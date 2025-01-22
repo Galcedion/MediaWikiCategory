@@ -1,0 +1,50 @@
+{
+	"extensionName": {
+		"message": "MediaWiki Category",
+		"description": "Name of the extension."
+	},
+	"extensionDescription": {
+		"message": "Test",
+		"description": "Description of the extension."
+	},
+	"dropdownDefault": {
+		"message": "Detecting category",
+		"description": "Initial dropdown text."
+	},
+	"fetchCategory": {
+		"message": "Fetch category",
+		"description": "Dropdown descriptor."
+	},
+	"elements": {
+		"message": "elements",
+		"description": "text-snippet elements."
+	},
+	"popupTitle": {
+		"message": "MediaWiki Category",
+		"description": "Title of the popup menu."
+	},
+	"popupNavOverview": {
+		"message": "Overview",
+		"description": "Popup menu: navigation entry for overview."
+	},
+	"popupNavOverviewEmpty": {
+		"message": "No Wiki data is stored",
+		"description": "Popup menu: overview without data."
+	},
+	"popupNavShow": {
+		"message": "Select a Wiki",
+		"description": "Popup menu: navigation entry for detailed wiki information."
+	},
+	"popupLoading": {
+		"message": "Loading data ...",
+		"description": "Display loading while category data is fetched for the popup."
+	},
+	"popupCategories": {
+		"message": "Categories",
+		"description": "Popup display, number of categories saved for a Wiki."
+	},
+	"popupPages": {
+		"message": "Pages",
+		"description": "Popup display, number of pages saved for a Wiki."
+	}
+}

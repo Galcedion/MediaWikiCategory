@@ -1,0 +1,9 @@
+html {background-color: white;}
+strong {margin-left: 0.5em; border-bottom: 1px solid black;  font-weight: normal}
+.p_nav {background-color: lightgray; text-align: center;}
+.p_title {text-align: center; background-color: lightgray; padding: 5px 5em; border-radius: 5px 5px 0 0;}
+.p_available {display: grid; grid-template-columns: repeat(auto-fit, minmax(5px, 1fr)); cursor: pointer;}
+.p_available > div::after + div {content: '|';}
+.hidden {visibility: hidden; display: none;}
+.nav_active {background-color: azure; font-weight: bold; padding: 5px 5px 0 5px; border-radius: 5px 5px 0 0;}
+.clickable {cursor: pointer; }

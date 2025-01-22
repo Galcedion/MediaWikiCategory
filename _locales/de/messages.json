@@ -1,0 +1,38 @@
+{
+	"extensionName": {
+		"message": "MediaWiki Category"
+	},
+	"extensionDescription": {
+		"message": "Test"
+	},
+	"dropdownDefault": {
+		"message": "Kategorie-Ermittlung läuft"
+	},
+	"fetchCategory": {
+		"message": "Kategorie laden"
+	},
+	"elements": {
+		"message": "Elemente"
+	},
+	"popupTitle": {
+		"message": "MediaWiki Category"
+	},
+	"popupNavOverview": {
+		"message": "Übersicht"
+	},
+	"popupNavOverviewEmpty": {
+		"message": "Keine Wiki-Daten gespeichert"
+	},
+	"popupNavShow": {
+		"message": "Wiki auswählen"
+	},
+	"popupLoading": {
+		"message": "Lade Daten ..."
+	},
+	"popupCategories": {
+		"message": "Kategorien"
+	},
+	"popupPages": {
+		"message": "Seiten"
+	}
+}
