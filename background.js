@@ -103,7 +103,11 @@ function scrapeCategoryTask(storedData) {
 }
 
 function scrapeCategoryList(content, storedData) {
-	var catLinks = content.getElementById('mw-pages').getElementsByClassName('mw-category')[0].getElementsByTagName('a');
+	var catLinks = [];
+	if(content.querySelector("#mw-pages"))
+		catLinks = content.querySelectorAll('#mw-pages .mw-category a');
+	else if(content.querySelector(".category-page__members"))
+		catLinks = content.querySelectorAll('.category-page__members a.category-page__member-link');
 	var catList = {};
 	var replacer = targetHref.href.replace(targetHref.pathname, '');
 	for(let i = 0; i < catLinks.length; i++) {
