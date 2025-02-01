@@ -1,3 +1,4 @@
+var isWiki = false;
 var curHostname = new URL(window.location.href).hostname;
 var objMWDomain = browser.storage.local.get(curHostname);
 objMWDomain.then(loadMWDomain);
@@ -19,6 +20,7 @@ function mwc_check() {
 
 // attache event handlers to categories and fetch all categories for action button
 function mwc_attach() {
+	isWiki = true;
 	if(document.querySelector("#catlinks ul")) {
 		let catlist = document.querySelectorAll("#catlinks ul a");
 		catlist.forEach(mwc_addListener);
@@ -53,3 +55,13 @@ function mwc_addListener(n) {
 		all: catPopup,
 	});
 }
+
+function contentMessageListener(listener) {
+	switch(listener.task) {
+		case 'getWiki':
+			return Promise.resolve({'wiki': isWiki});
+			break;
+	}
+}
+
+browser.runtime.onMessage.addListener(contentMessageListener);

@@ -18,7 +18,7 @@ browser.browserAction.setTitle({
 	title: browser.i18n.getMessage("extensionName")
 });
 
-browser.browserAction.setPopup({popup: 'popup/popup.html'});
+browser.browserAction.setPopup({popup: 'ba/browseraction.html'});
 
 function messageListener(listener) {
 	switch(listener.task) {

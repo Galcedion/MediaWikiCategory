@@ -17,7 +17,15 @@
 	},
 	"elements": {
 		"message": "elements",
-		"description": "text-snippet elements."
+		"description": "Text-snippet elements."
+	},
+	"browserActionNoWiki": {
+		"message": "No active MediaWiki page",
+		"description": "BroswerAction: alt-message when not on a MediaWiki page."
+	},
+	"browserActionOpenPopup": {
+		"message": "Open full overview",
+		"description": "BroswerAction: open the Popup."
 	},
 	"popupTitle": {
 		"message": "MediaWiki Category",
