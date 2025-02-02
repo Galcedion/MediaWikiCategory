@@ -31,6 +31,9 @@ function messageListener(listener) {
 		case 'catPopup':
 			messageStoreCaregoryPopupData(listener);
 			break;
+		case 'storeFromPopup':
+			storeFromPopup(listener);
+			break;
 	}
 }
 
@@ -69,6 +72,12 @@ function messageStoreCaregoryPopupData(listener) {
 function messageListenerHideCM() {
 	browser.menus.update(MEDIAWIKI_MENU_ITEM, {visible: false});
 	browser.menus.refresh();
+}
+
+function storeFromPopup(listener) {
+	targetTitle = listener.title;
+	targetHref = (new URL(listener.href));
+	storageManager();
 }
 
 function storageManager() {

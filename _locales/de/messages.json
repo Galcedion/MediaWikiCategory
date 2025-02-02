@@ -20,6 +20,9 @@
 	"browserActionOpenPopup": {
 		"message": "Komplettübersicht öffnen"
 	},
+	"browserActionAvailableCategories": {
+		"message": "Verfügbare Kategorien (aktueller Tab)"
+	},
 	"popupTitle": {
 		"message": "MediaWiki Category"
 	},

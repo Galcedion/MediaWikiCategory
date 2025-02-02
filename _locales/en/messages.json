@@ -27,6 +27,10 @@
 		"message": "Open full overview",
 		"description": "BroswerAction: open the Popup."
 	},
+	"browserActionAvailableCategories": {
+		"message": "Available Categories (current tab)",
+		"description": "BroswerAction: list title for current available categories."
+	},
 	"popupTitle": {
 		"message": "MediaWiki Category",
 		"description": "Title of the popup menu."

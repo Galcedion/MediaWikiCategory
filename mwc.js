@@ -1,4 +1,5 @@
 var isWiki = false;
+var availableCategories = {};
 var curHostname = new URL(window.location.href).hostname;
 var objMWDomain = browser.storage.local.get(curHostname);
 objMWDomain.then(loadMWDomain);
@@ -38,8 +39,9 @@ function mwc_attach() {
 // add listener to all given nodes
 function mwc_addListener(n) {
 	var catPopup = {};
+	availableCategories[n.textContent] = n.href;
 	n.addEventListener("contextmenu", function() {
-		var targetTitle = n.innerHTML;
+		var targetTitle = n.textContent;
 		var targetHref = n.href;
 		catPopup[targetTitle] = targetHref;
 		browser.runtime.sendMessage({
@@ -59,7 +61,15 @@ function mwc_addListener(n) {
 function contentMessageListener(listener) {
 	switch(listener.task) {
 		case 'getWiki':
-			return Promise.resolve({'wiki': isWiki});
+			return Promise.resolve({'wiki': isWiki, 'categories': availableCategories});
+			break;
+		case 'save':
+			browser.runtime.sendMessage({
+				task: 'storeFromPopup',
+				enableCM: false,
+				title: listener.name,
+				href: listener.href,
+			});
 			break;
 	}
 }
