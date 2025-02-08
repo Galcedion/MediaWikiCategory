@@ -3,8 +3,14 @@ document.getElementById("ba_popup").value = browser.i18n.getMessage("browserActi
 document.getElementById("ba_popup").addEventListener("click", openTab);
 
 function checkTab() {
-	var current = browser.tabs.query({active: true, currentWindow: true}).then(tl => browser.tabs.sendMessage(tl[0].id, {'task': 'getWiki'})); // TODO: can fail on FF internal pages
-	current.then(checkTabWiki);
+	var connection = true;
+	var current = browser.tabs.query({active: true, currentWindow: true})
+	.then(tl => browser.tabs.sendMessage(tl[0].id, {'task': 'getWiki'}))
+	.catch(e => connection = false);
+	if(connection)
+		current.then(checkTabWiki);
+	else
+		document.getElementById("ba_current").textContent = browser.i18n.getMessage("browserActionNoWiki");
 }
 
 function checkTabWiki(tabData) {
@@ -25,7 +31,8 @@ function openTab() {
 }
 
 function saveCategory() {
-	browser.tabs.query({active: true, currentWindow: true}).then(tl => browser.tabs.sendMessage(tl[0].id, {'task': 'save', 'name': this.getAttribute('data-name'), 'href': this.getAttribute('data-href')}))
+	browser.tabs.query({active: true, currentWindow: true})
+	.then(tl => browser.tabs.sendMessage(tl[0].id, {'task': 'save', 'name': this.getAttribute('data-name'), 'href': this.getAttribute('data-href')}));
 }
 
 window.onload = checkTab();
