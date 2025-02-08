@@ -55,7 +55,7 @@ function fetchStream(dataStream) {
 		for(let i = 0; i < value.length; i++) {
 			sum += Object.keys(value[i]['items']).length;
 		}
-		html += `<div><emph id="show_${key}" name="popupShow" class="clickable">🌐</emph> ${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")} <emph id="del_${key}" name="popupDelete" class="clickable">🗑</emph></div>`;
+		html += `<div><emph id="show_${key}" name="popupShow" class="clickable" title="${browser.i18n.getMessage("titleOpen")}">🌐</emph> ${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")} <emph id="del_${key}" name="popupDelete" class="clickable" title="${browser.i18n.getMessage("titleDelete")}">🗑</emph></div>`;
 	}
 	/*Object.keys(storedData).forEach(function(key) {
 		html += `<strong>${typeof storedData}</strong>`;
@@ -82,16 +82,10 @@ function showWiki() {
 	calculatedElements = [];
 	toShow = this.id.substring(5);
 	var wikiInfo = JSON.parse(storedData[toShow]);
-	var html = '<div>';
+	var html = '';
 	wikiInfo.forEach(function(category) {
-		html += `<input type="checkbox" name="selected_cat" id="sc_${category.title}" value="${category.title}"><label for="sc_${category.title}">${category.title} <i>(${Object.keys(category.items).length})</i></label>`;
-		//for(let i = 0; i < wikiInfo.length; i++) {
-		//	html = JSON.stringify(wikiInfo);
-		//}
+		html += `<input type="checkbox" name="selected_cat" id="sc_${category.title}" value="${category.title}" class="clickable"><label for="sc_${category.title}" class="clickable">${category.title} <i>(${Object.keys(category.items).length})</i></label>`;
 	});
-	//html += '</div><div id="cat_calculation"></div><div id="cat_cal_result"></div>';
-	html += '</div>';
-	//html = storedData[toShow];//.length;//[0]['title'];
 
 	var pageList = document.getElementsByClassName("page")
 	for(let i = 0; i < pageList.length; i++) {
@@ -145,7 +139,7 @@ function addCatCalc() {
 
 function generateOperators(operatorID, value) {
 	var operator = '';
-	operator += `<select id="operator_${operatorID}" name="math_operator">`;
+	operator += `<select id="operator_${operatorID}" name="math_operator" class="clickable">`;
 	['OR', 'AND', 'XOR'].forEach(function(o) {
 		if(o == value)
 			operator += `<option selected>${o}</option>`;
@@ -190,10 +184,15 @@ function catCalc() {
 		}
 	}
 	var html = '';
+	var hasResults = false;
 	resultList.forEach(function(r) {
-		//html += `<div><a href="https://${toShow}/${getURLFromCategoryItem(wikiData, r)}">${r}</a></div>`;
-		html += `<div><p name="math_result" data-href="${getURLFromCategoryItem(wikiData, r)}">${r}</a></div>`;
+		hasResults = true;
+		html += `<p name="math_result" data-href="${getURLFromCategoryItem(wikiData, r)}" class="result-entry">${r}</p>`;
 	});
+	if(hasResults)
+		html = `<h4>${browser.i18n.getMessage("popupMathResults")}</h4>` + html;
+	else
+		html = `<h4>${browser.i18n.getMessage("popupMathResultsNone")}</h4>` + html;
 	document.getElementById("p_result").innerHTML = html;
 	document.getElementsByName("math_result").forEach(function(node) {node.addEventListener("click", openTab);});
 }
@@ -246,6 +245,7 @@ function calcOR(a, b, xor = false) {
 
 function openTab() {
 	browser.tabs.create({'active': false, 'url': this.getAttribute('data-href')});
+	this.classList.add('clicked');
 }
 
 window.onload = showTitle();

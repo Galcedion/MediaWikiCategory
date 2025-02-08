@@ -44,6 +44,21 @@
 	"popupPages": {
 		"message": "Seiten"
 	},
+	"popupMathResults": {
+		"message": "Ergebnisse"
+	},
+	"popupMathResultsNone": {
+		"message": "Keine Ergebnisse, bitte prüfen Sie die Eingabe."
+	},
+	"titleOpen": {
+		"message": "Öffnen"
+	},
+	"titleSave": {
+		"message": "Speichern"
+	},
+	"titleDelete": {
+		"message": "Löschen"
+	},
 	"errorCategoryAlreadySaved": {
 		"message": "Kategorie bereits gespeichert!"
 	}

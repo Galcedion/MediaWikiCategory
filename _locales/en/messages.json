@@ -59,6 +59,26 @@
 		"message": "Pages",
 		"description": "Popup display, number of pages saved for a Wiki."
 	},
+	"popupMathResults": {
+		"message": "Results",
+		"description": "Popup display, results headline for math operations."
+	},
+	"popupMathResultsNone": {
+		"message": "No results, please check your calculation.",
+		"description": "Popup display, results headline for math operations with no results."
+	},
+	"titleOpen": {
+		"message": "Open",
+		"description": "Mouseover title: open object."
+	},
+	"titleSave": {
+		"message": "Save",
+		"description": "Mouseover title: save object."
+	},
+	"titleDelete": {
+		"message": "Delete",
+		"description": "Mouseover title: delete object."
+	},
 	"errorCategoryAlreadySaved": {
 		"message": "Category already saved!",
 		"description": "Error: the requested category has been fetched already."
