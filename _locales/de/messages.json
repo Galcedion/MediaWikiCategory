@@ -43,5 +43,8 @@
 	},
 	"popupPages": {
 		"message": "Seiten"
+	},
+	"errorCategoryAlreadySaved": {
+		"message": "Kategorie bereits gespeichert!"
 	}
 }

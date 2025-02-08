@@ -32,7 +32,16 @@ function openTab() {
 
 function saveCategory() {
 	browser.tabs.query({active: true, currentWindow: true})
-	.then(tl => browser.tabs.sendMessage(tl[0].id, {'task': 'save', 'name': this.getAttribute('data-name'), 'href': this.getAttribute('data-href')}));
+	.then(tl => browser.tabs.sendMessage(tl[0].id, {'task': 'save', 'name': this.getAttribute('data-name'), 'href': this.getAttribute('data-href')}))
+	.then(this.classList.add('saved'))
+	.catch(e => raiseError(this, e));
+}
+
+function raiseError(caller, error) {
+	caller.classList.remove('saved');
+	caller.classList.add('error');
+	document.getElementById("error").textContent = error;
+	document.getElementById("error").classList.add('error');
 }
 
 window.onload = checkTab();
