@@ -93,13 +93,12 @@ function storageManagerStream(storedData) {
 				return;
 		}
 	}
-	scrapeCategoryTask(storedData);
+	scrapeCategoryTask(storedData, targetHref);
 }
 
-function scrapeCategoryTask(storedData) {
-	var catList;
+function scrapeCategoryTask(storedData, target) {
 	var req = new XMLHttpRequest();
-	req.open('GET', targetHref);
+	req.open('GET', target);
 	req.responseType = 'document';
 	req.setRequestHeader('Access-Control-Allow-Origin', '*'); // User Agent?
 	req.setRequestHeader('Accept', 'text/html');
@@ -113,10 +112,25 @@ function scrapeCategoryTask(storedData) {
 
 function scrapeCategoryList(content, storedData) {
 	var catLinks = [];
-	if(content.querySelector("#mw-pages"))
+	var hasNext = false;
+	if(content.querySelector("#mw-pages")) {
 		catLinks = content.querySelectorAll('#mw-pages .mw-category a');
-	else if(content.querySelector(".category-page__members"))
+		var converted = content.querySelector('#mw-pages').innerHTML;
+		converted = converted.substring(0, converted.indexOf('<div'));
+		converted = converted.substring(converted.lastIndexOf('(') + 1, converted.lastIndexOf(')'));
+		if(converted.indexOf('<a') != -1) {
+			converted = content.querySelector('#mw-pages div');
+			while(typeof converted.tagName === 'undefined' || converted.tagName.toLowerCase() != 'a') { // TODO hacky!
+				converted = converted.previousSibling;
+			}
+			hasNext = converted.href;
+		}
+	}
+	else if(content.querySelector('.category-page__members')) {
 		catLinks = content.querySelectorAll('.category-page__members a.category-page__member-link');
+		if(content.querySelector('.category-page__pagination-next'))
+			hasNext = content.querySelector('.category-page__pagination-next').href;
+	}
 	var catList = {};
 	var replacer = targetHref.href.replace(targetHref.pathname, '');
 	for(let i = 0; i < catLinks.length; i++) {
@@ -129,9 +143,19 @@ function scrapeCategoryList(content, storedData) {
 	} else {
 		content = [];
 	}
-	content.push({'title': targetTitle, 'path': targetHref.pathname, 'protocol': targetHref.protocol, 'items' : catList});
+	var existing = false;
+	content.forEach(function(c) {if(c['title'] == targetTitle) c['items'] = {... c['items'], ...catList}; existing = true;});
+	if(!existing)
+		content.push({'title': targetTitle, 'path': targetHref.pathname, 'protocol': targetHref.protocol, 'items' : catList});
 	storedData[targetHref.hostname] = JSON.stringify(content);
-	browser.storage.local.set(storedData);
+
+	if(hasNext !== false) {;
+		if(!hasNext.startsWith(targetHref.protocol + '//' + targetHref.hostname))
+			hasNext = targetHref.protocol + '//' + targetHref.hostname + hasNext;
+		scrapeCategoryTask(storedData, new URL(hasNext));
+	} else {
+		browser.storage.local.set(storedData);
+	}
 }
 
 function fetchCategoryPage(categoryURL) {
