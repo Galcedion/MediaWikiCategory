@@ -137,13 +137,18 @@ function scrapeCategoryList(content, storedData) {
 	}
 
 	var content;
-	if(targetHref.hostname in storedData) {console.log(1);
+	if(targetHref.hostname in storedData) {
 		content = JSON.parse(storedData[targetHref.hostname]);
 	} else {
 		content = [];
 	}
 	var existing = false;
-	content.forEach(function(c) {if(c['title'] == targetTitle) c['items'] = {... c['items'], ...catList}; existing = true;});
+	content.forEach(function(c) { // check if category is already stored
+		if(c['title'] == targetTitle) {
+			c['items'] = {... c['items'], ...catList};
+			existing = true;
+		}
+	});
 	if(!existing)
 		content.push({'title': targetTitle, 'path': targetHref.pathname, 'protocol': targetHref.protocol, 'items' : catList});
 	storedData[targetHref.hostname] = JSON.stringify(content);
