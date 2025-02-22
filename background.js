@@ -23,12 +23,6 @@ function messageListener(listener) {
 		case 'enableCM': // event source: mwc.js
 			messageListenerDisplayCM(listener);
 			break;
-		case 'addCategoryBulk': // event source: none // TODO: is this necessary?
-			messageListenerAddCategoryBulk(listener);
-			break;
-		case 'catPopup': // event source: mwc.js
-			messageStoreCaregoryPopupData(listener);
-			break;
 		case 'storeFromPopup': // event source: mwc.js
 			storeFromPopup(listener);
 			break;
@@ -48,17 +42,6 @@ function messageListenerDisplayCM(listener) {
 	else // as of now this should never occour
 		browser.menus.update(MEDIAWIKI_MENU_ITEM, {visible: false});
 	browser.menus.refresh();
-}
-
-// TODO, is this necessary? see listener addCategoryBulk
-function messageListenerAddCategoryBulk(listener) {
-	console.log(`A content script sent a message: ${listener.title}`);
-	console.log(`A content script sent a message: ${listener.data}`);
-}
-
-// TODO this currently serves no purpose
-function messageStoreCaregoryPopupData(listener) {
-	categeoriesOnPage = listener.all;
 }
 
 // hide the menu when the menu is not displayed
@@ -168,27 +151,6 @@ function scrapeCategoryList(content, storedData) {
 	} else {
 		browser.storage.local.set(storedData);
 	}
-}
-
-// TODO is this necessary?
-function fetchCategoryPage(categoryURL) {
-	var req = fetch(categoryURL, {
-		method: 'GET',
-		mode: 'cors',
-		headers: {
-			'Accept': 'text/html',
-			'Access-Control-Allow-Origin': '*',
-			'Access-Control-Allow-Headers': '*'
-		},
-		referrerPolicy: 'no-referrer'
-	});
-	req.then(processCategoryPage);
-}
-
-// TODO is this necessary?
-function processCategoryPage(res) {
-	console.log(`Characters: ${res.status}`);
-	console.log(`Characters: ${res.responseText.length}`);
 }
 
 browser.runtime.onMessage.addListener(messageListener);

@@ -24,13 +24,6 @@ function showSelected() {
 	document.getElementById("p_wiki").classList.remove("hidden")
 }
 
-// TODO is this necessary, also called onload
-function showTitle() {
-	var title = document.getElementById('p_title');
-	//title.innerHTML = `<div>${categeoriesOnPage.length}</div>`;
-	//title.innerHTML = `<div>${window.location.pathname}</div>`;
-}
-
 // main storage function, creating a promise
 function fetchStorage() {
 	var sm = browser.storage.local.get(null);
@@ -256,5 +249,4 @@ function openTab() {
 	this.classList.add('clicked');
 }
 
-window.onload = showTitle();
 window.onload = fetchStorage();
