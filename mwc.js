@@ -19,7 +19,7 @@ function mwc_check() {
 		mwc_attach();
 }
 
-// attache event handlers to categories and fetch all categories for action button
+// attach event handlers to categories and fetch all categories for action button
 function mwc_attach() {
 	isWiki = true;
 	if(document.querySelector("#catlinks ul")) {
@@ -51,22 +51,21 @@ function mwc_addListener(n) {
 			href: targetHref
 		});
 	});
-	browser.runtime.sendMessage({
+	browser.runtime.sendMessage({ // TODO: this currently serves no purpose
 		task: 'catPopup',
-		enableCM: true,
 		all: catPopup,
 	});
 }
 
+// listener for incoming events
 function contentMessageListener(listener) {
 	switch(listener.task) {
-		case 'getWiki':
+		case 'getWiki': // event source: browseraction.js
 			return Promise.resolve({'wiki': isWiki, 'categories': availableCategories});
 			break;
-		case 'save':
+		case 'save': // event source: browseraction.js
 			browser.runtime.sendMessage({
 				task: 'storeFromPopup',
-				enableCM: false,
 				title: listener.name,
 				href: listener.href,
 			});

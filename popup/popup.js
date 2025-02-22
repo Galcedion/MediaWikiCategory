@@ -8,12 +8,15 @@ var selectedCategories;
 var toShow;
 var calculatedElements;
 
+// toggle display to overview
 function showOverview() {
 	document.getElementById("p_nav_overview").classList.add("nav_active");
 	document.getElementById("p_nav_show").classList.remove("nav_active")
 	document.getElementById("p_overview").classList.remove("hidden");
 	document.getElementById("p_wiki").classList.add("hidden")
 }
+
+// toggle display to selected wiki
 function showSelected() {
 	document.getElementById("p_nav_overview").classList.remove("nav_active");
 	document.getElementById("p_nav_show").classList.add("nav_active")
@@ -21,23 +24,27 @@ function showSelected() {
 	document.getElementById("p_wiki").classList.remove("hidden")
 }
 
+// TODO is this necessary, also called onload
 function showTitle() {
 	var title = document.getElementById('p_title');
 	//title.innerHTML = `<div>${categeoriesOnPage.length}</div>`;
 	//title.innerHTML = `<div>${window.location.pathname}</div>`;
 }
 
+// main storage function, creating a promise
 function fetchStorage() {
 	var sm = browser.storage.local.get(null);
 	sm.then(fetchStream);
 }
 
+// delete entire selected wiki from storage
 function deleteWiki() {
 	var toDel = this.id.substring(4);
 	browser.storage.local.remove(toDel);
 	location.reload();
 }
 
+// retrieve data from storage and create overview of all available wikis
 function fetchStream(dataStream) {
 	storedData = dataStream;
 	if(typeof(storedData) === 'undefined' || Object.keys(storedData).length == 0) {
@@ -57,21 +64,12 @@ function fetchStream(dataStream) {
 		}
 		html += `<div><emph id="show_${key}" name="popupShow" class="clickable" title="${browser.i18n.getMessage("titleOpen")}">🌐</emph> ${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")} <emph id="del_${key}" name="popupDelete" class="clickable" title="${browser.i18n.getMessage("titleDelete")}">🗑</emph></div>`;
 	}
-	/*Object.keys(storedData).forEach(function(key) {
-		html += `<strong>${typeof storedData}</strong>`;
-		//html += `<div>${storedData[key].items.length} 🗑</div>`;
-		//document.getElementById("p_available").innerHTML += `<div>${key}</div>`;
-		//document.getElementById("p_math").innerHTML += `<div id="${key}" class="hidden page">${storedData[key].length} ${browser.i18n.getMessage("elements")}</div>`;
-	});*/
 	document.getElementById("p_overview").innerHTML = html;
-	/*document.getElementById("p_math").firstChild.classList.remove("hidden");
-	document.getElementById("p_available").childNodes.forEach(function(cn) {
-		cn.addEventListener('click', function() {showPages(cn.innerHTML)});
-	});*/
 	document.getElementsByName("popupShow").forEach(function(node) {node.addEventListener("click", showWiki);});
 	document.getElementsByName("popupDelete").forEach(function(node) {node.addEventListener("click", deleteWiki);});
 }
 
+// display selected wiki and stored categories of said wiki
 function showWiki() {
 	/* each category has:
 	 * title - title of the category
@@ -101,6 +99,7 @@ function showWiki() {
 	showSelected();
 }
 
+// create calculation overview based on selected categories
 function addCatCalc() {
 	var caller = this.value;
 	var checked = this.checked;
@@ -137,6 +136,7 @@ function addCatCalc() {
 	catCalc();
 }
 
+// create visual operator selection
 function generateOperators(operatorID, value) {
 	var operator = '';
 	operator += `<select id="operator_${operatorID}" name="math_operator" class="clickable">`;
@@ -150,21 +150,23 @@ function generateOperators(operatorID, value) {
 	return operator;
 }
 
+// update operator on change and recalculate
 function updateOperator() {
 	var caller = this.id;
 	selectedCategories[caller.replace('operator_', '')]['value'] = this.options[this.selectedIndex].text;
 	catCalc();
 }
 
+// calculate category entries from user selection
 function catCalc() {
-	if(Object.keys(selectedCategories).length == 0) {
+	if(Object.keys(selectedCategories).length == 0) { // when no categories selected, nothing to do
 		document.getElementById("p_result").innerHTML = '';
 		return;
 	}
 	var wikiData = JSON.parse(storedData[toShow]);
 	var resultList = getItemsFromCategory(wikiData, selectedCategories[0]['value']);
 	var operator = null;
-	for(let i = 1; i < Object.keys(selectedCategories).length; i++) {
+	for(let i = 1; i < Object.keys(selectedCategories).length; i++) { // perform user selected calculations on the user selected categories
 		if(selectedCategories[i]['type'] == 'o') {
 			operator = selectedCategories[i]['value'];
 		} else {
@@ -183,6 +185,7 @@ function catCalc() {
 			}
 		}
 	}
+	// visual output of results
 	var html = '';
 	var hasResults = false;
 	resultList.forEach(function(r) {
@@ -197,8 +200,9 @@ function catCalc() {
 	document.getElementsByName("math_result").forEach(function(node) {node.addEventListener("click", openTab);});
 }
 
+// retrieve all items of a category
 function getItemsFromCategory(data, categoryName) {
-	var result;
+	var result = [];
 	data.forEach(function(d) {
 		if(d['title'] == categoryName) {
 			result = Object.keys(d['items']);
@@ -207,6 +211,7 @@ function getItemsFromCategory(data, categoryName) {
 	return result;
 }
 
+// create URL from the category entry
 function getURLFromCategoryItem(data, itemName) {
 	var url;
 	data.forEach(function(d) {
@@ -217,6 +222,7 @@ function getURLFromCategoryItem(data, itemName) {
 	return url;
 }
 
+// calculate logical AND
 function calcAND(a, b) {
 	var r = [];
 	for(let i = 0; i < a.length; i++) {
@@ -225,6 +231,7 @@ function calcAND(a, b) {
 	return r;
 }
 
+// calculate logical OR or XOR
 function calcOR(a, b, xor = false) {
 	var r = [];
 	if(xor) {
@@ -243,6 +250,7 @@ function calcOR(a, b, xor = false) {
 	return r;
 }
 
+// open selected entry in a new tab
 function openTab() {
 	browser.tabs.create({'active': false, 'url': this.getAttribute('data-href')});
 	this.classList.add('clicked');
