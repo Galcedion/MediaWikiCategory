@@ -107,32 +107,40 @@ function scrapeCategoryTask(storedData, target) {
 	req.send();
 }
 
-// search HTML code for category intries
-// TODO improve overall resiliance against changes in the HTML structure
+// search HTML code for category entries
 function scrapeCategoryList(content, storedData) {
 	var catLinks = [];
 	var hasNext = false;
-	if(content.querySelector("#mw-pages")) { // locate category area and grab individual category entries
+	if(content.querySelectorAll('#mw-pages .mw-category').length == 1) { // locate category area and grab individual category entries
 		catLinks = content.querySelectorAll('#mw-pages .mw-category a');
 		var converted = content.querySelector('#mw-pages').innerHTML; // manually search and grab next-page button
-		converted = converted.substring(0, converted.indexOf('<div'));
-		converted = converted.substring(converted.lastIndexOf('(') + 1, converted.lastIndexOf(')'));
+		converted = (converted.indexOf('<div') == -1 ? '' : converted.substring(0, converted.indexOf('<div')));
+		if(converted.lastIndexOf('(') == -1 || converted.lastIndexOf(')') == -1)
+			converted = '';
+		else
+			converted = converted.substring(converted.lastIndexOf('(') + 1, converted.lastIndexOf(')'));
 		if(converted.indexOf('<a') != -1) {
 			converted = content.querySelector('#mw-pages div');
-			while(typeof converted.tagName === 'undefined' || converted.tagName.toLowerCase() != 'a') { // TODO hacky!
-				converted = converted.previousSibling;
+			if(converted !== null) {
+				let limit = 0;
+				let maxlimit = 2;
+				while(limit <= maxlimit && (typeof converted.tagName === 'undefined' || converted.tagName.toLowerCase() != 'a')) {
+					converted = converted.previousSibling;
+					++limit;
+				}
+				if(limit <= maxlimit)
+					hasNext = converted.href;
 			}
-			hasNext = converted.href;
 		}
 	}
 	else if(content.querySelector('.category-page__members')) { // locate category area and grab individual category entries
 		catLinks = content.querySelectorAll('.category-page__members a.category-page__member-link');
-		if(content.querySelector('.category-page__pagination-next')) // search and grab next-page button
-			hasNext = content.querySelector('.category-page__pagination-next').href;
+		if(content.querySelector('a.category-page__pagination-next')) // search and grab next-page button
+			hasNext = content.querySelector('a.category-page__pagination-next').href;
 	}
 	var catList = {};
 	var replacer = targetHref.href.replace(targetHref.pathname, '');
-	for(let i = 0; i < catLinks.length; i++) { // adjust href format for addon-use
+	for(let i = 0; i < catLinks.length; i++) { // fill category list, adjust href format for addon-use
 		catList[catLinks[i].title] = catLinks[i].href.replace(replacer, '');
 	}
 
