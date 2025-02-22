@@ -134,7 +134,7 @@ function scrapeCategoryList(content, storedData) {
 		content = [];
 	}
 	var existing = false;
-	content.forEach(function(c) { // check if category is already stored
+	content.forEach(function(c) { // check if category is already stored, add additional items
 		if(c['title'] == targetTitle) {
 			c['items'] = {... c['items'], ...catList};
 			existing = true;

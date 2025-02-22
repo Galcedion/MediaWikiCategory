@@ -133,7 +133,7 @@ function addCatCalc() {
 function generateOperators(operatorID, value) {
 	var operator = '';
 	operator += `<select id="operator_${operatorID}" name="math_operator" class="clickable">`;
-	['OR', 'AND', 'XOR'].forEach(function(o) {
+	['OR', 'NOR', 'AND', 'NAND', 'XOR', 'XNOR'].forEach(function(o) {
 		if(o == value)
 			operator += `<option selected>${o}</option>`;
 		else
@@ -167,11 +167,20 @@ function catCalc() {
 				case 'AND':
 					resultList = calcAND(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']));
 					break;
+				case 'NAND':
+					resultList = calcAND(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), true);
+					break;
 				case 'OR':
 					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']));
 					break;
-				case 'XOR':
+				case 'NOR':
 					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), true);
+					break;
+				case 'XOR':
+					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), false, true);
+					break;
+				case 'XNOR':
+					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), true, true);
 					break;
 				default:
 					break;
@@ -180,13 +189,12 @@ function catCalc() {
 	}
 	// visual output of results
 	var html = '';
-	var hasResults = false;
+	resultList.sort();
 	resultList.forEach(function(r) {
-		hasResults = true;
 		html += `<p name="math_result" data-href="${getURLFromCategoryItem(wikiData, r)}" class="result-entry">${r}</p>`;
 	});
-	if(hasResults)
-		html = `<h4>${browser.i18n.getMessage("popupMathResults")}</h4>` + html;
+	if(Object.keys(resultList).length > 0)
+		html = `<h4>${browser.i18n.getMessage("popupMathResults")} <i>(${Object.keys(resultList).length})</i></h4>` + html;
 	else
 		html = `<h4>${browser.i18n.getMessage("popupMathResultsNone")}</h4>` + html;
 	document.getElementById("p_result").innerHTML = html;
@@ -216,25 +224,34 @@ function getURLFromCategoryItem(data, itemName) {
 }
 
 // calculate logical AND
-function calcAND(a, b) {
+function calcAND(a, b, not = false) {
 	var r = [];
-	for(let i = 0; i < a.length; i++) {
-		b.includes(a[i]) ? r.push(a[i]) : '';
+	if(not) {
+		r = a.concat(b);
+		r = r.filter((elem, index, self) => self.indexOf(elem) === index);
+	} else {
+		for(let i = 0; i < a.length; i++) {
+			b.includes(a[i]) ? r.push(a[i]) : '';
+		}
 	}
 	return r;
 }
 
 // calculate logical OR or XOR
-function calcOR(a, b, xor = false) {
+function calcOR(a, b, not = false, xor = false) {
 	var r = [];
-	if(xor) {
+	if(not && !xor) // NOR
+		return [];
+	else if(not && xor) // XNOR
+		return calcAND(a, b);
+	else if(xor) { // XOR
 		for(let i = 0; i < a.length; i++) {
 			b.includes(a[i]) ? '' : r.push(a[i]);
 		}
 		for(let i = 0; i < b.length; i++) {
 			a.includes(b[i]) ? '' : r.push(b[i]);
 		}
-	} else {
+	} else { // OR
 		r = b;
 		for(let i = 0; i < a.length; i++) {
 			b.includes(a[i]) ? '' : r.push(a[i]);
