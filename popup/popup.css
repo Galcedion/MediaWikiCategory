@@ -3,17 +3,20 @@ strong {margin-left: 0.5em; border-bottom: 1px solid black; font-weight: normal;
 h4 {margin: 0;}
 #error {border-bottom: 2px solid lightgray; border-radius: 0 0 5px 5px; min-height: 5px;}
 .p_nav {background-color: lightgray; text-align: center;}
-.p_title {text-align: center; background-color: lightgray; padding: 5px 5em; border-radius: 5px 5px 0 0;}
+.p_title {text-align: center; background-color: lightgray; font-weight: bold; padding: 1em; border-radius: 5px 5px 0 0;}
 .p_title ~ div {padding: 0 2px; border-left: 2px solid lightgray; border-right: 2px solid lightgray;}
 .p_available > label:not(:last-child)::after {content: '|';}
 .hidden {visibility: hidden; display: none;}
-.nav_active {background-color: azure; font-weight: bold; padding: 5px 5px 0 5px; border-radius: 5px 5px 0 0;}
-.clickable {cursor: pointer;}
+.nav_active {background-color: azure; font-weight: bold;}
+.section_title {padding: 5px 5px 0 5px; border-radius: 5px 5px 0 0;}
+.icon {filter: grayscale(1); font-style: normal; border-radius: 5px; transition: all 0.5s ease;}
+.icon:hover, .icon:active {filter: grayscale(1) drop-shadow(0 0 2px lightsteelblue);}
+.clickable {cursor: pointer; transition: all 0.5s ease;}
+.clickable:hover, .clickable:active {background-color: lightsteelblue;}
 .math {padding: 2em 0;}
 .math i {padding: 0 5px;}
 .math select {text-align: center; border: 0; border-radius: 5px;}
 .result-list {width: fit-content;}
 .result-list p:last-child {margin-bottom: 0;}
-.result-entry {cursor: alias; margin: 5px 0; padding: 2px; border-radius: 5px;}
-.result-entry:hover, .result-entry:active {background-color: lightsteelblue;}
+.result-entry {cursor: alias!important; margin: 5px 0; padding: 2px; border-radius: 5px;}
 .clicked {background-color: lightgreen; transition: all 0.5s ease;}

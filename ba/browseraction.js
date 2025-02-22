@@ -22,7 +22,7 @@ function checkTabWiki(tabData) {
 	else { // else display available categories
 		let html = `<h4>${browser.i18n.getMessage("browserActionAvailableCategories")}</h4>`;
 		for(const [k, v] of Object.entries(tabData.categories)) {
-			html += `<p name="currentCategories" data-name="${k}" data-href="${v}" title="${browser.i18n.getMessage("titleSave")}">💾 ${k}</p>`;
+			html += `<p name="currentCategories" data-name="${k}" data-href="${v}" title="${browser.i18n.getMessage("titleSave")}"><i class="icon">💾</i> ${k}</p>`;
 		}
 		document.getElementById("ba_current").innerHTML = html;
 		document.getElementsByName("currentCategories").forEach(function(node) {node.addEventListener("click", saveCategory);});

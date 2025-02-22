@@ -48,16 +48,17 @@ function fetchStream(dataStream) {
 	document.getElementById("p_overview").innerHTML = '';
 	var html = '';
 	for(let [key, value] of Object.entries(storedData)) {
-		html += `<strong class="clickable">${key}</strong>`;
+		html += `<strong id="show-${key}" name="popupSectionShow" class="section_title clickable">${key}</strong>`;
 		value = JSON.parse(value);
 		var entries = value.length;
 		var sum = 0;
 		for(let i = 0; i < value.length; i++) {
 			sum += Object.keys(value[i]['items']).length;
 		}
-		html += `<div><emph id="show_${key}" name="popupShow" class="clickable" title="${browser.i18n.getMessage("titleOpen")}">🌐</emph> ${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")} <emph id="del_${key}" name="popupDelete" class="clickable" title="${browser.i18n.getMessage("titleDelete")}">🗑</emph></div>`;
+		html += `<div><i id="show_${key}" name="popupShow" class="clickable icon" title="${browser.i18n.getMessage("titleOpen")}">🌐</i> ${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")} <i id="del_${key}" name="popupDelete" class="clickable icon" title="${browser.i18n.getMessage("titleDelete")}">🗑</i></div>`;
 	}
 	document.getElementById("p_overview").innerHTML = html;
+	document.getElementsByName("popupSectionShow").forEach(function(node) {node.addEventListener("click", showWiki);});
 	document.getElementsByName("popupShow").forEach(function(node) {node.addEventListener("click", showWiki);});
 	document.getElementsByName("popupDelete").forEach(function(node) {node.addEventListener("click", deleteWiki);});
 }
@@ -88,6 +89,7 @@ function showWiki() {
 	document.getElementById("p_available").innerHTML = html;
 	document.getElementsByName("selected_cat").forEach(function(node) {node.addEventListener("click", addCatCalc);});
 	document.getElementById("p_nav_show").addEventListener("click", showSelected);
+	document.getElementById("p_nav_show").classList.add("clickable");
 	document.getElementById("p_nav_show").innerHTML = toShow;
 	showSelected();
 }
@@ -191,7 +193,7 @@ function catCalc() {
 	var html = '';
 	resultList.sort();
 	resultList.forEach(function(r) {
-		html += `<p name="math_result" data-href="${getURLFromCategoryItem(wikiData, r)}" class="result-entry">${r}</p>`;
+		html += `<p name="math_result" data-href="${getURLFromCategoryItem(wikiData, r)}" class="result-entry clickable">${r}</p>`;
 	});
 	if(Object.keys(resultList).length > 0)
 		html = `<h4>${browser.i18n.getMessage("popupMathResults")} <i>(${Object.keys(resultList).length})</i></h4>` + html;
