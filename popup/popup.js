@@ -2,11 +2,19 @@ document.getElementById("p_title").innerHTML = browser.i18n.getMessage("popupTit
 document.getElementById("p_available").innerHTML = browser.i18n.getMessage("popupLoading");
 document.getElementById("p_nav_overview").innerHTML = browser.i18n.getMessage("popupNavOverview");
 document.getElementById("p_nav_show").innerHTML = browser.i18n.getMessage("popupNavShow");
+document.getElementById("p_refresh").addEventListener("click", refreshData);
 document.getElementById("p_nav_overview").addEventListener("click", showOverview);
 var storedData;
 var selectedCategories;
-var toShow;
+var toShow = null;
 var calculatedElements;
+var refresh = false;
+
+// refresh data and rebuild UI
+function refreshData() {
+	refresh = true;
+	fetchStorage();
+}
 
 // toggle display to overview
 function showOverview() {
@@ -61,6 +69,8 @@ function fetchStream(dataStream) {
 	document.getElementsByName("popupSectionShow").forEach(function(node) {node.addEventListener("click", showWiki);});
 	document.getElementsByName("popupShow").forEach(function(node) {node.addEventListener("click", showWiki);});
 	document.getElementsByName("popupDelete").forEach(function(node) {node.addEventListener("click", deleteWiki);});
+	if(refresh)
+		showWiki();
 }
 
 // display selected wiki and stored categories of said wiki
@@ -72,7 +82,12 @@ function showWiki() {
 	 */
 	selectedCategories = {};
 	calculatedElements = [];
-	toShow = this.id.substring(5);
+	if(refresh && toShow === null) {
+		refresh = false;
+		return;
+	}
+	if(!refresh)
+		toShow = this.id.substring(5);
 	var wikiInfo = JSON.parse(storedData[toShow]);
 	var html = '';
 	wikiInfo.forEach(function(category) {
@@ -91,7 +106,10 @@ function showWiki() {
 	document.getElementById("p_nav_show").addEventListener("click", showSelected);
 	document.getElementById("p_nav_show").classList.add("clickable");
 	document.getElementById("p_nav_show").innerHTML = toShow;
-	showSelected();
+	if(refresh)
+		refresh = false;
+	else
+		showSelected();
 }
 
 // create calculation overview based on selected categories

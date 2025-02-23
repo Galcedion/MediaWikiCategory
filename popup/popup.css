@@ -2,6 +2,7 @@ html {background-color: white; margin: 0 15%;}
 strong {margin-left: 0.5em; border-bottom: 1px solid black; font-weight: normal;}
 h4 {margin: 0;}
 #error {border-bottom: 2px solid lightgray; border-radius: 0 0 5px 5px; min-height: 5px;}
+.refresh {position: absolute; right: calc(15% + 1em); font-style: normal; border-radius: 5px;}
 .p_nav {background-color: lightgray; text-align: center;}
 .p_title {text-align: center; background-color: lightgray; font-weight: bold; padding: 1em; border-radius: 5px 5px 0 0;}
 .p_title ~ div {padding: 0 2px; border-left: 2px solid lightgray; border-right: 2px solid lightgray;}
