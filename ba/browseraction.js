@@ -1,6 +1,7 @@
 document.getElementById("ba_title").textContent = browser.i18n.getMessage("extensionName");
 document.getElementById("ba_popup").value = browser.i18n.getMessage("browserActionOpenPopup");
 document.getElementById("ba_popup").addEventListener("click", openTab);
+var lastSelected;
 
 // entry point for browser action
 // access current tab to check for wiki presence
@@ -36,6 +37,7 @@ function openTab() {
 
 // send call to current tab to save the selected category
 function saveCategory() {
+	lastSelected = this;
 	browser.tabs.query({active: true, currentWindow: true})
 	.then(tl => browser.tabs.sendMessage(tl[0].id, {'task': 'save', 'name': this.getAttribute('data-name'), 'href': this.getAttribute('data-href')}))
 	.then(this.classList.add('saved'))
@@ -50,4 +52,16 @@ function raiseError(caller, error) {
 	document.getElementById("error").classList.add('error');
 }
 
+// listener for incoming events
+function contentMessageListener(listener) {
+	switch(listener.task) {
+		case 'raiseError': // event source: background.js
+			if(typeof listener.target === 'undefined' || listener.target != 'ba')
+				return;
+			raiseError(lastSelected, listener.error);
+			break;
+	}
+}
+
 window.onload = checkTab();
+browser.runtime.onMessage.addListener(contentMessageListener);

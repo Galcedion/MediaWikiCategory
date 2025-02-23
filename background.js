@@ -54,17 +54,17 @@ function messageListenerHideCM() {
 function storeFromPopup(listener) {
 	targetTitle = listener.title;
 	targetHref = (new URL(listener.href));
-	storageManager();
+	storageManager(listener.caller);
 }
 
 // main storage function, creating a promise
-function storageManager() {
+function storageManager(caller = false) {
 	var sm = browser.storage.local.get(null);
-	sm.then(storageManagerStream);
+	sm.then(function(data) {storageManagerStream(data, caller);});
 }
 
 // check if requested category is already stored
-function storageManagerStream(storedData) {
+function storageManagerStream(storedData, caller) {
 	if(targetHref.hostname in storedData) { // if the wiki's category is already stored, return
 		var content = JSON.parse(storedData[targetHref.hostname]);
 		for(let i = 0; i < content.length; i++) {
@@ -72,11 +72,11 @@ function storageManagerStream(storedData) {
 				return;
 		}
 	}
-	scrapeCategoryTask(storedData, targetHref);
+	scrapeCategoryTask(storedData, targetHref, caller);
 }
 
 // load category document for processing, web request
-function scrapeCategoryTask(storedData, target) {
+function scrapeCategoryTask(storedData, target, caller) {
 	var req = new XMLHttpRequest();
 	req.open('GET', target);
 	req.responseType = 'document';
@@ -85,13 +85,18 @@ function scrapeCategoryTask(storedData, target) {
 	req.addEventListener('load', function() {
 		if(req.readyState === 4 && req.status === 200) { // TODO status != 200 ?
 			scrapeCategoryList(req.responseXML, storedData);
+		} else {
+			transmitError(caller, browser.i18n.getMessage("errorWebReqFail"));
 		}
+	});
+	req.addEventListener('error', function() {
+		transmitError(caller, browser.i18n.getMessage("errorWebReqFail"));
 	});
 	req.send();
 }
 
 // search HTML code for category entries
-function scrapeCategoryList(content, storedData) {
+function scrapeCategoryList(content, storedData, caller) {
 	var catLinks = [];
 	var hasNext = false;
 	if(content.querySelectorAll('#mw-pages .mw-category').length == 1) { // locate category area and grab individual category entries
@@ -147,12 +152,21 @@ function scrapeCategoryList(content, storedData) {
 	if(hasNext !== false) { // if next-page is available, call next page
 		if(!hasNext.startsWith(targetHref.protocol + '//' + targetHref.hostname))
 			hasNext = targetHref.protocol + '//' + targetHref.hostname + hasNext;
-		scrapeCategoryTask(storedData, new URL(hasNext));
+		scrapeCategoryTask(storedData, new URL(hasNext), caller);
 	} else {
 		browser.storage.local.set(storedData);
 	}
 }
 
+function transmitError(to, errorMsg) {
+	browser.runtime.sendMessage({
+		task: 'raiseError',
+		caller: 'background',
+		target: to,
+		error: errorMsg
+	});
+}
+
 browser.runtime.onMessage.addListener(messageListener);
 browser.menus.onHidden.addListener(messageListenerHideCM);
-browser.menus.onClicked.addListener(storageManager);
+browser.menus.onClicked.addListener(function() {storageManager();});

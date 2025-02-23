@@ -82,5 +82,9 @@
 	"errorCategoryAlreadySaved": {
 		"message": "Category already saved!",
 		"description": "Error: the requested category has been fetched already."
+	},
+	"errorWebReqFail": {
+		"message": "The requested webpage could not be loaded!",
+		"description": "Error: the requested web resource could not be loaded."
 	}
 }

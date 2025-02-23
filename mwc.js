@@ -53,6 +53,7 @@ function contentMessageListener(listener) {
 				task: 'storeFromPopup',
 				title: listener.name,
 				href: listener.href,
+				caller: 'ba'
 			});
 			break;
 	}
