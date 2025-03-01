@@ -56,18 +56,22 @@ function fetchStream(dataStream) {
 	document.getElementById("p_overview").innerHTML = '';
 	var html = '';
 	for(let [key, value] of Object.entries(storedData)) {
-		html += `<strong id="show-${key}" name="popupSectionShow" class="section_title clickable">${key}</strong>`;
+		html += `<strong id="show_${key}" name="popupShow" title="${browser.i18n.getMessage("titleOpen")}" class="section_title clickable"><i id="show_${key}" name="popupShow" class="icon" title="${browser.i18n.getMessage("titleOpen")}">🌐</i> ${key}</strong>`;
 		value = JSON.parse(value);
 		var entries = value.length;
 		var sum = 0;
+		var entryContent = `<ul id="expand_list_${key}" class="category-list hidden">`;
 		for(let i = 0; i < value.length; i++) {
+			entryContent += `<li>${value[i]['title']} (${Object.keys(value[i]['items']).length})</li>`;
 			sum += Object.keys(value[i]['items']).length;
 		}
-		html += `<div><i id="show_${key}" name="popupShow" class="clickable icon" title="${browser.i18n.getMessage("titleOpen")}">🌐</i> ${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")} <i id="del_${key}" name="popupDelete" class="clickable icon" title="${browser.i18n.getMessage("titleDelete")}">🗑</i></div>`;
+		entryContent += `</ul>`;
+		html += `<div><i id="expand_${key}" name="popupExpand" class="clickable icon" data-expanded="0" title="${browser.i18n.getMessage("titleOpen")}">↦</i> ${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")} <i id="del_${key}" name="popupDelete" class="clickable icon" title="${browser.i18n.getMessage("titleDelete")}">🗑</i></div>`;
+		html += entryContent;
 	}
 	document.getElementById("p_overview").innerHTML = html;
-	document.getElementsByName("popupSectionShow").forEach(function(node) {node.addEventListener("click", showWiki);});
 	document.getElementsByName("popupShow").forEach(function(node) {node.addEventListener("click", showWiki);});
+	document.getElementsByName("popupExpand").forEach(function(node) {node.addEventListener("click", expandWiki);});
 	document.getElementsByName("popupDelete").forEach(function(node) {node.addEventListener("click", deleteWiki);});
 	if(refresh)
 		showWiki();
@@ -110,6 +114,21 @@ function showWiki() {
 		refresh = false;
 	else
 		showSelected();
+}
+
+// expand the selected wiki and show its categories
+function expandWiki() {
+	var toExpand = document.getElementById('expand_list_' + this.id.substring(7));
+	var expandState = this.dataset.expanded;
+	if(expandState == '1') {
+		toExpand.classList.add('hidden');
+		this.textContent = '↦';
+		this.dataset.expanded = 0;
+	} else {
+		toExpand.classList.remove('hidden');
+		this.textContent = '↤';
+		this.dataset.expanded = 1;
+	}
 }
 
 // create calculation overview based on selected categories

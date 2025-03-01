@@ -1,5 +1,6 @@
 html {background-color: white; margin: 0 15%;}
-strong {margin-left: 0.5em; border-bottom: 1px solid black; font-weight: normal;}
+strong {display: inline-block; margin-left: 0.5em; border-bottom: 1px solid black; font-weight: normal;}
+strong[name="popupShow"] {margin-top: 0.5em;}
 h4 {margin: 0;}
 #error {border-bottom: 2px solid lightgray; border-radius: 0 0 5px 5px; min-height: 5px;}
 .refresh {position: absolute; right: calc(15% + 1em); font-style: normal; border-radius: 5px;}
@@ -14,6 +15,7 @@ h4 {margin: 0;}
 .icon:hover, .icon:active {filter: grayscale(1) drop-shadow(0 0 2px lightsteelblue);}
 .clickable {cursor: pointer; transition: all 0.5s ease;}
 .clickable:hover, .clickable:active {background-color: lightsteelblue;}
+.category-list {list-style: none; margin: 0;}
 .math {padding: 2em 0;}
 .math i {padding: 0 5px;}
 .math select {text-align: center; border: 0; border-radius: 5px;}
