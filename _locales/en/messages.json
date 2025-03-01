@@ -79,6 +79,14 @@
 		"message": "Delete",
 		"description": "Mouseover title: delete object."
 	},
+	"errorDialogTitle": {
+		"message": "MediaWiki Category Extension Error",
+		"description": "Error: title of the dialog popup."
+	},
+	"errorDialogOK": {
+		"message": "OK",
+		"description": "Error: accept-button text for the dialog popup."
+	},
 	"errorCategoryAlreadySaved": {
 		"message": "Category already saved!",
 		"description": "Error: the requested category has been fetched already."

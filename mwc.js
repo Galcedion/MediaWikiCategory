@@ -1,5 +1,6 @@
 var isWiki = false;
 var availableCategories = {};
+var curURL = window.location.href;
 var curHostname = new URL(window.location.href).hostname;
 
 mwc_check();
@@ -37,7 +38,8 @@ function mwc_addListener(n) {
 			task: 'enableCM',
 			enableCM: true,
 			title: targetTitle,
-			href: targetHref
+			href: targetHref,
+			caller: curURL
 		});
 	});
 }
@@ -56,7 +58,29 @@ function contentMessageListener(listener) {
 				caller: 'ba'
 			});
 			break;
+		case 'raiseError': // event source: background.js
+			if(typeof listener.target === 'undefined' || listener.target != curURL)
+				return;
+			raiseError(listener.error);
+			break;
 	}
+}
+
+// visual error handler
+function raiseError(error) {
+	var dialog = document.createElement('dialog');
+	var id = 0;
+	while(document.getElementById('mwc_err' + id) != null) {
+		++id;
+	}
+	dialog.id = 'mwc_err' + id;
+	dialog.open = true;
+	dialog.style.cssText = 'position: fixed; z-index: 100; top: calc(50% - 5em); padding: 0.5em 1em; width: 20em; background-color: white; border: 0; border-radius: 1em; box-shadow: 0 0 0.5em 0.5em crimson;';
+	dialog.innerHTML = '<h3>' + browser.i18n.getMessage("errorDialogTitle") + '</h3>\
+	<hr>\
+	<p style="text-align:justify;">' + error + '</p>\
+	<p style="text-align:center;"><input type="button" style="padding:0.5em;font-weight:bold;" onclick="document.getElementById(\'mwc_err' + id + '\').remove();" value="' + browser.i18n.getMessage("errorDialogOK") + '"></p>';
+	document.getElementsByTagName('BODY')[0].insertBefore(dialog, document.getElementsByTagName('BODY')[0].firstChild);
 }
 
 browser.runtime.onMessage.addListener(contentMessageListener);

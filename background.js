@@ -2,6 +2,7 @@ const MEDIAWIKI_MENU_ITEM = "mediawiki-menu-item";
 
 var targetTitle;
 var targetHref;
+var caller = false;
 var categeoriesOnPage;
 var tmpStorage = {};
 
@@ -38,6 +39,7 @@ function messageListenerDisplayCM(listener) {
 		});
 		targetTitle = listener.title;
 		targetHref = (new URL(listener.href));
+		caller = listener.caller;
 	}
 	else // as of now this should never occour
 		browser.menus.update(MEDIAWIKI_MENU_ITEM, {visible: false});
@@ -159,14 +161,28 @@ function scrapeCategoryList(content, storedData, caller) {
 }
 
 function transmitError(to, errorMsg) {
-	browser.runtime.sendMessage({
-		task: 'raiseError',
-		caller: 'background',
-		target: to,
-		error: errorMsg
-	});
+	if(to == 'ba') {
+		browser.runtime.sendMessage({
+			task: 'raiseError',
+			caller: 'background',
+			target: to,
+			error: errorMsg
+		});
+	} else {
+		browser.tabs.query({active: true, currentWindow: true})
+		.then(tl => {
+			for(let t of tl) {
+				browser.tabs.sendMessage(t.id, {
+					task: 'raiseError',
+					caller: 'background',
+					target: to,
+					error: errorMsg
+				});
+			}
+		});
+	}
 }
 
 browser.runtime.onMessage.addListener(messageListener);
 browser.menus.onHidden.addListener(messageListenerHideCM);
-browser.menus.onClicked.addListener(function() {storageManager();});
+browser.menus.onClicked.addListener(function() {storageManager(caller);});

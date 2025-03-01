@@ -59,6 +59,12 @@
 	"titleDelete": {
 		"message": "Löschen"
 	},
+		"errorDialogTitle": {
+		"message": "MediaWiki Category AddOn Fehler"
+	},
+	"errorDialogOK": {
+		"message": "OK"
+	},
 	"errorCategoryAlreadySaved": {
 		"message": "Kategorie bereits gespeichert!"
 	},
