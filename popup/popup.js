@@ -45,6 +45,22 @@ function deleteWiki() {
 	location.reload();
 }
 
+// delete single wiki category from storage
+function deleteCategory() {
+	var wiki = this.dataset.wiki;
+	var category = this.dataset.category;
+	var content = JSON.parse(storedData[wiki]);
+	for(let i = 0; i < content.length; i++) {
+		if(content[i]['title'] == category) {
+			content.splice(i, 1);
+			break;
+		}
+	}
+	storedData[wiki] = JSON.stringify(content);
+	browser.storage.local.set(storedData);
+	this.parentNode.remove();
+}
+
 // retrieve data from storage and create overview of all available wikis
 function fetchStream(dataStream) {
 	storedData = dataStream;
@@ -62,7 +78,7 @@ function fetchStream(dataStream) {
 		var sum = 0;
 		var entryContent = `<ul id="expand_list_${key}" class="category-list hidden">`;
 		for(let i = 0; i < value.length; i++) {
-			entryContent += `<li>${value[i]['title']} (${Object.keys(value[i]['items']).length})</li>`;
+			entryContent += `<li>${value[i]['title']} (${Object.keys(value[i]['items']).length}) <i name="popupDeleteCategory" data-wiki="${key}" data-category="${value[i]['title']}" class="clickable icon" title="${browser.i18n.getMessage("titleDelete")}">🗑</i></li>`;
 			sum += Object.keys(value[i]['items']).length;
 		}
 		entryContent += `</ul>`;
@@ -73,6 +89,7 @@ function fetchStream(dataStream) {
 	document.getElementsByName("popupShow").forEach(function(node) {node.addEventListener("click", showWiki);});
 	document.getElementsByName("popupExpand").forEach(function(node) {node.addEventListener("click", expandWiki);});
 	document.getElementsByName("popupDelete").forEach(function(node) {node.addEventListener("click", deleteWiki);});
+	document.getElementsByName("popupDeleteCategory").forEach(function(node) {node.addEventListener("click", deleteCategory);});
 	if(refresh)
 		showWiki();
 }
