@@ -76,12 +76,20 @@ function fetchStream(dataStream) {
 		value = JSON.parse(value);
 		var entries = value.length;
 		var sum = 0;
+		var hasError = false;
 		var entryContent = `<ul id="expand_list_${key}" class="category-list hidden">`;
 		for(let i = 0; i < value.length; i++) {
+			if(typeof value[i] !== 'object' || Object.keys(value[i]).length != 4) {
+				hasError = true;
+				break;
+			}
 			entryContent += `<li>${value[i]['title']} (${Object.keys(value[i]['items']).length}) <i name="popupDeleteCategory" data-wiki="${key}" data-category="${value[i]['title']}" class="clickable icon" title="${browser.i18n.getMessage("titleDelete")}">🗑</i></li>`;
 			sum += Object.keys(value[i]['items']).length;
 		}
-		entryContent += `</ul>`;
+		if(hasError)
+			entryContent = `<ul id="expand_list_${key}" class="category-list hidden"><li class="error">${browser.i18n.getMessage("errorPopupCorruptedCategory")}</li></ul>`;
+		else
+			entryContent += `</ul>`;
 		html += `<div><i id="expand_${key}" name="popupExpand" class="clickable icon" data-expanded="0" title="${browser.i18n.getMessage("titleOpen")}">↦</i> ${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")} <i id="del_${key}" name="popupDelete" class="clickable icon" title="${browser.i18n.getMessage("titleDelete")}">🗑</i></div>`;
 		html += entryContent;
 	}

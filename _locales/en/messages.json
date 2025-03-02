@@ -91,6 +91,10 @@
 		"message": "Category already saved!",
 		"description": "Error: the requested category has been fetched already."
 	},
+	"errorPopupCorruptedCategory": {
+		"message": "One or more categories of this wiki are corrupted. Please delete the wiki and save the categories again.",
+		"description": "Error: a category is found to be corrupted."
+	},
 	"errorWebReqFail": {
 		"message": "The requested webpage could not be loaded!",
 		"description": "Error: the requested web resource could not be loaded."

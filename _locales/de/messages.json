@@ -68,6 +68,9 @@
 	"errorCategoryAlreadySaved": {
 		"message": "Kategorie bereits gespeichert!"
 	},
+	"errorPopupCorruptedCategory": {
+		"message": "Eine oder mehrere Kategorien dieses Wiki sind fehlerhaft. Bitte löschen Sie das Wiki und speichern Sie die Kategorien erneut."
+	},
 	"errorWebReqFail": {
 		"message": "Die gewünschte Seite konnte nicht geladen werden!"
 	}
