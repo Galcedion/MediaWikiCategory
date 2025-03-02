@@ -3,7 +3,7 @@ strong {display: inline-block; margin-left: 0.5em; border-bottom: 1px solid blac
 strong[name="popupShow"] {margin-top: 0.5em;}
 h4 {margin: 0;}
 #error {border-bottom: 2px solid lightgray; border-radius: 0 0 5px 5px; min-height: 5px;}
-.refresh {position: absolute; right: calc(15% + 1em); font-style: normal; border-radius: 5px;}
+.refresh {position: absolute; right: calc(15% + 0.5em); margin: 0.5em; font-style: normal; border-radius: 5px;}
 .p_nav {background-color: lightgray; text-align: center;}
 .p_title {text-align: center; background-color: lightgray; font-weight: bold; padding: 1em; border-radius: 5px 5px 0 0;}
 .p_title ~ div {padding: 0 2px; border-left: 2px solid lightgray; border-right: 2px solid lightgray;}
@@ -11,8 +11,7 @@ h4 {margin: 0;}
 .hidden {visibility: hidden; display: none;}
 .nav_active {background-color: azure; font-weight: bold;}
 .section_title {padding: 5px 5px 0 5px; border-radius: 5px 5px 0 0;}
-.icon {filter: grayscale(1); font-style: normal; border-radius: 5px; transition: all 0.5s ease;}
-.icon:hover, .icon:active {filter: grayscale(1) drop-shadow(0 0 2px lightsteelblue);}
+.icon {vertical-align: text-top; border-radius: 5px;}
 .clickable {cursor: pointer; transition: all 0.5s ease;}
 .clickable:hover, .clickable:active {background-color: lightsteelblue;}
 .category-list {list-style: none; margin: 0;}
