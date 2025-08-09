@@ -38,25 +38,24 @@ function fetchStorage() {
 	sm.then(fetchStream);
 }
 
-// delete entire selected wiki from storage
+// delete either selected wiki or selected wiki category from storage
 function deleteWiki() {
-	browser.storage.local.remove(this.id.substring(4));
-	location.reload();
-}
-
-// delete single wiki category from storage
-function deleteCategory() {
 	var wiki = this.dataset.wiki;
-	var content = JSON.parse(storedData[wiki]);
-	for(let i = 0; i < content.length; i++) {
-		if(content[i]['title'] == this.dataset.category) {
-			content.splice(i, 1);
-			break;
+	if(this.hasAttribute('data-category')) {
+		var content = JSON.parse(storedData[wiki]);
+		for(let i = 0; i < content.length; i++) {
+			if(content[i]['title'] == this.dataset.category) {
+				content.splice(i, 1);
+				break;
+			}
 		}
+		storedData[wiki] = JSON.stringify(content);
+		browser.storage.local.set(storedData);
+		this.parentNode.remove();
+	} else {
+		browser.storage.local.remove(wiki);
+		location.reload();
 	}
-	storedData[wiki] = JSON.stringify(content);
-	browser.storage.local.set(storedData);
-	this.parentNode.remove();
 }
 
 // retrieve data from storage and create overview of all available wikis
@@ -81,21 +80,20 @@ function fetchStream(dataStream) {
 				hasError = true;
 				break;
 			}
-			entryContent += `<li>${value[i]['title']} (${Object.keys(value[i]['items']).length}) <img name="popupDeleteCategory" src="../heroicons/trash.svg" data-wiki="${key}" data-category="${value[i]['title']}" class="clickable icon" title="${browser.i18n.getMessage("titleDelete")}"></li>`;
+			entryContent += `<li>${value[i]['title']} (${Object.keys(value[i]['items']).length}) <img name="popupDelete" src="../heroicons/trash.svg" data-wiki="${key}" data-category="${value[i]['title']}" class="clickable icon" title="${browser.i18n.getMessage("titleDelete")}"></li>`;
 			sum += Object.keys(value[i]['items']).length;
 		}
 		if(hasError)
 			entryContent = `<ul id="expand_list_${key}" class="category-list hidden"><li class="error">${browser.i18n.getMessage("errorPopupCorruptedCategory")}</li></ul>`;
 		else
 			entryContent += `</ul>`;
-		html += `<div><img id="expand_${key}" name="popupExpand" src="../heroicons/arrows-pointing-out.svg" class="clickable icon" data-expanded="0" title="${browser.i18n.getMessage("titleOpen")}"> ${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")} <img id="del_${key}" name="popupDelete" src="../heroicons/trash.svg" class="clickable icon" title="${browser.i18n.getMessage("titleDelete")}"></div>`;
+		html += `<div><img id="expand_${key}" name="popupExpand" src="../heroicons/arrows-pointing-out.svg" class="clickable icon" data-expanded="0" title="${browser.i18n.getMessage("titleOpen")}"> ${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")} <img name="popupDelete" src="../heroicons/trash.svg" class="clickable icon" data-wiki="${key}" title="${browser.i18n.getMessage("titleDelete")}"></div>`;
 		html += entryContent;
 	}
 	document.getElementById("p_overview").innerHTML = html;
 	document.getElementsByName("popupShow").forEach(function(node) {node.addEventListener("click", showWiki);});
 	document.getElementsByName("popupExpand").forEach(function(node) {node.addEventListener("click", expandWiki);});
 	document.getElementsByName("popupDelete").forEach(function(node) {node.addEventListener("click", deleteWiki);});
-	document.getElementsByName("popupDeleteCategory").forEach(function(node) {node.addEventListener("click", deleteCategory);});
 	if(refresh)
 		showWiki();
 }
