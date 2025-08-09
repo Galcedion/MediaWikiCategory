@@ -1,26 +1,36 @@
 html {background-color: white; margin: 0 15%;}
-strong {display: inline-block; margin-left: 0.5em; border-bottom: 1px solid black; font-weight: normal;}
-strong[name="popupShow"] {margin-top: 0.5em;}
+strong {display: inline-block; border: 1px solid darkgray; font-weight: normal;}
+strong[name="popupShow"] {margin-top: 0.5em; margin-bottom: 0.25em;}
 h4 {margin: 0;}
+li {width: 50%; display: flex; border-radius: 5px; padding-left: 5px;}
+li:hover {background-color: lightblue;}
+label {margin: 0 5px; padding: 0 5px; border-radius: 5px;}
+#p_overview {padding: 0 1em;}
 #error {border-bottom: 2px solid lightgray; border-radius: 0 0 5px 5px; min-height: 5px;}
 .refresh {position: absolute; right: calc(15% + 0.5em); margin: 0.5em; font-style: normal; border-radius: 5px;}
 .p_nav {background-color: lightgray; text-align: center;}
 .p_title {text-align: center; background-color: lightgray; font-weight: bold; padding: 1em; border-radius: 5px 5px 0 0;}
-.p_title ~ div {padding: 0 2px; border-left: 2px solid lightgray; border-right: 2px solid lightgray;}
-.p_available > label:not(:last-child)::after {content: '|';}
+.p_title ~ div {border-left: 2px solid lightgray; border-right: 2px solid lightgray;}
+.p_available {padding-top: 1em;}
+.disabled {background-color: lightgray;}
 .hidden {visibility: hidden; display: none;}
-.nav_active {background-color: azure; font-weight: bold;}
+.active {background-color: lightblue!important; text-shadow:0px 0px 1px darkgray;}
 .section_title {padding: 5px 5px 0 5px; border-radius: 5px 5px 0 0;}
-.icon {vertical-align: text-top; border-radius: 5px;}
+.icon {vertical-align: text-top; border-radius: 5px; margin: 0 2px;}
 .clickable {cursor: pointer; transition: all 0.5s ease;}
+.clickable:not(.icon) {background-color: azure;}
 .clickable:hover, .clickable:active {background-color: lightsteelblue;}
 .category-list {list-style: none; margin: 0;}
+.flex-1 {flex: 1;}
+.flex-10 {flex: 10;}
+.text-center {text-align: center;}
+.text-right {text-align: right;}
 .math {padding: 2em 0;}
 .math i {padding: 0 5px;}
 .math select {text-align: center; border: 0; border-radius: 5px;}
+.math, .result-list {margin: 0 1em;}
 .result-list {width: fit-content;}
-.result-list p:last-child {margin-bottom: 0;}
-.result-entry {cursor: alias!important; margin: 5px 0; padding: 2px; border-radius: 5px;}
+.result-list div {display: flex; padding-bottom: 0.5em; flex-wrap: wrap;}
+.result-entry {cursor: alias!important; margin: 5px; padding: 5px; border-radius: 5px; flex-basis: calc(20% - 20px);}
 .clicked {background-color: lightgreen; transition: all 0.5s ease;}
 .error {background-color: orangered;}
-.disabled {background-color: lightgray;}

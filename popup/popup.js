@@ -18,16 +18,16 @@ function refreshData() {
 
 // toggle display to overview
 function showOverview() {
-	document.getElementById("p_nav_overview").classList.add("nav_active");
-	document.getElementById("p_nav_show").classList.remove("nav_active")
+	document.getElementById("p_nav_overview").classList.add("active");
+	document.getElementById("p_nav_show").classList.remove("active")
 	document.getElementById("p_overview").classList.remove("hidden");
 	document.getElementById("p_wiki").classList.add("hidden");
 }
 
 // toggle display to selected wiki
 function showSelected() {
-	document.getElementById("p_nav_overview").classList.remove("nav_active");
-	document.getElementById("p_nav_show").classList.add("nav_active")
+	document.getElementById("p_nav_overview").classList.remove("active");
+	document.getElementById("p_nav_show").classList.add("active")
 	document.getElementById("p_overview").classList.add("hidden");
 	document.getElementById("p_wiki").classList.remove("hidden");
 }
@@ -51,7 +51,7 @@ function deleteWiki() {
 		}
 		storedData[wiki] = JSON.stringify(content);
 		browser.storage.local.set(storedData);
-		this.parentNode.remove();
+		this.parentNode.parentNode.remove();
 	} else {
 		browser.storage.local.remove(wiki);
 		location.reload();
@@ -84,8 +84,9 @@ function fetchStream(dataStream) {
 				break;
 			}
 			entryContent += `<li>
-			${value[i]['title']} (${Object.keys(value[i]['items']).length})
-			<img name="popupDelete" src="../heroicons/trash.svg" data-wiki="${key}" data-category="${value[i]['title']}" class="clickable icon" title="${browser.i18n.getMessage("titleDelete")}">
+			<div class="flex-10">${value[i]['title']}</div>
+			<div class="flex-1 text-right">(${Object.keys(value[i]['items']).length})</div>
+			<div class="flex-1 text-center"><img name="popupDelete" src="../heroicons/trash.svg" data-wiki="${key}" data-category="${value[i]['title']}" class="clickable icon" title="${browser.i18n.getMessage("titleDelete")}"></div>
 			</li>`;
 			sum += Object.keys(value[i]['items']).length;
 		}
@@ -126,8 +127,8 @@ function showWiki() {
 	var wikiInfo = JSON.parse(storedData[toShow]);
 	var html = '';
 	wikiInfo.forEach(function(category) {
-		html += `<input type="checkbox" name="selected_cat" id="sc_${category.title}" value="${category.title}" class="clickable">
-		<label for="sc_${category.title}" class="clickable">
+		html += `<label for="sc_${category.title}" class="clickable">
+		<input type="checkbox" name="selected_cat" id="sc_${category.title}" value="${category.title}" class="clickable">
 		${category.title}
 		<i>(${Object.keys(category.items).length})</i>
 		</label>`;
@@ -265,7 +266,7 @@ function catCalc() {
 		html += `<p name="math_result" data-href="${getURLFromCategoryItem(wikiData, r)}" class="result-entry clickable">${r}</p>`;
 	});
 	if(Object.keys(resultList).length > 0)
-		html = `<h4>${browser.i18n.getMessage("popupMathResults")} <i>(${Object.keys(resultList).length})</i></h4>` + html;
+		html = `<h4>${browser.i18n.getMessage("popupMathResults")} <i>(${Object.keys(resultList).length})</i></h4><div>` + html + `</div>`;
 	else
 		html = `<h4>${browser.i18n.getMessage("popupMathResultsNone")}</h4>` + html;
 	document.getElementById("p_result").innerHTML = html;
