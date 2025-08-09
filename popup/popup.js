@@ -122,6 +122,13 @@ function showWiki() {
 		refresh = false;
 		return;
 	}
+	if(toShow == this.dataset.wiki) {
+		showSelected();
+		return;
+	} else if(toShow != null && toShow != this.dataset.wiki) {
+		document.getElementById("p_math").innerHTML = '';
+		document.getElementById("p_result").innerHTML = '';
+	}
 	if(!refresh)
 		toShow = this.dataset.wiki;
 	var wikiInfo = JSON.parse(storedData[toShow]);
