@@ -69,7 +69,10 @@ function fetchStream(dataStream) {
 	document.getElementById("p_overview").innerHTML = '';
 	var html = '';
 	for(let [key, value] of Object.entries(storedData)) {
-		html += `<strong id="show_${key}" name="popupShow" title="${browser.i18n.getMessage("titleOpen")}" class="section_title clickable"><img id="show_${key}" name="popupShow" src="../heroicons/globe-alt.svg" class="icon" title="${browser.i18n.getMessage("titleOpen")}"> ${key}</strong>`;
+		html += `<strong id="show_${key}" name="popupShow" title="${browser.i18n.getMessage("titleOpen")}" class="section_title clickable">
+		<img id="show_${key}" name="popupShow" src="../heroicons/globe-alt.svg" class="icon" title="${browser.i18n.getMessage("titleOpen")}">
+		${key}
+		</strong>`;
 		value = JSON.parse(value);
 		var entries = value.length;
 		var sum = 0;
@@ -80,19 +83,26 @@ function fetchStream(dataStream) {
 				hasError = true;
 				break;
 			}
-			entryContent += `<li>${value[i]['title']} (${Object.keys(value[i]['items']).length}) <img name="popupDelete" src="../heroicons/trash.svg" data-wiki="${key}" data-category="${value[i]['title']}" class="clickable icon" title="${browser.i18n.getMessage("titleDelete")}"></li>`;
+			entryContent += `<li>
+			${value[i]['title']} (${Object.keys(value[i]['items']).length})
+			<img name="popupDelete" src="../heroicons/trash.svg" data-wiki="${key}" data-category="${value[i]['title']}" class="clickable icon" title="${browser.i18n.getMessage("titleDelete")}">
+			</li>`;
 			sum += Object.keys(value[i]['items']).length;
 		}
 		if(hasError)
 			entryContent = `<ul id="expand_list_${key}" class="category-list hidden"><li class="error">${browser.i18n.getMessage("errorPopupCorruptedCategory")}</li></ul>`;
 		else
 			entryContent += `</ul>`;
-		html += `<div><img id="expand_${key}" name="popupExpand" src="../heroicons/arrows-pointing-out.svg" class="clickable icon" data-expanded="0" title="${browser.i18n.getMessage("titleOpen")}"> ${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")} <img name="popupDelete" src="../heroicons/trash.svg" class="clickable icon" data-wiki="${key}" title="${browser.i18n.getMessage("titleDelete")}"></div>`;
+		html += `<div>
+		<img id="expand_${key}" name="popupExpand" src="../heroicons/arrows-pointing-out.svg" class="icon${sum == 0 ? ' disabled' : ' clickable'}" data-wiki="${key}" data-expanded="0" title="${sum == 0 ? browser.i18n.getMessage("titleDisabled") : browser.i18n.getMessage("titleOpen")}">
+		${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")}
+		<img name="popupDelete" src="../heroicons/trash.svg" class="clickable icon" data-wiki="${key}" title="${browser.i18n.getMessage("titleDelete")}">
+		</div>`;
 		html += entryContent;
 	}
 	document.getElementById("p_overview").innerHTML = html;
 	document.getElementsByName("popupShow").forEach(function(node) {node.addEventListener("click", showWiki);});
-	document.getElementsByName("popupExpand").forEach(function(node) {node.addEventListener("click", expandWiki);});
+	document.getElementsByName("popupExpand").forEach(function(node) {if(!node.classList.contains('disabled')) {node.addEventListener("click", expandWiki);}});
 	document.getElementsByName("popupDelete").forEach(function(node) {node.addEventListener("click", deleteWiki);});
 	if(refresh)
 		showWiki();
@@ -116,7 +126,11 @@ function showWiki() {
 	var wikiInfo = JSON.parse(storedData[toShow]);
 	var html = '';
 	wikiInfo.forEach(function(category) {
-		html += `<input type="checkbox" name="selected_cat" id="sc_${category.title}" value="${category.title}" class="clickable"><label for="sc_${category.title}" class="clickable">${category.title} <i>(${Object.keys(category.items).length})</i></label>`;
+		html += `<input type="checkbox" name="selected_cat" id="sc_${category.title}" value="${category.title}" class="clickable">
+		<label for="sc_${category.title}" class="clickable">
+		${category.title}
+		<i>(${Object.keys(category.items).length})</i>
+		</label>`;
 	});
 
 	var pageList = document.getElementsByClassName("page");
@@ -136,15 +150,17 @@ function showWiki() {
 
 // expand the selected wiki and show its categories
 function expandWiki() {
-	var toExpand = document.getElementById('expand_list_' + this.id.substring(7));
+	var toExpand = document.getElementById('expand_list_' + this.dataset.wiki);
 	if(this.dataset.expanded == '1') {
 		toExpand.classList.add('hidden');
 		this.src = '../heroicons/arrows-pointing-out.svg';
 		this.dataset.expanded = 0;
+		this.title = browser.i18n.getMessage("titleOpen");
 	} else {
 		toExpand.classList.remove('hidden');
 		this.src = '../heroicons/arrows-pointing-in.svg';
 		this.dataset.expanded = 1;
+		this.title = browser.i18n.getMessage("titleClose");
 	}
 }
 

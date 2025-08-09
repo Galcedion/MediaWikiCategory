@@ -71,6 +71,14 @@
 		"message": "Open",
 		"description": "Mouseover title: open object."
 	},
+	"titleClose": {
+		"message": "Close",
+		"description": "Mouseover title: close object."
+	},
+	"titleDisabled": {
+		"message": "Disabled",
+		"description": "Mouseover title: interaction disabled."
+	},
 	"titleSave": {
 		"message": "Save",
 		"description": "Mouseover title: save object."

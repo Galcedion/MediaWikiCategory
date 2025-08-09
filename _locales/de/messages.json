@@ -53,6 +53,12 @@
 	"titleOpen": {
 		"message": "Öffnen"
 	},
+	"titleClose": {
+		"message": "Schließen"
+	},
+	"titleDisabled": {
+		"message": "Nicht verfügbar"
+	},
 	"titleSave": {
 		"message": "Speichern"
 	},
