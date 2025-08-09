@@ -296,7 +296,8 @@ function getURLFromCategoryItem(data, itemName) {
 	var url;
 	data.forEach(function(d) {
 		if(typeof d['items'][itemName] !== 'undefined') {
-			url = `${d['protocol']}//${toShow}/${d['items'][itemName]}`;
+			let iname = (d['items'][itemName][0] == '/' ? '' : '/') + d['items'][itemName];
+			url = `${d['protocol']}//${toShow}${iname}`;
 		}
 	});
 	return url;
