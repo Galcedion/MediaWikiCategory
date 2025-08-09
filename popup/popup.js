@@ -21,7 +21,7 @@ function showOverview() {
 	document.getElementById("p_nav_overview").classList.add("nav_active");
 	document.getElementById("p_nav_show").classList.remove("nav_active")
 	document.getElementById("p_overview").classList.remove("hidden");
-	document.getElementById("p_wiki").classList.add("hidden")
+	document.getElementById("p_wiki").classList.add("hidden");
 }
 
 // toggle display to selected wiki
@@ -29,7 +29,7 @@ function showSelected() {
 	document.getElementById("p_nav_overview").classList.remove("nav_active");
 	document.getElementById("p_nav_show").classList.add("nav_active")
 	document.getElementById("p_overview").classList.add("hidden");
-	document.getElementById("p_wiki").classList.remove("hidden")
+	document.getElementById("p_wiki").classList.remove("hidden");
 }
 
 // main storage function, creating a promise
@@ -40,18 +40,16 @@ function fetchStorage() {
 
 // delete entire selected wiki from storage
 function deleteWiki() {
-	var toDel = this.id.substring(4);
-	browser.storage.local.remove(toDel);
+	browser.storage.local.remove(this.id.substring(4));
 	location.reload();
 }
 
 // delete single wiki category from storage
 function deleteCategory() {
 	var wiki = this.dataset.wiki;
-	var category = this.dataset.category;
 	var content = JSON.parse(storedData[wiki]);
 	for(let i = 0; i < content.length; i++) {
-		if(content[i]['title'] == category) {
+		if(content[i]['title'] == this.dataset.category) {
 			content.splice(i, 1);
 			break;
 		}
@@ -78,7 +76,7 @@ function fetchStream(dataStream) {
 		var sum = 0;
 		var hasError = false;
 		var entryContent = `<ul id="expand_list_${key}" class="category-list hidden">`;
-		for(let i = 0; i < value.length; i++) {
+		for(let i = 0; i < entries; i++) {
 			if(typeof value[i] !== 'object' || Object.keys(value[i]).length != 4) {
 				hasError = true;
 				break;
@@ -123,7 +121,7 @@ function showWiki() {
 		html += `<input type="checkbox" name="selected_cat" id="sc_${category.title}" value="${category.title}" class="clickable"><label for="sc_${category.title}" class="clickable">${category.title} <i>(${Object.keys(category.items).length})</i></label>`;
 	});
 
-	var pageList = document.getElementsByClassName("page")
+	var pageList = document.getElementsByClassName("page");
 	for(let i = 0; i < pageList.length; i++) {
 		if(pageList[i].id == toShow)
 			pageList[i].classList.remove('hidden');
@@ -135,17 +133,13 @@ function showWiki() {
 	document.getElementById("p_nav_show").addEventListener("click", showSelected);
 	document.getElementById("p_nav_show").classList.add("clickable");
 	document.getElementById("p_nav_show").innerHTML = toShow;
-	if(refresh)
-		refresh = false;
-	else
-		showSelected();
+	refresh ? refresh = false : showSelected();
 }
 
 // expand the selected wiki and show its categories
 function expandWiki() {
 	var toExpand = document.getElementById('expand_list_' + this.id.substring(7));
-	var expandState = this.dataset.expanded;
-	if(expandState == '1') {
+	if(this.dataset.expanded == '1') {
 		toExpand.classList.add('hidden');
 		this.src = '../heroicons/arrows-pointing-out.svg';
 		this.dataset.expanded = 0;
@@ -159,8 +153,7 @@ function expandWiki() {
 // create calculation overview based on selected categories
 function addCatCalc() {
 	var caller = this.value;
-	var checked = this.checked;
-	if(!checked) {
+	if(!this.checked) {
 		if(Object.keys(selectedCategories).length == 1)
 			selectedCategories = {};
 		else {
@@ -171,7 +164,7 @@ function addCatCalc() {
 					selectedCategories[j] = selectedCategories[j + 2];
 				}
 				delete selectedCategories[Object.keys(selectedCategories).length - 1];
-				delete selectedCategories[Object.keys(selectedCategories).length -1];
+				delete selectedCategories[Object.keys(selectedCategories).length - 1];
 			}
 		}
 	} else {

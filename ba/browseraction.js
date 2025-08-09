@@ -21,7 +21,7 @@ function checkTabWiki(tabData) {
 	if(!tabData.wiki) // if no wiki
 		document.getElementById("ba_current").textContent = browser.i18n.getMessage("browserActionNoWiki");
 	else { // else display available categories
-		let html = `<h4>${browser.i18n.getMessage("browserActionAvailableCategories")}</h4>`;
+		var html = `<h4>${browser.i18n.getMessage("browserActionAvailableCategories")}</h4>`;
 		for(const [k, v] of Object.entries(tabData.categories)) {
 			html += `<p name="currentCategories" data-name="${k}" data-href="${v}" title="${browser.i18n.getMessage("titleSave")}"><img src="../heroicons/folder-arrow-down.svg" class="icon"> ${k}</p>`;
 		}

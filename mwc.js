@@ -32,13 +32,11 @@ function mwc_attach() {
 function mwc_addListener(n) {
 	availableCategories[n.textContent] = n.href;
 	n.addEventListener("contextmenu", function() {
-		var targetTitle = n.textContent;
-		var targetHref = n.href;
 		browser.runtime.sendMessage({
 			task: 'enableCM',
 			enableCM: true,
-			title: targetTitle,
-			href: targetHref,
+			title: n.textContent,
+			href: n.href,
 			caller: curURL
 		});
 	});
