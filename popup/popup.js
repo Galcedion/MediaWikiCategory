@@ -69,8 +69,8 @@ function fetchStream(dataStream) {
 	document.getElementById("p_overview").innerHTML = '';
 	var html = '';
 	for(let [key, value] of Object.entries(storedData)) {
-		html += `<strong id="show_${key}" name="popupShow" title="${browser.i18n.getMessage("titleOpen")}" class="section_title clickable">
-		<img id="show_${key}" name="popupShow" src="../heroicons/globe-alt.svg" class="icon" title="${browser.i18n.getMessage("titleOpen")}">
+		html += `<strong name="popupShow" title="${browser.i18n.getMessage("titleOpen")}" class="section_title clickable" data-wiki="${key}">
+		<img name="popupShow" src="../heroicons/globe-alt.svg" class="icon" data-wiki="${key}" title="${browser.i18n.getMessage("titleOpen")}">
 		${key}
 		</strong>`;
 		value = JSON.parse(value);
@@ -123,7 +123,7 @@ function showWiki() {
 		return;
 	}
 	if(!refresh)
-		toShow = this.id.substring(5);
+		toShow = this.dataset.wiki;
 	var wikiInfo = JSON.parse(storedData[toShow]);
 	var html = '';
 	wikiInfo.forEach(function(category) {
