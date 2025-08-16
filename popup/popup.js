@@ -212,7 +212,7 @@ function addCatCalc() {
 function generateOperators(operatorID, value) {
 	var operator = '';
 	operator += `<select id="operator_${operatorID}" name="math_operator" class="clickable">`;
-	['OR', 'NOR', 'AND', 'NAND', 'XOR', 'XNOR'].forEach(function(o) {
+	['OR', 'AND', 'XOR'/* 'NOR', 'NAND', 'XNOR'*/].forEach(function(o) {
 		if(o == value)
 			operator += `<option selected>${o}</option>`;
 		else
@@ -246,21 +246,21 @@ function catCalc() {
 				case 'AND':
 					resultList = calcAND(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']));
 					break;
-				case 'NAND':
+				/*case 'NAND':
 					resultList = calcAND(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), true);
-					break;
+					break;*/
 				case 'OR':
 					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']));
 					break;
-				case 'NOR':
+				/*case 'NOR':
 					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), true);
-					break;
+					break;*/
 				case 'XOR':
 					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), false, true);
 					break;
-				case 'XNOR':
+				/*case 'XNOR':
 					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), true, true);
-					break;
+					break;*/
 				default:
 					break;
 			}
