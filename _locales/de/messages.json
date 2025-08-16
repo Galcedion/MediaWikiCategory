@@ -65,7 +65,16 @@
 	"titleDelete": {
 		"message": "Löschen"
 	},
-		"errorDialogTitle": {
+	"titleAND": {
+		"message": "Ein Eintrag muss sowohl in der linken Liste als auch in der Kategorie auf der rechten Seite enthalten sein."
+	},
+	"titleOR": {
+		"message": "Ein Eintrag kann in der linken Liste oder der Kategorie auf der rechten Seite oder beiden enthalten sein."
+	},
+	"titleXOR": {
+		"message": "Ein Eintrag muss entweder in der linken Liste oder der Kategorie auf der rechten Seite enthalten sein, aber nicht in beiden."
+	},
+	"errorDialogTitle": {
 		"message": "MediaWiki Category AddOn Fehler"
 	},
 	"errorDialogOK": {

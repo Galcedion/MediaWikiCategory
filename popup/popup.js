@@ -9,6 +9,12 @@ var selectedCategories;
 var toShow = null;
 var calculatedElements;
 var refresh = false;
+var operatorList = {
+	'AND': {'title': browser.i18n.getMessage("titleAND")},
+	'OR': {'title': browser.i18n.getMessage("titleOR")},
+	'XOR': {'title': browser.i18n.getMessage("titleXOR")}
+	/* 'NOR', 'NAND', 'XNOR'*/
+};
 
 // refresh data and rebuild UI
 function refreshData() {
@@ -212,11 +218,8 @@ function addCatCalc() {
 function generateOperators(operatorID, value) {
 	var operator = '';
 	operator += `<select id="operator_${operatorID}" name="math_operator" class="clickable">`;
-	['OR', 'AND', 'XOR'/* 'NOR', 'NAND', 'XNOR'*/].forEach(function(o) {
-		if(o == value)
-			operator += `<option selected>${o}</option>`;
-		else
-			operator += `<option>${o}</option>`;
+	Object.keys(operatorList).forEach(function(o) {
+		operator += `<option title="${operatorList[o].title}"${o == value ? ' selected' : ''}>${o}</option>`;
 	});
 	operator += `</select>`;
 	return operator;

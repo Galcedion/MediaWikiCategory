@@ -87,6 +87,18 @@
 		"message": "Delete",
 		"description": "Mouseover title: delete object."
 	},
+	"titleAND": {
+		"message": "An entry must be contained in both the lefthand list as well as in the category on the right.",
+		"description": "Mouseover title: logical AND."
+	},
+	"titleOR": {
+		"message": "An entry can be contained either in the lefthand list or the category on the right, or both.",
+		"description": "Mouseover title: logical OR."
+	},
+	"titleXOR": {
+		"message": "An entry must be contained either in the lefthand list or the category on the right, but not in both.",
+		"description": "Mouseover title: logical XOR."
+	},
 	"errorDialogTitle": {
 		"message": "MediaWiki Category Extension Error",
 		"description": "Error: title of the dialog popup."
