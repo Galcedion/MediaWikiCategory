@@ -5,6 +5,7 @@ h4 {margin: 0;}
 li {width: 50%; display: flex; border-radius: 5px; padding-left: 5px;}
 li:hover {background-color: lightblue;}
 label {margin: 0 5px; padding: 0 5px; border-radius: 5px;}
+input.clickable {border: 1px solid darkgray; border-radius: 5px;}
 #p_overview {padding: 0 1em;}
 #error {border-bottom: 2px solid lightgray; border-radius: 0 0 5px 5px; min-height: 5px;}
 .refresh {position: absolute; right: calc(15% + 0.5em); margin: 0.5em; font-style: normal; border-radius: 5px;}
@@ -31,6 +32,8 @@ label {margin: 0 5px; padding: 0 5px; border-radius: 5px;}
 .math, .result-list {margin: 0 1em;}
 .result-list {width: fit-content;}
 .result-list div {display: flex; padding-bottom: 0.5em; flex-wrap: wrap;}
+.result-list label {margin-left: 5rem;}
+.result-list input[type="button"] {margin-left: 1rem;}
 .result-entry {cursor: alias!important; margin: 5px; padding: 5px; border-radius: 5px; flex-basis: calc(20% - 20px);}
 .clicked {background-color: lightgreen; transition: all 0.5s ease;}
 .error {background-color: orangered;}

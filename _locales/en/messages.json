@@ -67,6 +67,14 @@
 		"message": "No results, please check your calculation.",
 		"description": "Popup display, results headline for math operations with no results."
 	},
+	"popupMathResultsFilter": {
+		"message": "Filter results",
+		"description": "Popup display, filter label."
+	},
+	"popupMathResultsFilterReset": {
+		"message": "Reset",
+		"description": "Popup display, reset filter."
+	},
 	"titleOpen": {
 		"message": "Open",
 		"description": "Mouseover title: open object."

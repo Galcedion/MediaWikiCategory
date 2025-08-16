@@ -275,12 +275,18 @@ function catCalc() {
 	resultList.forEach(function(r) {
 		html += `<p name="math_result" data-href="${getURLFromCategoryItem(wikiData, r)}" class="result-entry clickable">${r}</p>`;
 	});
-	if(Object.keys(resultList).length > 0)
-		html = `<h4>${browser.i18n.getMessage("popupMathResults")} <i>(${Object.keys(resultList).length})</i></h4><div>` + html + `</div>`;
-	else
+	if(Object.keys(resultList).length > 0) {
+		html = `<div><h4>${browser.i18n.getMessage("popupMathResults")} <i>(${Object.keys(resultList).length})</i></h4>
+		<label for="resultFilter">${browser.i18n.getMessage("popupMathResultsFilter")}</label><input id="resultFilter" type="text">
+		<input id="resultFilterReset" type="button" class="clickable" value="${browser.i18n.getMessage("popupMathResultsFilterReset")}"></div>
+		<div>` + html + `</div>`;
+	} else {
 		html = `<h4>${browser.i18n.getMessage("popupMathResultsNone")}</h4>` + html;
+	}
 	document.getElementById("p_result").innerHTML = html;
 	document.getElementsByName("math_result").forEach(function(node) {node.addEventListener("click", openTab);});
+	document.getElementById("resultFilter").addEventListener("keyup", filterResults);
+	document.getElementById("resultFilterReset").addEventListener("click", filterResultsReset);
 }
 
 // retrieve all items of a category
@@ -347,6 +353,18 @@ function calcOR(a, b, not = false, xor = false) {
 function openTab() {
 	browser.tabs.create({'active': false, 'url': this.getAttribute('data-href')});
 	this.classList.add('clicked');
+}
+
+// filter resultlist by live-input
+function filterResults() {
+	let filter = this.value;
+	document.getElementsByName('math_result').forEach(function(elem) {elem.innerHTML.includes(filter) || filter.length == 0 ? elem.classList.remove('hidden') : elem.classList.add('hidden');});
+}
+
+// reset filtering of resultlist
+function filterResultsReset() {
+	document.getElementById('resultFilter').value = '';
+	document.querySelectorAll('[name="math_result"].hidden').forEach(function(elem) {elem.classList.remove('hidden');});
 }
 
 window.onload = fetchStorage();

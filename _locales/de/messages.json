@@ -50,6 +50,12 @@
 	"popupMathResultsNone": {
 		"message": "Keine Ergebnisse, bitte prüfen Sie die Eingabe."
 	},
+	"popupMathResultsFilter": {
+		"message": "Ergebnisse filtern"
+	},
+	"popupMathResultsFilterReset": {
+		"message": "Zurücksetzen"
+	},
 	"titleOpen": {
 		"message": "Öffnen"
 	},
