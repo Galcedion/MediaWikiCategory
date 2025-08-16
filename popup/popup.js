@@ -113,6 +113,10 @@ function fetchStream(dataStream) {
 	document.getElementsByName("popupDelete").forEach(function(node) {node.addEventListener("click", deleteWiki);});
 	if(refresh)
 		showWiki();
+	let instantOpen = new URLSearchParams(window.location.search).get('wiki');
+	if(instantOpen !== null) {
+		document.querySelector(`.section_title[data-wiki="${instantOpen}"]`).click();
+	}
 }
 
 // display selected wiki and stored categories of said wiki

@@ -20,6 +20,9 @@
 	"browserActionOpenPopup": {
 		"message": "Komplettübersicht öffnen"
 	},
+	"browserActionOpenPopupDetail": {
+		"message": "Übersicht öffnen für"
+	},
 	"browserActionAvailableCategories": {
 		"message": "Verfügbare Kategorien (aktueller Tab)"
 	},

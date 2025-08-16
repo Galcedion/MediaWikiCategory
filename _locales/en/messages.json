@@ -25,7 +25,11 @@
 	},
 	"browserActionOpenPopup": {
 		"message": "Open full overview",
-		"description": "BroswerAction: open the Popup."
+		"description": "BroswerAction: open the general Popup."
+	},
+	"browserActionOpenPopupDetail": {
+		"message": "Open overview for",
+		"description": "BroswerAction: open the Popup with a specific wiki."
 	},
 	"browserActionAvailableCategories": {
 		"message": "Available Categories (current tab)",

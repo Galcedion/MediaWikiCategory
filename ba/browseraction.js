@@ -2,6 +2,7 @@ document.getElementById("ba_title").textContent = browser.i18n.getMessage("exten
 document.getElementById("ba_popup").value = browser.i18n.getMessage("browserActionOpenPopup");
 document.getElementById("ba_popup").addEventListener("click", openTab);
 var lastSelected;
+var detailTarget = false;
 
 // entry point for browser action
 // access current tab to check for wiki presence
@@ -21,6 +22,8 @@ function checkTabWiki(tabData) {
 	if(!tabData.wiki) // if no wiki
 		document.getElementById("ba_current").textContent = browser.i18n.getMessage("browserActionNoWiki");
 	else { // else display available categories
+		document.getElementById("ba_popup").value = browser.i18n.getMessage("browserActionOpenPopupDetail") + ': ' + tabData.name;
+		detailTarget = tabData.name;
 		var html = `<h4>${browser.i18n.getMessage("browserActionAvailableCategories")}</h4>`;
 		for(const [k, v] of Object.entries(tabData.categories)) {
 			html += `<p name="currentCategories" data-name="${k}" data-href="${v}" title="${browser.i18n.getMessage("titleSave")}"><img src="../heroicons/folder-arrow-down.svg" class="icon"> ${k}</p>`;
@@ -32,7 +35,10 @@ function checkTabWiki(tabData) {
 
 // open popup.html in a new tab
 function openTab() {
-	browser.tabs.create({'active': false, 'url': '../popup/popup.html'});
+	let targetURL = '../popup/popup.html';
+	if(detailTarget)
+		targetURL += '?wiki=' + detailTarget;
+	browser.tabs.create({'active': false, 'url': targetURL});
 }
 
 // send call to current tab to save the selected category

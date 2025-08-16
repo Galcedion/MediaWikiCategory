@@ -46,7 +46,7 @@ function mwc_addListener(n) {
 function contentMessageListener(listener) {
 	switch(listener.task) {
 		case 'getWiki': // event source: browseraction.js
-			return Promise.resolve({'wiki': isWiki, 'categories': availableCategories});
+			return Promise.resolve({'wiki': isWiki, 'categories': availableCategories, 'name': curHostname});
 			break;
 		case 'save': // event source: browseraction.js
 			browser.runtime.sendMessage({
