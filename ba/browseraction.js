@@ -30,6 +30,7 @@ function checkTabWiki(tabData) {
 		}
 		document.getElementById("ba_current").innerHTML = html;
 		document.getElementsByName("currentCategories").forEach(function(node) {node.addEventListener("click", saveCategory);});
+		fetchStorage();
 	}
 }
 
@@ -66,6 +67,24 @@ function contentMessageListener(listener) {
 				return;
 			raiseError(lastSelected, listener.error);
 			break;
+	}
+}
+
+// main storage function, creating a promise
+function fetchStorage() {
+	var sm = browser.storage.local.get(null);
+	sm.then(fetchStream);
+}
+
+// retrieving storage stream, checking current wiki for categories already stored
+function fetchStream(dataStream) {
+	for(let [key, value] of Object.entries(dataStream)) {
+		if(key == detailTarget) {
+			let storedCategories = [];
+			JSON.parse(value).forEach(function(elem) {storedCategories.push(elem.title);});
+			document.getElementsByName('currentCategories').forEach(function(node) {if(storedCategories.includes(node.dataset.name)) node.classList.add('saved');});
+			break;
+		}
 	}
 }
 

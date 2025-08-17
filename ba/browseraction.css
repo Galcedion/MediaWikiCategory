@@ -1,6 +1,6 @@
 html {background-color: white;}
 h4 {margin: 0; padding-bottom: 5px;}
-p {cursor: copy; margin: 0; padding: 0.25em; border-radius: 5px; transition: all 0.25s ease;}
+p {cursor: copy; margin: 0.25em 0; padding: 0.25em; border-radius: 5px; transition: all 0.25s ease;}
 p:hover, p:active {background-color: lightsteelblue;}
 #ba_popup {margin: 5px 0;}
 #error {border-bottom: 2px solid lightgray; border-radius: 0 0 5px 5px; min-height: 5px;}
