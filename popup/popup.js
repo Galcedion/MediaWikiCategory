@@ -277,7 +277,7 @@ function catCalc() {
 	var html = '';
 	resultList.sort();
 	resultList.forEach(function(r) {
-		html += `<p name="math_result" data-href="${getURLFromCategoryItem(wikiData, r)}" class="result-entry clickable">${r}</p>`;
+		html += `<a href="${getURLFromCategoryItem(wikiData, r)}" target="_blank" class="result-entry clickable">${r}</a>`;
 	});
 	if(Object.keys(resultList).length > 0) {
 		html = `<div><h4>${browser.i18n.getMessage("popupMathResults")} <i>(${Object.keys(resultList).length})</i></h4>
@@ -288,7 +288,6 @@ function catCalc() {
 		html = `<h4>${browser.i18n.getMessage("popupMathResultsNone")}</h4>` + html;
 	}
 	document.getElementById("p_result").innerHTML = html;
-	document.getElementsByName("math_result").forEach(function(node) {node.addEventListener("click", openTab);});
 	document.getElementById("resultFilter").addEventListener("keyup", filterResults);
 	document.getElementById("resultFilterReset").addEventListener("click", filterResultsReset);
 }

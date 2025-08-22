@@ -34,6 +34,6 @@ input.clickable {border: 1px solid darkgray; border-radius: 5px;}
 .result-list div {display: flex; padding-bottom: 0.5em; flex-wrap: wrap;}
 .result-list label {margin-left: 5rem;}
 .result-list input[type="button"] {margin-left: 1rem;}
-.result-entry {cursor: alias!important; margin: 5px; padding: 5px; border-radius: 5px; flex-basis: calc(20% - 20px);}
+.result-entry {cursor: alias!important; margin: 5px; padding: 5px; text-decoration: none; color: inherit; border-radius: 5px; flex-basis: calc(20% - 20px);}
 .clicked {background-color: lightgreen; transition: all 0.5s ease;}
 .error {background-color: orangered;}
