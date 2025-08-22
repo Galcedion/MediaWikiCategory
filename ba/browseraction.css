@@ -1,6 +1,7 @@
 html {background-color: white;}
-h4 {margin: 0; padding-bottom: 5px;}
-p {cursor: copy; margin: 0.25em 0; padding: 0.25em; border-radius: 5px; transition: all 0.25s ease;}
+h4 {margin: 0; margin-bottom: 0.25em; padding-bottom: 5px; text-align: center; border-bottom: 1px solid darkgray;}
+p {cursor: copy; margin: 0; padding: 0.25em; border-radius: 5px; transition: all 0.25s ease;}
+p + p {margin-top: 0.25em;}
 p:hover, p:active {background-color: lightsteelblue;}
 #ba_popup {margin: 5px 0;}
 #error {border-bottom: 2px solid lightgray; border-radius: 0 0 5px 5px; min-height: 5px;}
@@ -9,4 +10,5 @@ p:hover, p:active {background-color: lightsteelblue;}
 .input {text-align: center;}
 .icon {vertical-align: text-top;}
 .saved {background-color: lightgreen;}
+.saved:hover, .saved:active {background-color: green; cursor: no-drop;}
 .error {background-color: orangered;}
