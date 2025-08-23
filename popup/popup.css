@@ -1,14 +1,16 @@
 html {background-color: white; margin: 0 15%;}
-strong {display: inline-block; border: 1px solid darkgray; font-weight: normal;}
-strong[name="popupShow"] {margin-top: 0.5em; margin-bottom: 0.25em;}
+strong {display: inline-block; border: 1px solid darkgray; border-bottom: 0; font-weight: normal;}
+strong[name="popupShow"] {margin-top: 0.5em;}
 h4 {margin: 0;}
-li {width: 50%; display: flex; border-radius: 5px; padding-left: 5px;}
+ul {padding-bottom: 0.25em; border: 1px solid darkgray; border-top: 0; border-radius: 0 0 5px 5px;}
+li {width: 50%; display: flex; padding-left: 5px; border-radius: 5px; transition: }
 li:hover {background-color: lightblue;}
+li + li {margin-top: 0.25em;}
 label {margin: 0 5px; padding: 0 5px; border-radius: 5px;}
 input.clickable {border: 1px solid darkgray; border-radius: 5px;}
 #p_overview {padding: 0 1em;}
+#p_overview > div {padding: 0.5em 0.25em; border: 1px solid darkgray; border-radius: 0 5px 5px 5px;}
 #error {border-bottom: 2px solid lightgray; border-radius: 0 0 5px 5px; min-height: 5px;}
-.refresh {position: absolute; right: calc(15% + 0.5em); margin: 0.5em; font-style: normal; border-radius: 5px;}
 .p_nav {background-color: lightgray; text-align: center;}
 .p_title {text-align: center; background-color: lightgray; font-weight: bold; padding: 1em; border-radius: 5px 5px 0 0;}
 .p_title ~ div {border-left: 2px solid lightgray; border-right: 2px solid lightgray;}
@@ -18,6 +20,7 @@ input.clickable {border: 1px solid darkgray; border-radius: 5px;}
 .active {background-color: lightblue!important; text-shadow:0px 0px 1px darkgray;}
 .section_title {padding: 5px 5px 0 5px; border-radius: 5px 5px 0 0;}
 .icon {vertical-align: text-top; border-radius: 5px; margin: 0 2px;}
+.refresh {position: absolute; right: calc(15% + 0.5em); margin: 1em; font-style: normal; border-radius: 5px;}
 .clickable {cursor: pointer; transition: all 0.5s ease;}
 .clickable:not(.icon) {background-color: azure;}
 .clickable:hover, .clickable:active {background-color: lightsteelblue;}
@@ -36,4 +39,5 @@ input.clickable {border: 1px solid darkgray; border-radius: 5px;}
 .result-list input[type="button"] {margin-left: 1rem;}
 .result-entry {cursor: alias!important; margin: 5px; padding: 5px; text-decoration: none; color: inherit; border-radius: 5px; flex-basis: calc(20% - 20px);}
 .clicked {background-color: lightgreen; transition: all 0.5s ease;}
+.border-merge {border-bottom: 0!important; border-radius: 0 5px 0 0!important;}
 .error {background-color: orangered;}

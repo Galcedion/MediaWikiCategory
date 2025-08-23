@@ -163,11 +163,13 @@ function expandWiki() {
 		this.src = '../heroicons/arrows-pointing-out.svg';
 		this.dataset.expanded = 0;
 		this.title = browser.i18n.getMessage("titleOpen");
+		toExpand.previousElementSibling.classList.remove('border-merge');
 	} else {
 		toExpand.classList.remove('hidden');
 		this.src = '../heroicons/arrows-pointing-in.svg';
 		this.dataset.expanded = 1;
 		this.title = browser.i18n.getMessage("titleClose");
+		toExpand.previousElementSibling.classList.add('border-merge');
 	}
 }
 
