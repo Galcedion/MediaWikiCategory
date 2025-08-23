@@ -1,14 +1,26 @@
-html {background-color: white;}
-h4 {margin: 0; margin-bottom: 0.25em; padding-bottom: 5px; text-align: center; border-bottom: 1px solid darkgray;}
+:root {
+  --white: white;
+  --bg: lightgray;
+  --border: darkgray;
+  --active: lightblue;
+  --active-f: aquamarine;
+  --clickable: lightsteelblue;
+  --clickable-f: steelblue;
+  --success: lightgreen;
+  --success-f: green;
+  --warn: red;
+}
+html {background-color: var(--white);}
+h4 {margin: 0; margin-bottom: 0.25em; padding-bottom: 5px; text-align: center; border-bottom: 1px solid var(--border);}
 p {cursor: copy; margin: 0; padding: 0.25em; border-radius: 5px; transition: all 0.25s ease;}
 p + p {margin-top: 0.25em;}
-p:hover, p:active {background-color: lightsteelblue;}
+p:hover, p:active {background-color: var(--clickable);}
 #ba_popup {margin: 5px 0;}
-#error {border-bottom: 2px solid lightgray; border-radius: 0 0 5px 5px; min-height: 5px;}
-.ba_title {text-align: center; background-color: lightgray; padding: 5px 5em; border-radius: 5px 5px 0 0;}
-.ba_title ~ div {padding: 0 2px; border-left: 2px solid lightgray; border-right: 2px solid lightgray;}
+#error {border-bottom: 2px solid var(--bg); border-radius: 0 0 5px 5px; min-height: 5px;}
+.ba_title {text-align: center; background-color: var(--bg); padding: 5px 5em; border-radius: 5px 5px 0 0;}
+.ba_title ~ div {padding: 0 2px; border-left: 2px solid var(--bg); border-right: 2px solid var(--bg);}
 .input {text-align: center;}
 .icon {vertical-align: text-top;}
-.saved {background-color: lightgreen;}
-.saved:hover, .saved:active {background-color: green; cursor: no-drop;}
-.error {background-color: orangered;}
+.saved {background-color: var(--success);}
+.saved:hover, .saved:active {background-color: var(--success-f); cursor: no-drop;}
+.error {background-color: var(--warn); color: var(--white);}
