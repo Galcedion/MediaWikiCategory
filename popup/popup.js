@@ -7,8 +7,6 @@ document.getElementById("p_nav_overview").addEventListener("click", showOverview
 var storedData;
 var selectedCategories;
 var toShow = null;
-var calculatedElements;
-var refresh = false;
 var operatorList = {
 	'AND': {'title': browser.i18n.getMessage("titleAND")},
 	'OR': {'title': browser.i18n.getMessage("titleOR")},
@@ -18,8 +16,10 @@ var operatorList = {
 
 // refresh data and rebuild UI
 function refreshData() {
-	refresh = true;
 	fetchStorage();
+	if(toShow !== null) {
+		showWiki();
+	}
 }
 
 // toggle display to overview
@@ -60,7 +60,7 @@ function deleteWiki() {
 		this.parentNode.parentNode.remove();
 	} else {
 		browser.storage.local.remove(wiki);
-		location.reload();
+		refreshData();
 	}
 }
 
@@ -111,8 +111,6 @@ function fetchStream(dataStream) {
 	document.getElementsByName("popupShow").forEach(function(node) {node.addEventListener("click", showWiki);});
 	document.getElementsByName("popupExpand").forEach(function(node) {if(!node.classList.contains('disabled')) {node.addEventListener("click", expandWiki);}});
 	document.getElementsByName("popupDelete").forEach(function(node) {node.addEventListener("click", deleteWiki);});
-	if(refresh)
-		showWiki();
 	let instantOpen = new URLSearchParams(window.location.search).get('wiki');
 	if(instantOpen !== null) {
 		document.querySelector(`.section_title[data-wiki="${instantOpen}"]`).click();
@@ -127,23 +125,18 @@ function showWiki() {
 	 * items - Obj. of k (string) - v (URL)
 	 */
 	selectedCategories = {};
-	calculatedElements = [];
-	if(refresh && toShow === null) {
-		refresh = false;
-		return;
-	}
-	if(toShow == this.dataset.wiki) {
+	if('dataset' in this && toShow == this.dataset.wiki) {
 		showSelected();
 		return;
-	} else if(toShow != null && toShow != this.dataset.wiki) {
+	}
+	if(toShow !== null) {
 		document.getElementById("p_math").innerHTML = '';
 		document.getElementById("p_result").innerHTML = '';
 	}
-	if(!refresh)
+	if('dataset' in this)
 		toShow = this.dataset.wiki;
-	var wikiInfo = JSON.parse(storedData[toShow]);
 	var html = '';
-	wikiInfo.forEach(function(category) {
+	JSON.parse(storedData[toShow]).forEach(function(category) {
 		html += `<label for="sc_${category.title}" class="clickable">
 		<input type="checkbox" name="selected_cat" id="sc_${category.title}" value="${category.title}" class="clickable">
 		${category.title}
@@ -151,19 +144,15 @@ function showWiki() {
 		</label>`;
 	});
 
-	var pageList = document.getElementsByClassName("page");
-	for(let i = 0; i < pageList.length; i++) {
-		if(pageList[i].id == toShow)
-			pageList[i].classList.remove('hidden');
-		else
-			pageList[i].classList.add('hidden');
+	if(!document.getElementById("p_nav_show").classList.contains("clickable")) {
+		document.getElementById("p_nav_show").addEventListener("click", showSelected);
+		document.getElementById("p_nav_show").classList.add("clickable");
 	}
+	document.getElementById("p_nav_show").textContent = toShow;
 	document.getElementById("p_available").innerHTML = html;
 	document.getElementsByName("selected_cat").forEach(function(node) {node.addEventListener("click", addCatCalc);});
-	document.getElementById("p_nav_show").addEventListener("click", showSelected);
-	document.getElementById("p_nav_show").classList.add("clickable");
-	document.getElementById("p_nav_show").innerHTML = toShow;
-	refresh ? refresh = false : showSelected();
+	if('dataset' in this)
+		showSelected();
 }
 
 // expand the selected wiki and show its categories
