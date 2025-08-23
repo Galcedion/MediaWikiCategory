@@ -51,6 +51,7 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .result-list label {margin-left: 5rem;}
 .result-list input[type="button"] {margin-left: 1rem;}
 .result-entry {cursor: alias!important; margin: 5px; padding: 5px; text-decoration: none; color: inherit; border-radius: 5px; flex-basis: calc(20% - 20px);}
-.clicked {background-color: var(--success); transition: all 0.5s ease;}
+.clicked {background-color: var(--success)!important;}
+.clicked:hover, .clicked:active {background-color: var(--success-f)!important;}
 .border-merge {border-bottom: 0!important; border-radius: 0 5px 0 0!important;}
 .error {background-color: --var(warn); color: --var(white);}

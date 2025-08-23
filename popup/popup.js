@@ -279,6 +279,7 @@ function catCalc() {
 		html = `<h4>${browser.i18n.getMessage("popupMathResultsNone")}</h4>` + html;
 	}
 	document.getElementById("p_result").innerHTML = html;
+	document.querySelectorAll(".result-entry").forEach(function(node) {node.addEventListener("pointerup", openTab);});
 	document.getElementById("resultFilter").addEventListener("keyup", filterResults);
 	document.getElementById("resultFilterReset").addEventListener("click", filterResultsReset);
 }
@@ -345,20 +346,19 @@ function calcOR(a, b, not = false, xor = false) {
 
 // open selected entry in a new tab
 function openTab() {
-	browser.tabs.create({'active': false, 'url': this.getAttribute('data-href')});
 	this.classList.add('clicked');
 }
 
 // filter resultlist by live-input
 function filterResults() {
 	let filter = this.value;
-	document.getElementsByName('math_result').forEach(function(elem) {elem.innerHTML.includes(filter) || filter.length == 0 ? elem.classList.remove('hidden') : elem.classList.add('hidden');});
+	document.querySelectorAll('.result-entry').forEach(function(elem) {elem.innerHTML.includes(filter) || filter.length == 0 ? elem.classList.remove('hidden') : elem.classList.add('hidden');});
 }
 
 // reset filtering of resultlist
 function filterResultsReset() {
 	document.getElementById('resultFilter').value = '';
-	document.querySelectorAll('[name="math_result"].hidden').forEach(function(elem) {elem.classList.remove('hidden');});
+	document.querySelectorAll('.result-entry.hidden').forEach(function(elem) {elem.classList.remove('hidden');});
 }
 
 window.onload = fetchStorage();
