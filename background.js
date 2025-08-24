@@ -86,13 +86,15 @@ function scrapeCategoryTask(storedData, target, caller) {
 	req.setRequestHeader('Accept', 'text/html');
 	req.addEventListener('load', function() {
 		if(req.readyState === 4 && req.status === 200) { // TODO status != 200 ?
-			scrapeCategoryList(req.responseXML, storedData);
+			scrapeCategoryList(req.responseXML, storedData, caller);
 		} else {
 			transmitError(caller, browser.i18n.getMessage("errorWebReqFail"));
+			freeBlockedEvent(caller);
 		}
 	});
 	req.addEventListener('error', function() {
 		transmitError(caller, browser.i18n.getMessage("errorWebReqFail"));
+		freeBlockedEvent(caller);
 	});
 	req.send();
 }
@@ -157,6 +159,7 @@ function scrapeCategoryList(content, storedData, caller) {
 		scrapeCategoryTask(storedData, new URL(hasNext), caller);
 	} else {
 		browser.storage.local.set(storedData);
+		freeBlockedEvent(caller);
 	}
 }
 
@@ -177,6 +180,26 @@ function transmitError(to, errorMsg) {
 					caller: 'background',
 					target: to,
 					error: errorMsg
+				});
+			}
+		});
+	}
+}
+function freeBlockedEvent(to) {
+	if(to == 'ba') {
+		browser.runtime.sendMessage({
+			task: 'freeBlockedEvent',
+			caller: 'background',
+			target: to
+		});
+	} else {
+		browser.tabs.query({active: true, currentWindow: true})
+		.then(tl => {
+			for(let t of tl) {
+				browser.tabs.sendMessage(t.id, {
+					task: 'freeBlockedEvent',
+					caller: 'background',
+					target: to
 				});
 			}
 		});

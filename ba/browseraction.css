@@ -23,4 +23,5 @@ p:hover, p:active {background-color: var(--clickable);}
 .icon {vertical-align: text-top;}
 .saved {background-color: var(--success);}
 .saved:hover, .saved:active {background-color: var(--success-f); cursor: no-drop;}
+.blocked {cursor: wait; filter: grayscale(0.5) opacity(0.5);}
 .error {background-color: var(--warn); color: var(--white);}

@@ -3,6 +3,7 @@ document.getElementById("ba_popup").value = browser.i18n.getMessage("browserActi
 document.getElementById("ba_popup").addEventListener("click", openTab);
 var lastSelected;
 var detailTarget = false;
+var blockBackground = false;
 
 // entry point for browser action
 // access current tab to check for wiki presence
@@ -44,11 +45,22 @@ function openTab() {
 
 // send call to current tab to save the selected category
 function saveCategory() {
+	if(blockBackground)
+		return;
+	switchBackendBlock(true);
 	lastSelected = this;
 	browser.tabs.query({active: true, currentWindow: true})
 	.then(tl => browser.tabs.sendMessage(tl[0].id, {'task': 'save', 'name': this.getAttribute('data-name'), 'href': this.getAttribute('data-href')}))
 	.then(this.classList.add('saved'))
-	.catch(e => raiseError(this, e));
+	.catch(e => {switchBackendBlock(false); raiseError(this, e);});
+}
+
+function switchBackendBlock(state = false) {
+	blockBackground = state;
+	if(state)
+		document.getElementsByTagName("body")[0].classList.add("blocked");
+	else
+		document.getElementsByTagName("body")[0].classList.remove("blocked");
 }
 
 // visual error handler
@@ -61,11 +73,14 @@ function raiseError(caller, error) {
 
 // listener for incoming events
 function contentMessageListener(listener) {
+	if(typeof listener.target === 'undefined' || listener.target != 'ba')
+		return;
 	switch(listener.task) {
 		case 'raiseError': // event source: background.js
-			if(typeof listener.target === 'undefined' || listener.target != 'ba')
-				return;
 			raiseError(lastSelected, listener.error);
+			break;
+		case 'freeBlockedEvent': // event source: background.js
+			switchBackendBlock(false);
 			break;
 	}
 }
