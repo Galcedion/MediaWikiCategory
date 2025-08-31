@@ -1,3 +1,4 @@
+document.title = browser.i18n.getMessage("extensionName");
 document.getElementById("p_title").innerHTML = browser.i18n.getMessage("popupTitle");
 document.getElementById("p_available").innerHTML = browser.i18n.getMessage("popupLoading");
 document.getElementById("p_nav_overview").innerHTML = browser.i18n.getMessage("popupNavOverview");
@@ -114,6 +115,8 @@ function fetchStream(dataStream) {
 	let instantOpen = new URLSearchParams(window.location.search).get('wiki');
 	if(instantOpen !== null) {
 		document.querySelector(`.section_title[data-wiki="${instantOpen}"]`).click();
+		let baseLocation = window.location.href.substring(0, window.location.href.lastIndexOf('?'));
+		window.history.replaceState(null, '', baseLocation);
 	}
 }
 
