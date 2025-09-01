@@ -20,7 +20,7 @@ li:hover {background-color: var(--clickable);}
 li + li {margin-top: 0.25em;}
 label {margin: 0 5px; padding: 0 5px; border-radius: 5px;}
 input.clickable {border: 1px solid var(--border); border-radius: 5px;}
-#p_overview {padding: 0 1em;}
+#p_overview {padding: 1em;}
 #p_overview > div {padding: 0.5em 0.25em; border: 1px solid var(--border); border-radius: 0 5px 5px 5px;}
 #error {border-bottom: 2px solid var(--bg); border-radius: 0 0 5px 5px; min-height: 5px;}
 .p_nav {background-color: var(--bg); text-align: center;}
@@ -55,4 +55,4 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .clicked {background-color: var(--success)!important;}
 .clicked:hover, .clicked:active {background-color: var(--success-f)!important;}
 .border-merge {border-bottom: 0!important; border-radius: 0 5px 0 0!important;}
-.error {background-color: --var(warn); color: --var(white);}
+.error {background-color: var(--warn); color: var(--white); padding: 5px;}

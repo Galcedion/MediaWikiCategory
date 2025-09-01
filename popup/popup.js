@@ -5,6 +5,7 @@ document.getElementById("p_nav_overview").innerHTML = browser.i18n.getMessage("p
 document.getElementById("p_nav_show").innerHTML = browser.i18n.getMessage("popupNavShow");
 document.getElementById("p_refresh").addEventListener("click", refreshData);
 document.getElementById("p_nav_overview").addEventListener("click", showOverview);
+document.getElementById("error").addEventListener("click", closeError);
 var storedData;
 var selectedCategories;
 var toShow = null;
@@ -88,6 +89,7 @@ function fetchStream(dataStream) {
 		for(let i = 0; i < entries; i++) {
 			if(typeof value[i] !== 'object' || Object.keys(value[i]).length != 4) {
 				hasError = true;
+				raiseError(`${key}: ${browser.i18n.getMessage("errorPopupCorruptedCategory")}`);
 				break;
 			}
 			entryContent += `<li>
@@ -97,16 +99,14 @@ function fetchStream(dataStream) {
 			</li>`;
 			sum += Object.keys(value[i]['items']).length;
 		}
-		if(hasError)
-			entryContent = `<ul id="expand_list_${key}" class="category-list hidden"><li class="error">${browser.i18n.getMessage("errorPopupCorruptedCategory")}</li></ul>`;
-		else
-			entryContent += `</ul>`;
+		entryContent += `</ul>`;
 		html += `<div>
 		<img id="expand_${key}" name="popupExpand" src="../heroicons/arrows-pointing-out.svg" class="icon${sum == 0 ? ' disabled' : ' clickable'}" data-wiki="${key}" data-expanded="0" title="${sum == 0 ? browser.i18n.getMessage("titleDisabled") : browser.i18n.getMessage("titleOpen")}">
 		${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")}
 		<img name="popupDelete" src="../heroicons/trash.svg" class="clickable icon" data-wiki="${key}" title="${browser.i18n.getMessage("titleDelete")}">
 		</div>`;
-		html += entryContent;
+		if(!hasError)
+			html += entryContent;
 	}
 	document.getElementById("p_overview").innerHTML = html;
 	document.getElementsByName("popupShow").forEach(function(node) {node.addEventListener("click", showWiki);});
@@ -362,6 +362,24 @@ function filterResults() {
 function filterResultsReset() {
 	document.getElementById('resultFilter').value = '';
 	document.querySelectorAll('.result-entry.hidden').forEach(function(elem) {elem.classList.remove('hidden');});
+}
+
+// visual error handler
+function raiseError(error) {
+	let errorNode = document.getElementById("error");
+	if(errorNode.innerHTML == '')
+		errorNode.innerHTML = error;
+	else
+		errorNode.innerHTML += '<br>' + error;
+	errorNode.classList.add('error');
+	errorNode.title = browser.i18n.getMessage("titleClose");
+}
+
+// close open error message
+function closeError() {
+	let errorNode = document.getElementById("error");
+	errorNode.innerHTML = '';
+	errorNode.classList.remove('error');
 }
 
 window.onload = fetchStorage();
