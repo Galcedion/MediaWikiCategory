@@ -16,12 +16,13 @@ p {cursor: copy; margin: 0; padding: 0.25em; border-radius: 5px; transition: all
 p + p {margin-top: 0.25em;}
 p:hover, p:active {background-color: var(--clickable);}
 #ba_popup {margin: 5px 0;}
-#error {border-bottom: 2px solid var(--bg); border-radius: 0 0 5px 5px; min-height: 5px;}
+#error {min-height: 5px;}
 .ba_title {text-align: center; background-color: var(--bg); padding: 5px 5em; border-radius: 5px 5px 0 0;}
-.ba_title ~ div {padding: 0 2px; border-left: 2px solid var(--bg); border-right: 2px solid var(--bg);}
+.ba_title ~ div {padding: 2px; border-left: 2px solid var(--bg); border-right: 2px solid var(--bg);}
 .input {text-align: center;}
 .icon {vertical-align: text-top;}
 .saved {background-color: var(--success);}
 .saved:hover, .saved:active {background-color: var(--success-f); cursor: no-drop;}
 .blocked {cursor: wait; filter: grayscale(0.5) opacity(0.5);}
-.error {background-color: var(--warn); color: var(--white);}
+.ba_current {border-bottom: 2px solid var(--bg); border-radius: 0 0 5px 5px;}
+.error {background-color: var(--warn); color: var(--white); padding: 0 5px!important;}

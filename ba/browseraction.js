@@ -1,6 +1,7 @@
 document.getElementById("ba_title").textContent = browser.i18n.getMessage("extensionName");
 document.getElementById("ba_popup").value = browser.i18n.getMessage("browserActionOpenPopup");
 document.getElementById("ba_popup").addEventListener("click", openTab);
+document.getElementById("error").addEventListener("click", closeError);
 var lastSelected;
 var detailTarget = false;
 var blockBackground = false;
@@ -65,10 +66,21 @@ function switchBackendBlock(state = false) {
 
 // visual error handler
 function raiseError(caller, error) {
-	caller.classList.remove('saved');
-	caller.classList.add('error');
-	document.getElementById("error").textContent = error;
-	document.getElementById("error").classList.add('error');
+	if(caller !== null) {
+		caller.classList.remove('saved');
+		caller.classList.add('error');
+	}
+	let errorNode = document.getElementById("error");
+	errorNode.textContent = error;
+	errorNode.classList.add('error');
+	errorNode.title = browser.i18n.getMessage("titleClose");
+}
+
+// close open error message
+function closeError() {
+	let errorNode = document.getElementById("error");
+	errorNode.textContent = '';
+	errorNode.classList.remove('error');
 }
 
 // listener for incoming events
