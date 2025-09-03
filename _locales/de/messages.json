@@ -3,7 +3,7 @@
 		"message": "MediaWiki Category"
 	},
 	"extensionDescription": {
-		"message": "Test"
+		"message": "Laden Sie Kategorien von MediaWikis (z.B. Wikipedia, fandom.com) und finden Sie Artikel in den Kategorien anhand verschiedener Kriterien. Bitte beachten Sie: dieses AddOn ruft im Hintergrund die MediaWikis entsprechend Ihrer Eingaben auf!"
 	},
 	"dropdownDefault": {
 		"message": "Kategorie-Ermittlung läuft"

@@ -4,7 +4,7 @@
 		"description": "Name of the extension."
 	},
 	"extensionDescription": {
-		"message": "Test",
+		"message": "Get categories of MediaWikis (e.g. Wikipedia, fandom.com) and find articles matching the categories by different criteria. Be aware: this AddOn performs background webrequests based on your input!",
 		"description": "Description of the extension."
 	},
 	"dropdownDefault": {
@@ -100,15 +100,15 @@
 		"description": "Mouseover title: delete object."
 	},
 	"titleAND": {
-		"message": "An entry must be contained in both the lefthand list as well as in the category on the right.",
+		"message": "An entry must be contained in both the left-hand list as well as in the category on the right.",
 		"description": "Mouseover title: logical AND."
 	},
 	"titleOR": {
-		"message": "An entry can be contained either in the lefthand list or the category on the right, or both.",
+		"message": "An entry can be contained either in the left-hand list or the category on the right, or both.",
 		"description": "Mouseover title: logical OR."
 	},
 	"titleXOR": {
-		"message": "An entry must be contained either in the lefthand list or the category on the right, but not in both.",
+		"message": "An entry must be contained either in the left-hand list or the category on the right, but not in both.",
 		"description": "Mouseover title: logical XOR."
 	},
 	"errorDialogTitle": {
