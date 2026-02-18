@@ -48,20 +48,11 @@ function openTab() {
 function saveCategory() {
 	if(blockBackground)
 		return;
-	switchBackendBlock(true);
 	lastSelected = this;
 	browser.tabs.query({active: true, currentWindow: true})
 	.then(tl => browser.tabs.sendMessage(tl[0].id, {'task': 'save', 'name': this.getAttribute('data-name'), 'href': this.getAttribute('data-href')}))
-	.then(this.classList.add('saved'))
-	.catch(e => {switchBackendBlock(false); raiseError(this, e);});
-}
-
-function switchBackendBlock(state = false) {
-	blockBackground = state;
-	if(state)
-		document.getElementsByTagName("body")[0].classList.add("blocked");
-	else
-		document.getElementsByTagName("body")[0].classList.remove("blocked");
+	//.then(this.classList.add('saved'))
+	.catch(e => {raiseError(this, e);});
 }
 
 // visual error handler
@@ -91,8 +82,13 @@ function contentMessageListener(listener) {
 		case 'raiseError': // event source: background.js
 			raiseError(lastSelected, listener.error);
 			break;
-		case 'freeBlockedEvent': // event source: background.js
-			switchBackendBlock(false);
+		case 'finishedCategoryScrape': // event source: background.js
+			listener.category = new URL(listener.category).pathname;
+			let catList = document.getElementsByName("currentCategories");
+			for(let i = 0; i < catList.length; i++) {
+				if(catList[i].dataset.href.includes(listener.category))
+					listener.success ?  catList[i].classList.add('saved') : catList[i].classList.add('error');
+			}
 			break;
 	}
 }

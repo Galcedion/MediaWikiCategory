@@ -107,12 +107,12 @@ function scrapeCategoryTask(storedData, metadata) {
 			scrapeCategoryList(req.responseXML, storedData, metadata);
 		} else {
 			transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFail"));
-			freeBlockedEvent(metadata['caller']);
+			finishedCategoryScrape(metadata['caller'], metadata['targetHref'], false);
 		}
 	});
 	req.addEventListener('error', function() {
 		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFail"));
-		freeBlockedEvent(metadata['caller']);
+		finishedCategoryScrape(metadata['caller'], metadata['targetHref'], false);
 	});
 	req.send();
 }
@@ -178,7 +178,7 @@ function scrapeCategoryList(content, storedData, metadata) {
 	} else {
 		browser.storage.local.set(storedData);
 		checkToDo(metadata);
-		freeBlockedEvent(metadata['caller']);
+		finishedCategoryScrape(metadata['caller'], metadata['targetHref'], true);
 	}
 }
 
@@ -215,19 +215,21 @@ function transmitError(to, errorMsg) {
 		});
 	}
 }
-function freeBlockedEvent(to) {
+function finishedCategoryScrape(to, targetCategory, success = true) {
 	if(to == 'ba') {
 		browser.runtime.sendMessage({
-			task: 'freeBlockedEvent',
+			task: 'finishedCategoryScrape',
 			caller: 'background',
-			target: to
+			target: to,
+			category: targetCategory.toString(),
+			success: success
 		});
 	} else {
 		browser.tabs.query({active: true, currentWindow: true})
 		.then(tl => {
 			for(let t of tl) {
 				browser.tabs.sendMessage(t.id, {
-					task: 'freeBlockedEvent',
+					task: 'finishedCategoryScrape',
 					caller: 'background',
 					target: to
 				});
