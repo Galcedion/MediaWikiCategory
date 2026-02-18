@@ -3,6 +3,7 @@ document.getElementById("p_title").innerHTML = browser.i18n.getMessage("popupTit
 document.getElementById("p_available").innerHTML = browser.i18n.getMessage("popupLoading");
 document.getElementById("p_nav_overview").innerHTML = browser.i18n.getMessage("popupNavOverview");
 document.getElementById("p_nav_show").innerHTML = browser.i18n.getMessage("popupNavShow");
+document.getElementById("p_storage").addEventListener("click", displayStorage);
 document.getElementById("p_refresh").addEventListener("click", refreshData);
 document.getElementById("p_nav_overview").addEventListener("click", showOverview);
 document.getElementById("error").addEventListener("click", closeError);
@@ -15,6 +16,29 @@ var operatorList = {
 	'XOR': {'title': browser.i18n.getMessage("titleXOR")}
 	/* 'NOR', 'NAND', 'XNOR'*/
 };
+var storageUsage = {'total' : 0};
+
+// toggle display of storage in use
+function displayStorage() {
+	if(document.getElementById("storage_display")) {
+		document.getElementById("storage_display").remove();
+		return;
+	}
+	let storageDisplay = document.createElement("div");
+	storageDisplay.id = "storage_display";
+	storageDisplay.classList.add("storage_display");
+	for(let [key, value] of Object.entries(storageUsage)) {
+		let unit = 'k';
+		value = value / 1024;
+		if(value > 1024) {
+			value = value / 1024;
+			unit = 'M';
+		}
+		value = (Math.ceil(value * 10) / 10).toFixed(1) + unit + 'B';
+		storageDisplay.innerHTML += `${key}: ${value}<br>`;
+	}
+	document.getElementById("p_special").appendChild(storageDisplay);
+}
 
 // refresh data and rebuild UI
 function refreshData() {
@@ -66,6 +90,15 @@ function deleteWiki() {
 	}
 }
 
+// calculate approximate disc size in use by storage
+function calculateStorage() {
+	for(let [key, value] of Object.entries(storedData)) {
+		let curStorage = key.length * 2 + value.length * 2;
+		storageUsage['total'] += curStorage;
+		storageUsage[key] = curStorage;
+	}
+}
+
 // retrieve data from storage and create overview of all available wikis
 function fetchStream(dataStream) {
 	storedData = dataStream;
@@ -105,8 +138,10 @@ function fetchStream(dataStream) {
 		${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")}
 		<img name="popupDelete" src="../heroicons/trash.svg" class="clickable icon" data-wiki="${key}" title="${browser.i18n.getMessage("titleDelete")}">
 		</div>`;
-		if(!hasError)
+		if(!hasError) {
 			html += entryContent;
+			calculateStorage();
+		}
 	}
 	document.getElementById("p_overview").innerHTML = html;
 	document.getElementsByName("popupShow").forEach(function(node) {node.addEventListener("click", showWiki);});
