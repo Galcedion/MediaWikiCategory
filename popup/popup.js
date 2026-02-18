@@ -17,6 +17,8 @@ var operatorList = {
 	/* 'NOR', 'NAND', 'XNOR'*/
 };
 var storageUsage = {'total' : 0};
+var currentTabsURL = [];
+browser.tabs.query({}).then(tl => {for(const t of tl) currentTabsURL.push(t.url);});
 
 // toggle display of storage in use
 function displayStorage() {
@@ -306,7 +308,11 @@ function catCalc() {
 	var html = '';
 	resultList.sort();
 	resultList.forEach(function(r) {
-		html += `<a href="${getURLFromCategoryItem(wikiData, r)}" target="_blank" class="result-entry clickable">${r}</a>`;
+		let classes = 'result-entry clickable';
+		let url = getURLFromCategoryItem(wikiData, r);
+		if(currentTabsURL.includes(url))
+			classes += ' clicked';
+		html += `<a href="${url}" target="_blank" class="${classes}">${r}</a>`;
 	});
 	if(Object.keys(resultList).length > 0) {
 		html = `<div><h4>${browser.i18n.getMessage("popupMathResults")} <i>(${Object.keys(resultList).length})</i></h4>
