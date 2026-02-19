@@ -59,6 +59,18 @@
 		"message": "Categories",
 		"description": "Popup display, number of categories saved for a Wiki."
 	},
+	"popupDeleteAllText": {
+		"message": "This will delete all data from the extension. Are you sure?",
+		"description": "Popup display, delete all confirmation text body."
+	},
+	"popupDeleteAllTextYes": {
+		"message": "Yes",
+		"description": "Popup display, delete all yes."
+	},
+	"popupDeleteAllTextNo": {
+		"message": "Yes",
+		"description": "Popup display, delete all no."
+	},
 	"popupPages": {
 		"message": "Pages",
 		"description": "Popup display, number of pages saved for a Wiki."

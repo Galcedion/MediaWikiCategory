@@ -47,6 +47,15 @@
 	"popupPages": {
 		"message": "Seiten"
 	},
+	"popupDeleteAllText": {
+		"message": "Dies wird alle Daten dieser Erweiterung löschen. Sind Sie sicher?"
+	},
+	"popupDeleteAllYes": {
+		"message": "Ja"
+	},
+	"popupDeleteAllNo": {
+		"message": "Nein"
+	},
 	"popupMathResults": {
 		"message": "Ergebnisse"
 	},

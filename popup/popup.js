@@ -5,6 +5,7 @@ document.getElementById("p_nav_overview").innerHTML = browser.i18n.getMessage("p
 document.getElementById("p_nav_show").innerHTML = browser.i18n.getMessage("popupNavShow");
 document.getElementById("p_storage").addEventListener("click", displayStorage);
 document.getElementById("p_refresh").addEventListener("click", refreshData);
+document.getElementById("p_deleteall").addEventListener("click", deleteAll);
 document.getElementById("p_nav_overview").addEventListener("click", showOverview);
 document.getElementById("error").addEventListener("click", closeError);
 var storedData;
@@ -90,6 +91,27 @@ function deleteWiki() {
 		browser.storage.local.remove(wiki);
 		refreshData();
 	}
+}
+
+function deleteAll() {
+	var dialog = document.createElement('dialog');
+	dialog.id = 'delete_all_dialog';
+	dialog.open = true;
+	dialog.innerHTML = `<p>${browser.i18n.getMessage("popupDeleteAllText")}</p>
+	<p style="text-align:center;">
+		<input type="button" data-confirmation="1" value="${browser.i18n.getMessage("popupDeleteAllYes")}">
+		<input type="button" data-confirmation="0" value="${browser.i18n.getMessage("popupDeleteAllNo")}">
+	<p>`;
+	document.getElementsByTagName('BODY')[0].insertBefore(dialog, document.getElementsByTagName('BODY')[0].firstChild);
+	document.querySelectorAll("#delete_all_dialog input").forEach(function(i) {i.addEventListener("click", deleteAllConfirmation)});
+}
+
+function deleteAllConfirmation() {
+	if(this.dataset.confirmation == 1) {
+		browser.storage.local.clear();
+		refreshData();
+	}
+	document.getElementById('delete_all_dialog').remove();
 }
 
 // calculate approximate disc size in use by storage
