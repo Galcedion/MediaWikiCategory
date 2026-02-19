@@ -3,6 +3,9 @@ document.getElementById("p_title").innerHTML = browser.i18n.getMessage("popupTit
 document.getElementById("p_available").innerHTML = browser.i18n.getMessage("popupLoading");
 document.getElementById("p_nav_overview").innerHTML = browser.i18n.getMessage("popupNavOverview");
 document.getElementById("p_nav_show").innerHTML = browser.i18n.getMessage("popupNavShow");
+document.getElementById("p_storage").title = browser.i18n.getMessage("titleStorage");
+document.getElementById("p_refresh").title = browser.i18n.getMessage("titleRefresh");
+document.getElementById("p_deleteall").title = browser.i18n.getMessage("titleDeleteAll");
 document.getElementById("p_storage").addEventListener("click", displayStorage);
 document.getElementById("p_refresh").addEventListener("click", refreshData);
 document.getElementById("p_deleteall").addEventListener("click", deleteAll);
@@ -25,8 +28,10 @@ browser.tabs.query({}).then(tl => {for(const t of tl) currentTabsURL.push(t.url)
 function displayStorage() {
 	if(document.getElementById("storage_display")) {
 		document.getElementById("storage_display").remove();
+		document.getElementById("p_storage").classList.remove("active");
 		return;
 	}
+	document.getElementById("p_storage").classList.add("active");
 	let storageDisplay = document.createElement("div");
 	storageDisplay.id = "storage_display";
 	storageDisplay.classList.add("storage_display");
@@ -45,6 +50,8 @@ function displayStorage() {
 
 // refresh data and rebuild UI
 function refreshData() {
+	if(document.getElementById("storage_display"))
+		displayStorage();
 	fetchStorage();
 	if(toShow !== null) {
 		showWiki();

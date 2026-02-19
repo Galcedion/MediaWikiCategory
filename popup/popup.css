@@ -22,6 +22,7 @@ label {margin: 0 5px; padding: 0 5px; border-radius: 5px;}
 input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 #p_special {position: absolute; right: calc(15% + 0.5em); margin: calc(1em - 3px); font-style: normal; border: 1px solid var(--border); border-radius: 5px; }
 #p_special img {margin: 2px; }
+#p_special img + img {margin-left: 1em; }
 #delete_all_dialog {border: 2px solid var(--border); border-radius: 5px; box-shadow: 0 0 5px 5px crimson; }
 #delete_all_dialog input {padding: 0.25em; border-radius: 5px; }
 #delete_all_dialog input:first-child {background-color: var(--warn); }
@@ -39,7 +40,7 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .active:hover, .active:focus {background-color: var(--active-f)!important;}
 .section_title {padding: 5px 5px 0 5px; border-radius: 5px 5px 0 0;}
 .icon {vertical-align: text-top; border-radius: 5px; margin: 0 2px;}
-.storage_display {position: absolute; width:15em; right: calc(15% - 1em); padding: 5px; background-color: var(--bg); top: calc(2em - 2px); border: 1px solid var(--border); border-radius: 0 0 5px 5px;}
+.storage_display {position: absolute; width:15em; right: 0; padding: 5px; background-color: var(--bg); top: calc(2em - 2px); border: 1px solid var(--border); border-radius: 0 0 5px 5px;}
 .clickable {cursor: pointer; transition: all 0.5s ease;}
 .clickable:not(.icon) {background-color: var(--clickable);}
 .clickable:hover, .clickable:active {background-color: var(--clickable-f);}

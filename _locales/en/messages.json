@@ -123,6 +123,18 @@
 		"message": "An entry must be contained either in the left-hand list or the category on the right, but not in both.",
 		"description": "Mouseover title: logical XOR."
 	},
+	"titleStorage": {
+		"message": "Storage size",
+		"description": "Mouseover title: storage."
+	},
+	"titleRefresh": {
+		"message": "Reload page",
+		"description": "Mouseover title: refresh."
+	},
+	"titleDeleteAll": {
+		"message": "Delete all data",
+		"description": "Mouseover title: delete all."
+	},
 	"errorDialogTitle": {
 		"message": "MediaWiki Category Extension Error",
 		"description": "Error: title of the dialog popup."

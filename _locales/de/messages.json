@@ -92,6 +92,15 @@
 	"titleXOR": {
 		"message": "Ein Eintrag muss entweder in der linken Liste oder der Kategorie auf der rechten Seite enthalten sein, aber nicht in beiden."
 	},
+	"titleStorage": {
+		"message": "Speicherverbrauch"
+	},
+	"titleRefresh": {
+		"message": "Seite neu laden"
+	},
+	"titleDeleteAll": {
+		"message": "Alle Daten löschen"
+	},
 	"errorDialogTitle": {
 		"message": "MediaWiki Category AddOn Fehler"
 	},
