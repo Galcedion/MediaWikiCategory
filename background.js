@@ -79,6 +79,7 @@ function storageManager(caller = false, rerun = false) {
 		categoryToDo.push([targetTitle, targetHref]);
 		return;
 	}
+	metadata['originalTargetHref'] = metadata['targetHref'];
 	var sm = browser.storage.local.get(null);
 	sm.then(function(data) {storageManagerStream(data, metadata);})
 }
@@ -174,7 +175,8 @@ function scrapeCategoryList(content, storedData, metadata) {
 	if(hasNext !== false) { // if next-page is available, call next page
 		if(!hasNext.startsWith(metadata['targetHref'].protocol + '//' + metadata['targetHref'].hostname))
 			hasNext = metadata['targetHref'].protocol + '//' + metadata['targetHref'].hostname + hasNext;
-		scrapeCategoryTask(storedData, {'caller': metadata['caller'], 'targetTitle': metadata['targetTitle'],'targetHref': new URL(hasNext)});
+		metadata['targetHref'] = new URL(hasNext)
+		scrapeCategoryTask(storedData, metadata);
 	} else {
 		browser.storage.local.set(storedData);
 		checkToDo(metadata);
@@ -184,7 +186,7 @@ function scrapeCategoryList(content, storedData, metadata) {
 
 function checkToDo(metadata) {
 	for(let i = 0; i < categoryToDo.length; i++) {
-		if(categoryToDo[i] == [metadata['targetTitle'], metadata['targetHref']])
+		if(categoryToDo[i][0] == metadata['targetTitle'] && categoryToDo[i][1].href == metadata['originalTargetHref'].href)
 			categoryToDo.splice(i, 1);
 	}
 	if(categoryToDo.length == 0)
