@@ -8,6 +8,8 @@
   --clickable-f: steelblue;
   --success: lightgreen;
   --success-f: green;
+  --pending: orange;
+  --pending-f: darkorange;
   --warn: red;
 }
 html {background-color: var(--white);}
@@ -23,6 +25,8 @@ p:hover, p:active {background-color: var(--clickable);}
 .icon {vertical-align: text-top;}
 .saved {background-color: var(--success);}
 .saved:hover, .saved:active {background-color: var(--success-f); cursor: no-drop;}
+.pending {background-color: var(--pending);}
+.pending:hover, .pending:active {background-color: var(--pending-f); cursor: progress;}
 .blocked {cursor: wait; filter: grayscale(0.5) opacity(0.5);}
 .ba_current {border-bottom: 2px solid var(--bg); border-radius: 0 0 5px 5px;}
 .error {background-color: var(--warn); color: var(--white); padding: 0 5px!important;}

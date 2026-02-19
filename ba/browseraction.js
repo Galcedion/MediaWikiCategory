@@ -4,7 +4,6 @@ document.getElementById("ba_popup").addEventListener("click", openTab);
 document.getElementById("error").addEventListener("click", closeError);
 var lastSelected;
 var detailTarget = false;
-var blockBackground = false;
 
 // entry point for browser action
 // access current tab to check for wiki presence
@@ -46,19 +45,19 @@ function openTab() {
 
 // send call to current tab to save the selected category
 function saveCategory() {
-	if(blockBackground)
+	if(this.classList.contains('saved') || this.classList.contains('pending'))
 		return;
 	lastSelected = this;
 	browser.tabs.query({active: true, currentWindow: true})
 	.then(tl => browser.tabs.sendMessage(tl[0].id, {'task': 'save', 'name': this.getAttribute('data-name'), 'href': this.getAttribute('data-href')}))
-	//.then(this.classList.add('saved'))
+	.then(this.classList.add('pending'))
 	.catch(e => {raiseError(this, e);});
 }
 
 // visual error handler
 function raiseError(caller, error) {
 	if(caller !== null) {
-		caller.classList.remove('saved');
+		caller.classList.remove('saved', 'pending');
 		caller.classList.add('error');
 	}
 	let errorNode = document.getElementById("error");
@@ -86,8 +85,10 @@ function contentMessageListener(listener) {
 			listener.category = new URL(listener.category).pathname;
 			let catList = document.getElementsByName("currentCategories");
 			for(let i = 0; i < catList.length; i++) {
-				if(catList[i].dataset.href.includes(listener.category))
-					listener.success ?  catList[i].classList.add('saved') : catList[i].classList.add('error');
+				if(catList[i].dataset.href.includes(listener.category)) {
+					catList[i].classList.remove('pending');
+					listener.success ? catList[i].classList.add('saved') : catList[i].classList.add('error');
+				}
 			}
 			break;
 	}
