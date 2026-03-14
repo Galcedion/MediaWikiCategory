@@ -117,11 +117,16 @@ function deleteAll() {
 }
 
 function deleteAllConfirmation() {
+	document.getElementById("delete_all_dialog").remove();
 	if(this.dataset.confirmation == 1) {
+		toShow = null;
+		document.getElementById('p_nav_overview').click();
+		document.getElementById("p_nav_show").innerHTML = browser.i18n.getMessage("popupNavShow");
+		document.getElementById("p_nav_show").classList.remove("clickable");
+		['p_available', 'p_math', 'p_result'].forEach(function(i) {document.getElementById(i).innerHTML = '';});
 		browser.storage.local.clear();
 		refreshData();
 	}
-	document.getElementById('delete_all_dialog').remove();
 }
 
 // calculate approximate disc size in use by storage
