@@ -35,13 +35,22 @@ function messageListener(listener) {
 // show / hide menu
 function messageListenerDisplayCM(listener) {
 	if(listener.enableCM) {
-		browser.menus.update(MEDIAWIKI_MENU_ITEM, {
-			visible: true,
-			title: `${browser.i18n.getMessage("fetchCategory")}: ${listener.title}`
-		});
-		targetTitle = listener.title;
-		targetHref = (new URL(listener.href));
-		caller = listener.caller;
+		if(new URL(listener.caller).origin == new URL(listener.href).origin) {
+			browser.menus.update(MEDIAWIKI_MENU_ITEM, {
+				visible: true,
+				title: `${browser.i18n.getMessage("fetchCategory")}: ${listener.title}`
+			});
+			targetTitle = listener.title;
+			targetHref = (new URL(listener.href));
+			caller = listener.caller;
+		} else {
+			transmitError(listener.caller, browser.i18n.getMessage("securityOffsiteCategory"));
+			browser.menus.onClicked.removeListener(function() {storageManager(caller);});
+			browser.menus.update(MEDIAWIKI_MENU_ITEM, {
+				visible: false,
+				title: `${browser.i18n.getMessage("securityOffsiteCategory")}`
+			});
+		}
 	}
 	else // as of now this should never occour
 		browser.menus.update(MEDIAWIKI_MENU_ITEM, {visible: false});
