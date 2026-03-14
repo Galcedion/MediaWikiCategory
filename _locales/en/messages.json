@@ -158,5 +158,9 @@
 	"errorWebReqFail": {
 		"message": "The requested webpage could not be loaded!",
 		"description": "Error: the requested web resource could not be loaded."
+	},
+	"securityOffsiteCategory": {
+		"message": "Malicious category blocked",
+		"description": "Security warning: the category has a target outside of the current wiki."
 	}
 }

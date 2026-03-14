@@ -30,3 +30,4 @@ p:hover, p:active {background-color: var(--clickable);}
 .blocked {cursor: wait; filter: grayscale(0.5) opacity(0.5);}
 .ba_current {border-bottom: 2px solid var(--bg); border-radius: 0 0 5px 5px;}
 .error {background-color: var(--warn); color: var(--white); padding: 0 5px!important;}
+.security {cursor:not-allowed; padding: 0.25em; margin-top: 0.25em; border-radius: 5px;}

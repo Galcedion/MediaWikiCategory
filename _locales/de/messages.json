@@ -118,5 +118,8 @@
 	},
 	"errorWebReqFail": {
 		"message": "Die gewünschte Seite konnte nicht geladen werden!"
+	},
+	"securityOffsiteCategory": {
+		"message": "Böswillige Kategorie blockiert"
 	}
 }

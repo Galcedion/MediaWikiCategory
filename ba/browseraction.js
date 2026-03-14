@@ -4,11 +4,14 @@ document.getElementById("ba_popup").addEventListener("click", openTab);
 document.getElementById("error").addEventListener("click", closeError);
 var lastSelected;
 var detailTarget = false;
+var currentTabTrueURL = null;
 
 // entry point for browser action
 // access current tab to check for wiki presence
 function checkTab() {
 	var connection = true;
+	browser.tabs.query({active: true, currentWindow: true})
+	.then(tl => currentTabTrueURL = new URL(tl[0].url));
 	var current = browser.tabs.query({active: true, currentWindow: true})
 	.then(tl => browser.tabs.sendMessage(tl[0].id, {'task': 'getWiki'}))
 	.catch(e => connection = false);
@@ -27,7 +30,10 @@ function checkTabWiki(tabData) {
 		detailTarget = tabData.name;
 		var html = `<h4>${browser.i18n.getMessage("browserActionAvailableCategories")}</h4>`;
 		for(const [k, v] of Object.entries(tabData.categories)) {
-			html += `<p name="currentCategories" data-name="${k}" data-href="${v}" title="${browser.i18n.getMessage("titleSave")}"><img src="../heroicons/folder-arrow-down.svg" class="icon"> ${k}</p>`;
+			if(currentTabTrueURL.origin == new URL(v).origin)
+				html += `<p name="currentCategories" data-name="${k}" data-href="${v}" title="${browser.i18n.getMessage("titleSave")}"><img src="../heroicons/folder-arrow-down.svg" class="icon"> ${k}</p>`;
+			else
+				html += `<div class="security error"><strong>${browser.i18n.getMessage("securityOffsiteCategory")}: ${encodeURI(k)}</strong></div>`
 		}
 		document.getElementById("ba_current").innerHTML = html;
 		document.getElementsByName("currentCategories").forEach(function(node) {node.addEventListener("click", saveCategory);});
