@@ -174,5 +174,9 @@
 	"securityOffsiteCategory": {
 		"message": "Malicious category blocked",
 		"description": "Security warning: the category has a target outside of the current wiki."
+	},
+	"securityOffsiteCategoryRedirect": {
+		"message": "Malicious category-redirect blocked",
+		"description": "Security warning: the category paging has a target outside of the current wiki."
 	}
 }

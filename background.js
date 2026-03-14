@@ -72,7 +72,7 @@ function storeFromPopup(listener) {
 
 // main storage function, creating a promise
 function storageManager(caller = false, rerun = false) {
-	let metadata = {'caller': caller}
+	let metadata = {'caller': caller};
 	if(!lock) {
 		lock = true;
 		metadata['targetTitle'] = targetTitle;
@@ -184,8 +184,12 @@ function scrapeCategoryList(content, storedData, metadata) {
 	if(hasNext !== false) { // if next-page is available, call next page
 		if(!hasNext.startsWith(metadata['targetHref'].protocol + '//' + metadata['targetHref'].hostname))
 			hasNext = metadata['targetHref'].protocol + '//' + metadata['targetHref'].hostname + hasNext;
-		metadata['targetHref'] = new URL(hasNext)
-		scrapeCategoryTask(storedData, metadata);
+		metadata['targetHref'] = new URL(hasNext);
+		if(metadata['originalTargetHref'].origin != metadata['targetHref'].origin) {
+			transmitError(metadata['caller'], browser.i18n.getMessage("securityOffsiteCategoryRedirect"));
+			checkToDo(metadata);
+		} else
+			scrapeCategoryTask(storedData, metadata);
 	} else {
 		browser.storage.local.set(storedData);
 		checkToDo(metadata);
