@@ -65,6 +65,9 @@
 	"popupMathResultsFilter": {
 		"message": "Ergebnisse filtern"
 	},
+	"popupMathResultsCaseSensitive": {
+		"message": "Groß- / Kleinschreibung"
+	},
 	"popupMathResultsFilterReset": {
 		"message": "Zurücksetzen"
 	},

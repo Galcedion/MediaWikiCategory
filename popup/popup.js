@@ -25,6 +25,7 @@ var currentTabsURL = [];
 const displayState = {NODATA: 'NODATA', DATA: 'DATA', OVERVIEW: 'OVERVIEW', INWIKI: 'INWIKI'}; // reference for reload operations to refresh specific sections
 var pageDisplayState = displayState.NODATA;
 var rebuild = false;
+var caseSensitive = false;
 browser.tabs.query({}).then(tl => {for(const t of tl) currentTabsURL.push(t.url);});
 
 // toggle display of storage in use
@@ -367,6 +368,7 @@ function catCalc() {
 	if(Object.keys(resultList).length > 0) {
 		html = `<div><h4>${browser.i18n.getMessage("popupMathResults")} <i>(${Object.keys(resultList).length})</i></h4>
 		<label for="resultFilter">${browser.i18n.getMessage("popupMathResultsFilter")}</label><input id="resultFilter" type="text">
+		<label for="resultFilterCaseSensitive"><input id="resultFilterCaseSensitive" type="checkbox" class="clickable">${browser.i18n.getMessage("popupMathResultsCaseSensitive")}</label>
 		<input id="resultFilterReset" type="button" class="clickable" value="${browser.i18n.getMessage("popupMathResultsFilterReset")}"></div>
 		<div>` + html + `</div>`;
 	} else {
@@ -375,6 +377,7 @@ function catCalc() {
 	document.getElementById("p_result").innerHTML = html;
 	document.querySelectorAll(".result-entry").forEach(function(node) {node.addEventListener("pointerup", openTab);});
 	document.getElementById("resultFilter").addEventListener("keyup", filterResults);
+	document.getElementById("resultFilterCaseSensitive").addEventListener("click", filterResultsCaseSensitive);
 	document.getElementById("resultFilterReset").addEventListener("click", filterResultsReset);
 }
 
@@ -446,7 +449,19 @@ function openTab() {
 // filter resultlist by live-input
 function filterResults() {
 	let filter = this.value;
-	document.querySelectorAll('.result-entry').forEach(function(elem) {elem.innerHTML.includes(filter) || filter.length == 0 ? elem.classList.remove('hidden') : elem.classList.add('hidden');});
+	if(!caseSensitive)
+		filter = filter.toLowerCase();
+	document.querySelectorAll('.result-entry').forEach(function(elem) {
+		if(caseSensitive)
+			elem.innerHTML.includes(filter) || filter.length == 0 ? elem.classList.remove('hidden') : elem.classList.add('hidden');
+		else
+			elem.innerHTML.toLowerCase().includes(filter) || filter.length == 0 ? elem.classList.remove('hidden') : elem.classList.add('hidden');
+	});
+}
+
+// set case sensitive for resultlist live-input filter
+function filterResultsCaseSensitive() {
+	document.getElementById('resultFilterCaseSensitive').checked ? caseSensitive = true : caseSensitive = false;
 }
 
 // reset filtering of resultlist

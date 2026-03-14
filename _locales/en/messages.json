@@ -87,6 +87,10 @@
 		"message": "Filter results",
 		"description": "Popup display, filter label."
 	},
+	"popupMathResultsCaseSensitive": {
+		"message": "Case sensitive",
+		"description": "Popup display, filter case sensitive y/n."
+	},
 	"popupMathResultsFilterReset": {
 		"message": "Reset",
 		"description": "Popup display, reset filter."
