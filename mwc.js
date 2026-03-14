@@ -48,14 +48,6 @@ function contentMessageListener(listener) {
 		case 'getWiki': // event source: browseraction.js
 			return Promise.resolve({'wiki': isWiki, 'categories': availableCategories, 'name': curHostname});
 			break;
-		case 'save': // event source: browseraction.js
-			browser.runtime.sendMessage({
-				task: 'storeFromPopup',
-				title: listener.name,
-				href: listener.href,
-				caller: 'ba'
-			});
-			break;
 		case 'raiseError': // event source: background.js
 			if(typeof listener.target === 'undefined' || listener.target != curURL)
 				return;

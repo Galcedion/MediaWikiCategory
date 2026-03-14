@@ -49,7 +49,7 @@ function saveCategory() {
 		return;
 	lastSelected = this;
 	browser.tabs.query({active: true, currentWindow: true})
-	.then(tl => browser.tabs.sendMessage(tl[0].id, {'task': 'save', 'name': this.getAttribute('data-name'), 'href': this.getAttribute('data-href')}))
+	.then(tl => browser.runtime.sendMessage({task: 'storeFromPopup', title: this.getAttribute('data-name'), href: this.getAttribute('data-href'), caller: 'ba'}))
 	.then(this.classList.add('pending'))
 	.catch(e => {raiseError(this, e);});
 }
