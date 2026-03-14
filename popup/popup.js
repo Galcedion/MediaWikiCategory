@@ -26,7 +26,12 @@ const displayState = {NODATA: 'NODATA', DATA: 'DATA', OVERVIEW: 'OVERVIEW', INWI
 var pageDisplayState = displayState.NODATA;
 var rebuild = false;
 var caseSensitive = false;
-browser.tabs.query({}).then(tl => {for(const t of tl) currentTabsURL.push(t.url);});
+browser.tabs.query({}).then(tl => {
+	for(const t of tl) {
+		t.url = t.url.substring(0, t.url.indexOf('#'));
+		currentTabsURL.push(t.url);
+	}
+});
 
 // toggle display of storage in use
 function displayStorage() {
