@@ -22,6 +22,9 @@ var operatorList = {
 };
 var storageUsage = {'total' : 0};
 var currentTabsURL = [];
+const displayState = {NODATA: 'NODATA', DATA: 'DATA', OVERVIEW: 'OVERVIEW', INWIKI: 'INWIKI'}; // reference for reload operations to refresh specific sections
+var pageDisplayState = displayState.NODATA;
+var rebuild = false;
 browser.tabs.query({}).then(tl => {for(const t of tl) currentTabsURL.push(t.url);});
 
 // toggle display of storage in use
@@ -52,14 +55,13 @@ function displayStorage() {
 function refreshData() {
 	if(document.getElementById("storage_display"))
 		displayStorage();
+	rebuild = true;
 	fetchStorage();
-	if(toShow !== null) {
-		showWiki();
-	}
 }
 
 // toggle display to overview
 function showOverview() {
+	pageDisplayState = displayState.OVERVIEW;
 	document.getElementById("p_nav_overview").classList.add("active");
 	document.getElementById("p_nav_show").classList.remove("active")
 	document.getElementById("p_overview").classList.remove("hidden");
@@ -68,6 +70,7 @@ function showOverview() {
 
 // toggle display to selected wiki
 function showSelected() {
+	pageDisplayState = displayState.INWIKI;
 	document.getElementById("p_nav_overview").classList.remove("active");
 	document.getElementById("p_nav_show").classList.add("active")
 	document.getElementById("p_overview").classList.add("hidden");
@@ -136,8 +139,12 @@ function fetchStream(dataStream) {
 	if(typeof(storedData) === 'undefined' || Object.keys(storedData).length == 0) {
 		document.getElementById("p_overview").innerHTML = `<div>${browser.i18n.getMessage("popupNavOverviewEmpty")}</div>`;
 		document.getElementById("p_nav_show").classList.add('hidden');
+		rebuild = false;
 		return;
 	}
+	document.getElementById("p_nav_show").classList.remove('hidden');
+	if(pageDisplayState == displayState.NODATA)
+		pageDisplayState = displayState.DATA;
 	document.getElementById("p_overview").innerHTML = '';
 	var html = '';
 	for(let [key, value] of Object.entries(storedData)) {
@@ -184,6 +191,15 @@ function fetchStream(dataStream) {
 		let baseLocation = window.location.href.substring(0, window.location.href.lastIndexOf('?'));
 		window.history.replaceState(null, '', baseLocation);
 	}
+	if(rebuild) { // rebuild on refresh
+		if(pageDisplayState == displayState.INWIKI)
+			document.querySelectorAll('[data-wiki="' + toShow + '"]')[0].click();
+		else if(toShow !== null && pageDisplayState == displayState.OVERVIEW) {
+			document.querySelectorAll('[data-wiki="' + toShow + '"]')[0].click();
+			showOverview();
+		}
+		rebuild = false;
+	}
 }
 
 // display selected wiki and stored categories of said wiki
@@ -194,7 +210,7 @@ function showWiki() {
 	 * items - Obj. of k (string) - v (URL)
 	 */
 	selectedCategories = {};
-	if('dataset' in this && toShow == this.dataset.wiki) {
+	if('dataset' in this && toShow == this.dataset.wiki && !rebuild) {
 		showSelected();
 		return;
 	}
