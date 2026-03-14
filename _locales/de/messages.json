@@ -95,6 +95,15 @@
 	"titleXOR": {
 		"message": "Ein Eintrag muss entweder in der linken Liste oder der Kategorie auf der rechten Seite enthalten sein, aber nicht in beiden."
 	},
+	"titleNAND": {
+		"message": "Ein Eintrag darf nicht sowohl in der linken Liste als auch in der Kategorie auf der rechten Seite enthalten sein."
+	},
+	"titleNOR": {
+		"message": "Ein Eintrag darf auf keiner Seite enthalten sein (ergibt zwangsläufig ein leeres Ergebnis)."
+	},
+	"titleXNOR": {
+		"message": "Ein Eintrag muss entweder auf beiden Seiten oder keiner enthalten sein."
+	},
 	"titleStorage": {
 		"message": "Speicherverbrauch"
 	},

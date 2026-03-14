@@ -127,6 +127,18 @@
 		"message": "An entry must be contained either in the left-hand list or the category on the right, but not in both.",
 		"description": "Mouseover title: logical XOR."
 	},
+	"titleNAND": {
+		"message": "An entry can not be contained in both the left-hand list as well as in the category on the right.",
+		"description": "Mouseover title: logical NAND."
+	},
+	"titleNOR": {
+		"message": "An entry can not be contained on either side (result will be empty).",
+		"description": "Mouseover title: logical NOR."
+	},
+	"titleXNOR": {
+		"message": "An entry must be contained on both sides or neither.",
+		"description": "Mouseover title: logical XNOR."
+	},
 	"titleStorage": {
 		"message": "Storage size",
 		"description": "Mouseover title: storage."

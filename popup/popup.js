@@ -17,8 +17,10 @@ var toShow = null;
 var operatorList = {
 	'AND': {'title': browser.i18n.getMessage("titleAND")},
 	'OR': {'title': browser.i18n.getMessage("titleOR")},
-	'XOR': {'title': browser.i18n.getMessage("titleXOR")}
-	/* 'NOR', 'NAND', 'XNOR'*/
+	'XOR': {'title': browser.i18n.getMessage("titleXOR")},
+	'NAND': {'title': browser.i18n.getMessage("titleNAND")},
+	'NOR': {'title': browser.i18n.getMessage("titleNOR")},
+	'XNOR': {'title': browser.i18n.getMessage("titleXNOR")}
 };
 var storageUsage = {'total' : 0};
 var currentTabsURL = [];
@@ -340,21 +342,21 @@ function catCalc() {
 				case 'AND':
 					resultList = calcAND(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']));
 					break;
-				/*case 'NAND':
+				case 'NAND':
 					resultList = calcAND(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), true);
-					break;*/
+					break;
 				case 'OR':
 					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']));
 					break;
-				/*case 'NOR':
+				case 'NOR':
 					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), true);
-					break;*/
+					break;
 				case 'XOR':
 					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), false, true);
 					break;
-				/*case 'XNOR':
+				case 'XNOR':
 					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), true, true);
-					break;*/
+					break;
 				default:
 					break;
 			}
@@ -376,14 +378,14 @@ function catCalc() {
 		<label for="resultFilterCaseSensitive"><input id="resultFilterCaseSensitive" type="checkbox" class="clickable">${browser.i18n.getMessage("popupMathResultsCaseSensitive")}</label>
 		<input id="resultFilterReset" type="button" class="clickable" value="${browser.i18n.getMessage("popupMathResultsFilterReset")}"></div>
 		<div>` + html + `</div>`;
+		document.getElementById("p_result").innerHTML = html;
+		document.querySelectorAll(".result-entry").forEach(function(node) {node.addEventListener("pointerup", openTab);});
+		document.getElementById("resultFilter").addEventListener("keyup", filterResults);
+		document.getElementById("resultFilterCaseSensitive").addEventListener("click", filterResultsCaseSensitive);
+		document.getElementById("resultFilterReset").addEventListener("click", filterResultsReset);
 	} else {
-		html = `<h4>${browser.i18n.getMessage("popupMathResultsNone")}</h4>` + html;
+		document.getElementById("p_result").innerHTML = `<h4>${browser.i18n.getMessage("popupMathResultsNone")}</h4>`;
 	}
-	document.getElementById("p_result").innerHTML = html;
-	document.querySelectorAll(".result-entry").forEach(function(node) {node.addEventListener("pointerup", openTab);});
-	document.getElementById("resultFilter").addEventListener("keyup", filterResults);
-	document.getElementById("resultFilterCaseSensitive").addEventListener("click", filterResultsCaseSensitive);
-	document.getElementById("resultFilterReset").addEventListener("click", filterResultsReset);
 }
 
 // retrieve all items of a category
