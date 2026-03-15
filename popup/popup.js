@@ -15,12 +15,12 @@ var storedData;
 var selectedCategories;
 var toShow = null;
 var operatorList = {
-	'AND': {'title': browser.i18n.getMessage("titleAND")},
-	'OR': {'title': browser.i18n.getMessage("titleOR")},
-	'XOR': {'title': browser.i18n.getMessage("titleXOR")},
-	'NAND': {'title': browser.i18n.getMessage("titleNAND")},
-	'NOR': {'title': browser.i18n.getMessage("titleNOR")},
-	'XNOR': {'title': browser.i18n.getMessage("titleXNOR")}
+	'AND': {'title': browser.i18n.getMessage("titleAND"), TEXT: "AND", LOGICSYMBOL: "⋀"},
+	'OR': {'title': browser.i18n.getMessage("titleOR"), TEXT: "OR", LOGICSYMBOL: "⋁"},
+	'XOR': {'title': browser.i18n.getMessage("titleXOR"), TEXT: "XOR", LOGICSYMBOL: "⊻"},
+	'NAND': {'title': browser.i18n.getMessage("titleNAND"), TEXT: "NAND", LOGICSYMBOL: "⊼"},
+	'NOR': {'title': browser.i18n.getMessage("titleNOR"), TEXT: "NOR", LOGICSYMBOL: "⊽"},
+	'XNOR': {'title': browser.i18n.getMessage("titleXNOR"), TEXT: "XNOR", LOGICSYMBOL: "⊙"}
 };
 var storageUsage = {'total' : 0};
 var currentTabsURL = [];
@@ -34,6 +34,17 @@ browser.tabs.query({}).then(tl => {
 		currentTabsURL.push(t.url);
 	}
 });
+
+var settings = {};
+var getSettings = browser.storage.sync.get();
+getSettings.then(loadSettings);
+
+function loadSettings(syncSettings) {
+	let tmp = "TEXT";
+	if(syncSettings.notation)
+		tmp = syncSettings.notation;
+	settings["notation"] = tmp;
+}
 
 // toggle display of storage in use
 function displayStorage() {
@@ -312,7 +323,7 @@ function generateOperators(operatorID, value) {
 	var operator = '';
 	operator += `<select id="operator_${operatorID}" name="math_operator" class="clickable">`;
 	Object.keys(operatorList).forEach(function(o) {
-		operator += `<option title="${operatorList[o].title}"${o == value ? ' selected' : ''}>${o}</option>`;
+		operator += `<option title="${operatorList[o].title}"${o == value ? ' selected' : ''}>${operatorList[o][settings.notation]}</option>`;
 	});
 	operator += `</select>`;
 	return operator;

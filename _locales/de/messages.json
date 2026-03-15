@@ -120,7 +120,7 @@
 		"message": "Text (z.B. AND)"
 	},
 	"optionsNotationLogicSymbol": {
-		"message": "Logik-Symbol (z.B. ⋏)"
+		"message": "Logik-Symbol (z.B. ⋀)"
 	},
 	"optionsButtonSave": {
 		"message": "Speichern"

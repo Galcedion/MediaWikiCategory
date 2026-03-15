@@ -160,7 +160,7 @@
 		"description": "Options: notation selection option text."
 	},
 	"optionsNotationLogicSymbol": {
-		"message": "Logic symbol (e.g. ⋏)",
+		"message": "Logic symbol (e.g. ⋀)",
 		"description": "Options: notation selection optio logic symbol."
 	},
 	"optionsButtonSave": {
