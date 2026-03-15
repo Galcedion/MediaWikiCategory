@@ -151,6 +151,26 @@
 		"message": "Delete all data",
 		"description": "Mouseover title: delete all."
 	},
+	"optionsLabelSetNotation": {
+		"message": "Notation",
+		"description": "Options: label for notation selection."
+	},
+	"optionsNotationText": {
+		"message": "Text (e.g. AND)",
+		"description": "Options: notation selection option text."
+	},
+	"optionsNotationLogicSymbol": {
+		"message": "Logic symbol (e.g. ⋏)",
+		"description": "Options: notation selection optio logic symbol."
+	},
+	"optionsButtonSave": {
+		"message": "Save",
+		"description": "Options: button save."
+	},
+	"optionsButtonReset": {
+		"message": "Reset",
+		"description": "Options: button reset."
+	},
 	"errorDialogTitle": {
 		"message": "MediaWiki Category Extension Error",
 		"description": "Error: title of the dialog popup."

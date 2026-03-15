@@ -113,6 +113,21 @@
 	"titleDeleteAll": {
 		"message": "Alle Daten löschen"
 	},
+	"optionsLabelSetNotation": {
+		"message": "Notation"
+	},
+	"optionsNotationText": {
+		"message": "Text (z.B. AND)"
+	},
+	"optionsNotationLogicSymbol": {
+		"message": "Logik-Symbol (z.B. ⋏)"
+	},
+	"optionsButtonSave": {
+		"message": "Speichern"
+	},
+	"optionsButtonReset": {
+		"message": "Zurücksetzen"
+	},
 	"errorDialogTitle": {
 		"message": "MediaWiki Category AddOn Fehler"
 	},

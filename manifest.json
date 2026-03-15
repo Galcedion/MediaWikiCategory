@@ -37,5 +37,8 @@
 		"gecko": {
 			"id": "mwc@galcedion.de"
 		}
+	},
+	"options_ui": {
+		"page": "settings/options.html"
 	}
 }
