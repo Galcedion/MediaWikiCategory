@@ -187,6 +187,14 @@
 		"message": "No",
 		"description": "Info: truth table no."
 	},
+	"optionsSectionSettings": {
+		"message": "Settings",
+		"description": "Options: section title for settings section."
+	},
+	"optionsSectionUpDown": {
+		"message": "Import / Export",
+		"description": "Options: section title for up and down section."
+	},
 	"optionsLabelSetNotation": {
 		"message": "Notation",
 		"description": "Options: label for notation selection."
@@ -206,6 +214,42 @@
 	"optionsButtonReset": {
 		"message": "Reset",
 		"description": "Options: button reset."
+	},
+	"optionsLabelSelectSyncUp": {
+		"message": "Select wikis to export and synchronize",
+		"description": "Options: label for wiki selection to store."
+	},
+	"optionsSyncUpSelected": {
+		"message": "Export selected",
+		"description": "Options: button store selected wikis."
+	},
+	"optionsSyncUpAll": {
+		"message": "Export all",
+		"description": "Options: button store all wikis."
+	},
+	"optionsSyncUpTitle": {
+		"message": "This will overwrite selected / all wikis in the synchronized storage!",
+		"description": "Options: title warning for sync up."
+	},
+	"optionsLabelSelectSyncDown": {
+		"message": "Select wikis to import from synchronized storage",
+		"description": "Options: label for wiki selection to load."
+	},
+	"optionsSyncDownSelected": {
+		"message": "Import selected",
+		"description": "Options: button import selected wikis."
+	},
+	"optionsSyncDownAll": {
+		"message": "Import all",
+		"description": "Options: button import all wikis."
+	},
+	"optionsSyncDownTitle": {
+		"message": "This will overwrite selected / all wikis in the local storage!",
+		"description": "Options: title warning for sync down."
+	},
+	"optionsSubstrCategories": {
+		"message": "categories",
+		"description": "Options: select option substring."
 	},
 	"errorDialogTitle": {
 		"message": "MediaWiki Category Extension Error",

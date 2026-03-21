@@ -140,6 +140,12 @@
 	"infoDialogTruthTableNo": {
 		"message": "Nein"
 	},
+	"optionsSectionSettings": {
+		"message": "Einstellungen"
+	},
+	"optionsSectionUpDown": {
+		"message": "Import / Export"
+	},
 	"optionsLabelSetNotation": {
 		"message": "Notation"
 	},
@@ -154,6 +160,33 @@
 	},
 	"optionsButtonReset": {
 		"message": "Zurücksetzen"
+	},
+	"optionsLabelSelectSyncUp": {
+		"message": "Wikis zum exportieren und synchronisieren wählen"
+	},
+	"optionsSyncUpSelected": {
+		"message": "Ausgewählte exportieren"
+	},
+	"optionsSyncUpAll": {
+		"message": "Alle exportieren"
+	},
+	"optionsSyncUpTitle": {
+		"message": "Das wird die ausgewählten / alle Wikis im synchronisierten Speicher überschreiben!"
+	},
+	"optionsLabelSelectSyncDown": {
+		"message": "Wikis zum importieren wählen"
+	},
+	"optionsSyncDownSelected": {
+		"message": "Ausgewählte importieren"
+	},
+	"optionsSyncDownAll": {
+		"message": "Alle importieren"
+	},
+	"optionsSyncDownTitle": {
+		"message": "Das wird die ausgewählten / alle Wikis im lokalen Speicher überschreiben!"
+	},
+	"optionsSubstrCategories": {
+		"message": "Kategorien"
 	},
 	"errorDialogTitle": {
 		"message": "MediaWiki Category AddOn Fehler"
