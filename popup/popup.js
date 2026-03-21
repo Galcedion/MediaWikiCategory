@@ -356,23 +356,24 @@ function addCatCalc() {
 	var html = '';
 	for(let i = 0; i < Object.keys(selectedCategories).length; i++) {
 		if(selectedCategories[i]['type'] == 'o')
-			html += generateOperators(i, selectedCategories[i]['value']);
+			html += generateOperators(i, selectedCategories[i]['value'], i);
 		else
 			html += `<i>${selectedCategories[i]['value']}</i>`;
 	}
 	document.getElementById("p_math").innerHTML = html;
 	document.getElementsByName("math_operator").forEach(function(node) {node.addEventListener("change", updateOperator);});
+	document.querySelectorAll('#p_math div img').forEach(function(node) {node.addEventListener("click", switchCategories);});
 	catCalc();
 }
 
 // create visual operator selection
-function generateOperators(operatorID, value) {
+function generateOperators(operatorID, value, pos) {
 	var operator = '';
-	operator += `<select id="operator_${operatorID}" name="math_operator" class="clickable">`;
+	operator += `<div class="text-center"><img data-pos="${pos}" src="../heroicons/arrows-right-left.svg" class="clickable icon"><br><select id="operator_${operatorID}" name="math_operator" class="clickable">`;
 	Object.keys(operatorList).forEach(function(o) {
 		operator += `<option title="${operatorList[o].title}"${o == value ? ' selected' : ''}>${operatorList[o][settings.notation]}</option>`;
 	});
-	operator += `</select>`;
+	operator += `</select></div>`;
 	return operator;
 }
 
@@ -380,6 +381,20 @@ function generateOperators(operatorID, value) {
 function updateOperator() {
 	var caller = this.id;
 	selectedCategories[caller.replace('operator_', '')]['value'] = this.options[this.selectedIndex].text;
+	catCalc();
+}
+
+// switch two categories around an operator and recalculate
+function switchCategories() {
+	var caller = parseInt(this.dataset.pos);
+	let parent = this.parentNode;
+	let left = parent.previousElementSibling;
+	let right = parent.nextElementSibling;
+	parent.parentNode.insertBefore(right.cloneNode(true), parent);
+	parent.parentNode.replaceChild(left, right);
+	let tmp = selectedCategories[caller - 1];
+	selectedCategories[caller - 1] = selectedCategories[caller + 1];
+	selectedCategories[caller + 1] = tmp;
 	catCalc();
 }
 
