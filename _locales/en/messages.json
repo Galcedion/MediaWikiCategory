@@ -68,7 +68,7 @@
 		"description": "Popup display, delete all yes."
 	},
 	"popupDeleteAllTextNo": {
-		"message": "Yes",
+		"message": "No",
 		"description": "Popup display, delete all no."
 	},
 	"popupPages": {
@@ -139,6 +139,10 @@
 		"message": "An entry must be contained on both sides or neither.",
 		"description": "Mouseover title: logical XNOR."
 	},
+	"titleInfo": {
+		"message": "Information",
+		"description": "Mouseover title: info."
+	},
 	"titleStorage": {
 		"message": "Storage size",
 		"description": "Mouseover title: storage."
@@ -150,6 +154,38 @@
 	"titleDeleteAll": {
 		"message": "Delete all data",
 		"description": "Mouseover title: delete all."
+	},
+	"infoDialogPopupUse": {
+		"message": "In the overview of your stored data you can select a wiki via the tab 'Overview'. The selected wiki is opened automatically if it isn't already open. Once a wiki is opened you can swap to it via the right tab of the wiki's name.",
+		"description": "Info: description of how to use the popup page."
+	},
+	"infoDialogTruthTableUse": {
+		"message": "Below is the list of available operators and a truth table. Hover over the operators to see how entries in categories can be matched and filtered. Please note that non-existent entries can't appear even if the truth table says so.",
+		"description": "Info: description of how to use the truth table."
+	},
+	"infoDialogTruthTable": {
+		"message": "Truth table",
+		"description": "Info: headline truth table."
+	},
+	"infoDialogTruthTableCategoryLeft": {
+		"message": "Category left",
+		"description": "Info: truth table category on the left side."
+	},
+	"infoDialogTruthTableCategoryRight": {
+		"message": "Category right",
+		"description": "Info: truth table category on the right side."
+	},
+	"infoDialogTruthTableResult": {
+		"message": "Result",
+		"description": "Info: truth table result."
+	},
+	"infoDialogTruthTableYes": {
+		"message": "Yes",
+		"description": "Info: truth table yes."
+	},
+	"infoDialogTruthTableNo": {
+		"message": "No",
+		"description": "Info: truth table no."
 	},
 	"optionsLabelSetNotation": {
 		"message": "Notation",

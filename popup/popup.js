@@ -3,9 +3,11 @@ document.getElementById("p_title").innerHTML = browser.i18n.getMessage("popupTit
 document.getElementById("p_available").innerHTML = browser.i18n.getMessage("popupLoading");
 document.getElementById("p_nav_overview").innerHTML = browser.i18n.getMessage("popupNavOverview");
 document.getElementById("p_nav_show").innerHTML = browser.i18n.getMessage("popupNavShow");
+document.getElementById("p_info").title = browser.i18n.getMessage("titleInfo");
 document.getElementById("p_storage").title = browser.i18n.getMessage("titleStorage");
 document.getElementById("p_refresh").title = browser.i18n.getMessage("titleRefresh");
 document.getElementById("p_deleteall").title = browser.i18n.getMessage("titleDeleteAll");
+document.getElementById("p_info").addEventListener("click", displayInfo);
 document.getElementById("p_storage").addEventListener("click", displayStorage);
 document.getElementById("p_refresh").addEventListener("click", refreshData);
 document.getElementById("p_deleteall").addEventListener("click", deleteAll);
@@ -34,6 +36,7 @@ browser.tabs.query({}).then(tl => {
 		currentTabsURL.push(t.url);
 	}
 });
+var tt_operator = null;
 
 var settings = {};
 var getSettings = browser.storage.sync.get();
@@ -44,6 +47,37 @@ function loadSettings(syncSettings) {
 	if(syncSettings.notation)
 		tmp = syncSettings.notation;
 	settings["notation"] = tmp;
+}
+
+// toggle display of info
+function displayInfo() {
+	if(document.getElementById("info_display")) {
+		document.getElementById("info_display").remove();
+		document.getElementById("p_info").classList.remove("active");
+		tt_operator = null;
+		return;
+	}
+	document.getElementById("p_info").classList.add("active");
+	let infoDisplay = document.createElement("div");
+	infoDisplay.id = "info_display";
+	infoDisplay.classList.add("info_display");
+	infoDisplay.innerHTML += `${browser.i18n.getMessage("infoDialogPopupUse")}<br>${browser.i18n.getMessage("infoDialogTruthTableUse")}`;
+	let operatorHTML = '';
+	for(let [key, value] of Object.entries(operatorList)) {
+		operatorHTML += `<strong name="tt_operator" data-operator="${key}">${value[settings.notation]}</strong>`;
+	}
+	infoDisplay.innerHTML += `<div class="text-center">${operatorHTML}</div><h4 class="text-center">${browser.i18n.getMessage("infoDialogTruthTable")}</h4>`;
+	infoDisplay.innerHTML += `<table id="tt_table" class="margin-center text-center">
+		<tr>
+			<th>${browser.i18n.getMessage("infoDialogTruthTableCategoryLeft")}</th><th>${browser.i18n.getMessage("infoDialogTruthTableCategoryRight")}</th><th>${browser.i18n.getMessage("infoDialogTruthTableResult")}</th>
+		</tr>
+		<tr><td class="tt_no">${browser.i18n.getMessage("infoDialogTruthTableNo")}</td><td class="tt_no">${browser.i18n.getMessage("infoDialogTruthTableNo")}</td><td></td></tr>
+		<tr><td class="tt_no">${browser.i18n.getMessage("infoDialogTruthTableNo")}</td><td class="tt_yes">${browser.i18n.getMessage("infoDialogTruthTableYes")}</td><td></td></tr>
+		<tr><td class="tt_yes">${browser.i18n.getMessage("infoDialogTruthTableYes")}</td><td class="tt_no">${browser.i18n.getMessage("infoDialogTruthTableNo")}</td><td></td></tr>
+		<tr><td class="tt_yes">${browser.i18n.getMessage("infoDialogTruthTableYes")}</td><td class="tt_yes">${browser.i18n.getMessage("infoDialogTruthTableYes")}</td><td></td></tr>
+	</table>`;
+	document.getElementById("p_special").appendChild(infoDisplay);
+	document.getElementsByName("tt_operator").forEach(function(i) {i.addEventListener("mouseover", showTruthTable)});
 }
 
 // toggle display of storage in use
@@ -486,6 +520,33 @@ function filterResultsCaseSensitive() {
 function filterResultsReset() {
 	document.getElementById('resultFilter').value = '';
 	document.querySelectorAll('.result-entry.hidden').forEach(function(elem) {elem.classList.remove('hidden');});
+}
+
+// set truth table display to currently targeted logic operation
+function showTruthTable() {
+	if(tt_operator == this.dataset.operator)
+		return;
+	tt_operator = this.dataset.operator;
+	let tt_data = {
+		AND : [0, 0, 0, 1],
+		OR : [0, 1, 1, 1],
+		XOR : [0, 1, 1, 0],
+		NAND : [1, 1, 1, 0],
+		NOR : [1, 0, 0, 0],
+		XNOR : [1, 0, 0, 1],
+	}
+	let cells = document.querySelectorAll('#tt_table tr td:last-child');
+	for(i = 0; i < cells.length; i++) {
+		if(tt_data[tt_operator][i] == 0) {
+			cells[i].classList.remove('tt_yes');
+			cells[i].classList.add('tt_no');
+			cells[i].innerHTML = browser.i18n.getMessage("infoDialogTruthTableNo");
+		} else {
+			cells[i].classList.remove('tt_no');
+			cells[i].classList.add('tt_yes');
+			cells[i].innerHTML = browser.i18n.getMessage("infoDialogTruthTableYes");
+		}
+	}
 }
 
 // visual error handler

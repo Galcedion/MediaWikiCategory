@@ -104,6 +104,9 @@
 	"titleXNOR": {
 		"message": "Ein Eintrag muss entweder auf beiden Seiten oder keiner enthalten sein."
 	},
+	"titleInfo": {
+		"message": "Informationen"
+	},
 	"titleStorage": {
 		"message": "Speicherverbrauch"
 	},
@@ -112,6 +115,30 @@
 	},
 	"titleDeleteAll": {
 		"message": "Alle Daten löschen"
+	},
+	"infoDialogPopupUse": {
+		"message": "In der Übersicht der gespeicherten Daten können Sie ein Wiki über den Reiter 'Übersicht' auswählen. Das gewählte Wiki wird automatisch geöffnet wenn es noch nicht geöffnet wurde. Sobald ein Wiki geöffnet wurde können Sie über den rechten Reiter mit dem Wiki-Namen dorthin wechseln."
+	},
+	"infoDialogTruthTableUse": {
+		"message": "Unten ist eine Liste der verfügbaren Operatoren und eine Wahrheitstabelle. Bewegen Sie die Maus über die Operatoren um zu sehen, wie Einträge in Kategorien verbunden und gefiltert werden können. Bitte beachten Sie, dass nicht existierende Einträge nicht erscheinen können, auch wenn die Wahrheitstabelle es so ausdrückt."
+	},
+	"infoDialogTruthTable": {
+		"message": "Wahrheitstabelle"
+	},
+	"infoDialogTruthTableCategoryLeft": {
+		"message": "Kategorie links"
+	},
+	"infoDialogTruthTableCategoryRight": {
+		"message": "Kategorie rechts"
+	},
+	"infoDialogTruthTableResult": {
+		"message": "Ergebnis"
+	},
+	"infoDialogTruthTableYes": {
+		"message": "Ja"
+	},
+	"infoDialogTruthTableNo": {
+		"message": "Nein"
 	},
 	"optionsLabelSetNotation": {
 		"message": "Notation"

@@ -23,6 +23,9 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 #p_special {position: absolute; right: calc(15% + 0.5em); margin: calc(1em - 3px); font-style: normal; border: 1px solid var(--border); border-radius: 5px; }
 #p_special img {margin: 2px; }
 #p_special img + img {margin-left: 1em; }
+#tt_table th {border-bottom: 1px solid var(--border);}
+#tt_table th + th, #tt_table tr + tr {border-left: 1px dashed var(--border);}
+#tt_table td {border-bottom: 1px dashed var(--border);}
 #delete_all_dialog {border: 2px solid var(--border); border-radius: 5px; box-shadow: 0 0 5px 5px crimson; }
 #delete_all_dialog input {padding: 0.25em; border-radius: 5px; }
 #delete_all_dialog input:first-child {background-color: var(--warn); }
@@ -40,6 +43,7 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .active:hover, .active:focus {background-color: var(--active-f)!important;}
 .section_title {padding: 5px 5px 0 5px; border-radius: 5px 5px 0 0;}
 .icon {vertical-align: text-top; border-radius: 5px; margin: 0 2px;}
+.info_display {position: absolute; width:45em; right: 0; padding: 5px; background-color: var(--bg); top: calc(2em - 2px); border: 1px solid var(--border); border-radius: 0 0 5px 5px;}
 .storage_display {position: absolute; width:15em; right: 0; padding: 5px; background-color: var(--bg); top: calc(2em - 2px); border: 1px solid var(--border); border-radius: 0 0 5px 5px;}
 .clickable {cursor: pointer; transition: all 0.5s ease;}
 .clickable:not(.icon) {background-color: var(--clickable);}
@@ -49,6 +53,7 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .flex-10 {flex: 10;}
 .text-center {text-align: center;}
 .text-right {text-align: right;}
+.margin-center {margin-left: auto; margin-right: auto;}
 .math {padding: 2em 0;}
 .math i {padding: 0 5px;}
 .math select {text-align: center; border: 0; border-radius: 5px;}
@@ -62,3 +67,5 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .clicked:hover, .clicked:active {background-color: var(--success-f)!important;}
 .border-merge {border-bottom: 0!important; border-radius: 0 5px 0 0!important;}
 .error {background-color: var(--warn); color: var(--white); padding: 5px;}
+.tt_yes {background-color: var(--success);}
+.tt_no {background-color: var(--warn);}
