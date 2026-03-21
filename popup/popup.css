@@ -14,21 +14,23 @@ html {background-color: var(--white); margin: 0 15%;}
 strong {display: inline-block; border: 1px solid var(--border); border-bottom: 0; font-weight: normal;}
 strong[name="popupShow"] {margin-top: 0.5em;}
 h4 {margin: 0;}
+table {border-spacing: 0;}
 ul {padding-bottom: 0.25em; border: 1px solid var(--border); border-top: 0; border-radius: 0 0 5px 5px;}
 li {width: 50%; display: flex; padding-left: 5px; border-radius: 5px; transition: }
 li:hover {background-color: var(--clickable);}
 li + li {margin-top: 0.25em;}
 label {margin: 0 5px; padding: 0 5px; border-radius: 5px;}
 input.clickable {border: 1px solid var(--border); border-radius: 5px;}
-#p_special {position: absolute; right: calc(15% + 0.5em); margin: calc(1em - 3px); font-style: normal; border: 1px solid var(--border); border-radius: 5px; }
-#p_special img {margin: 2px; }
-#p_special img + img {margin-left: 1em; }
-#tt_table th {border-bottom: 1px solid var(--border);}
-#tt_table th + th, #tt_table tr + tr {border-left: 1px dashed var(--border);}
-#tt_table td {border-bottom: 1px dashed var(--border);}
-#delete_all_dialog {border: 2px solid var(--border); border-radius: 5px; box-shadow: 0 0 5px 5px crimson; }
-#delete_all_dialog input {padding: 0.25em; border-radius: 5px; }
-#delete_all_dialog input:first-child {background-color: var(--warn); }
+#p_special {position: absolute; right: calc(15% + 0.5em); margin: calc(1em - 3px); font-style: normal; border: 1px solid var(--border); border-radius: 5px;}
+#p_special img {margin: 2px;}
+#p_special img + img {margin-left: 1em;}
+#tt_table th {border-bottom: 2px solid var(--border);}
+#tt_table th:first-child, #tt_table td:first-child {border-right: 1px dashed var(--border);}
+#tt_table th:last-child, #tt_table td:last-child {border-left: 2px solid var(--border);}
+#tt_table tr:not(:last-child) td {border-bottom: 1px dashed var(--border);}
+#delete_all_dialog {border: 2px solid var(--border); border-radius: 5px; box-shadow: 0 0 5px 5px crimson;}
+#delete_all_dialog input {padding: 0.25em; border-radius: 5px;}
+#delete_all_dialog input:first-child {background-color: var(--warn);}
 #p_overview {padding: 1em;}
 #p_overview > div {padding: 0.5em 0.25em; border: 1px solid var(--border); border-radius: 0 5px 5px 5px;}
 #error {border-bottom: 2px solid var(--bg); border-radius: 0 0 5px 5px; min-height: 5px;}
@@ -43,8 +45,9 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .active:hover, .active:focus {background-color: var(--active-f)!important;}
 .section_title {padding: 5px 5px 0 5px; border-radius: 5px 5px 0 0;}
 .icon {vertical-align: text-top; border-radius: 5px; margin: 0 2px;}
-.info_display {position: absolute; width:45em; right: 0; padding: 5px; background-color: var(--bg); top: calc(2em - 2px); border: 1px solid var(--border); border-radius: 0 0 5px 5px;}
-.storage_display {position: absolute; width:15em; right: 0; padding: 5px; background-color: var(--bg); top: calc(2em - 2px); border: 1px solid var(--border); border-radius: 0 0 5px 5px;}
+.display_box {position: absolute; right: 0; padding: 5px; background-color: var(--bg); top: calc(2em - 2px); border: 1px solid var(--border); border-radius: 0 0 5px 5px; max-width: calc(70vw - 4em + 6px);}
+.info_display {width:45em;}
+.storage_display {width:15em;}
 .clickable {cursor: pointer; transition: all 0.5s ease;}
 .clickable:not(.icon) {background-color: var(--clickable);}
 .clickable:hover, .clickable:active {background-color: var(--clickable-f);}
@@ -67,5 +70,9 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .clicked:hover, .clicked:active {background-color: var(--success-f)!important;}
 .border-merge {border-bottom: 0!important; border-radius: 0 5px 0 0!important;}
 .error {background-color: var(--warn); color: var(--white); padding: 5px;}
+.info-operators {margin: 1em 0;}
+.info-operators i {padding: 5px; background-color: var(--active); border: 1px solid var(--border); cursor: pointer; border-radius: 5px;}
+.info-operators i:hover {background-color: var(--active-f);}
+.info-operators i + i {margin-left: 1em;}
 .tt_yes {background-color: var(--success);}
 .tt_no {background-color: var(--warn);}

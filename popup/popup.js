@@ -13,6 +13,7 @@ document.getElementById("p_refresh").addEventListener("click", refreshData);
 document.getElementById("p_deleteall").addEventListener("click", deleteAll);
 document.getElementById("p_nav_overview").addEventListener("click", showOverview);
 document.getElementById("error").addEventListener("click", closeError);
+document.addEventListener("keydown", function(event) {if(event.key == 'Escape') displayCleanup();});
 var storedData;
 var selectedCategories;
 var toShow = null;
@@ -51,22 +52,20 @@ function loadSettings(syncSettings) {
 
 // toggle display of info
 function displayInfo() {
-	if(document.getElementById("info_display")) {
-		document.getElementById("info_display").remove();
-		document.getElementById("p_info").classList.remove("active");
-		tt_operator = null;
+	let isActive = Boolean(document.getElementById("info_display"));
+	displayCleanup();
+	if(isActive)
 		return;
-	}
 	document.getElementById("p_info").classList.add("active");
 	let infoDisplay = document.createElement("div");
 	infoDisplay.id = "info_display";
-	infoDisplay.classList.add("info_display");
+	infoDisplay.classList.add("display_box", "info_display");
 	infoDisplay.innerHTML += `${browser.i18n.getMessage("infoDialogPopupUse")}<br>${browser.i18n.getMessage("infoDialogTruthTableUse")}`;
 	let operatorHTML = '';
 	for(let [key, value] of Object.entries(operatorList)) {
-		operatorHTML += `<strong name="tt_operator" data-operator="${key}">${value[settings.notation]}</strong>`;
+		operatorHTML += `<i name="tt_operator" data-operator="${key}">${value[settings.notation]}</i>`;
 	}
-	infoDisplay.innerHTML += `<div class="text-center">${operatorHTML}</div><h4 class="text-center">${browser.i18n.getMessage("infoDialogTruthTable")}</h4>`;
+	infoDisplay.innerHTML += `<div class="info-operators text-center">${operatorHTML}</div><h4 id="tt_title" class="text-center">${browser.i18n.getMessage("infoDialogTruthTable")}</h4>`;
 	infoDisplay.innerHTML += `<table id="tt_table" class="margin-center text-center">
 		<tr>
 			<th>${browser.i18n.getMessage("infoDialogTruthTableCategoryLeft")}</th><th>${browser.i18n.getMessage("infoDialogTruthTableCategoryRight")}</th><th>${browser.i18n.getMessage("infoDialogTruthTableResult")}</th>
@@ -82,15 +81,14 @@ function displayInfo() {
 
 // toggle display of storage in use
 function displayStorage() {
-	if(document.getElementById("storage_display")) {
-		document.getElementById("storage_display").remove();
-		document.getElementById("p_storage").classList.remove("active");
+	let isActive = Boolean(document.getElementById("storage_display"));
+	displayCleanup();
+	if(isActive)
 		return;
-	}
 	document.getElementById("p_storage").classList.add("active");
 	let storageDisplay = document.createElement("div");
 	storageDisplay.id = "storage_display";
-	storageDisplay.classList.add("storage_display");
+	storageDisplay.classList.add("display_box", "storage_display");
 	for(let [key, value] of Object.entries(storageUsage)) {
 		let unit = 'k';
 		value = value / 1024;
@@ -102,6 +100,21 @@ function displayStorage() {
 		storageDisplay.innerHTML += `${key}: ${value}<br>`;
 	}
 	document.getElementById("p_special").appendChild(storageDisplay);
+}
+
+// removes unnecessary elements from the page
+function displayCleanup() {
+	if(document.getElementById("info_display")) { // remove displayInfo content
+		document.getElementById("info_display").remove();
+		document.getElementById("p_info").classList.remove("active");
+		tt_operator = null;
+		return;
+	}
+	if(document.getElementById("storage_display")) { // remove displayStorage content
+		document.getElementById("storage_display").remove();
+		document.getElementById("p_storage").classList.remove("active");
+		return;
+	}
 }
 
 // refresh data and rebuild UI
@@ -527,6 +540,7 @@ function showTruthTable() {
 	if(tt_operator == this.dataset.operator)
 		return;
 	tt_operator = this.dataset.operator;
+	document.getElementById('tt_title').innerHTML = browser.i18n.getMessage("infoDialogTruthTable") + ': ' + this.textContent;
 	let tt_data = {
 		AND : [0, 0, 0, 1],
 		OR : [0, 1, 1, 1],
