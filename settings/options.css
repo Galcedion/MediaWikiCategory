@@ -1,3 +1,8 @@
+:root {
+  --warn: red;
+}
 td {text-align: center;}
 hr {color: lightgray;}
 th {text-align: center;}
+.dangerzone {color: var(--warn);}
+.crit-button {background-color: var(--warn); border-radius: 5px;}

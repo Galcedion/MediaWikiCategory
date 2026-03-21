@@ -146,6 +146,9 @@
 	"optionsSectionUpDown": {
 		"message": "Import / Export"
 	},
+	"optionsSectionDelete": {
+		"message": "Gefahrenzone"
+	},
 	"optionsLabelSetNotation": {
 		"message": "Notation"
 	},
@@ -187,6 +190,15 @@
 	},
 	"optionsSubstrCategories": {
 		"message": "Kategorien"
+	},
+	"optionsDeleteLocal": {
+		"message": "Wiki-Daten löschen"
+	},
+	"optionsDeleteSync": {
+		"message": "Einstellungen löschen"
+	},
+	"optionsDeleteAll": {
+		"message": "Alles löschen"
 	},
 	"errorDialogTitle": {
 		"message": "MediaWiki Category AddOn Fehler"

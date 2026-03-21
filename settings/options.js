@@ -13,6 +13,10 @@ document.getElementById("sync_down_selected").value = browser.i18n.getMessage('o
 document.getElementById("sync_down_selected").title = browser.i18n.getMessage('optionsSyncDownTitle');
 document.getElementById("sync_down_all").value = browser.i18n.getMessage('optionsSyncDownAll');
 document.getElementById("sync_down_all").title = browser.i18n.getMessage('optionsSyncDownTitle');
+document.getElementById("section_delete").textContent = browser.i18n.getMessage('optionsSectionDelete');
+document.getElementById("delete_local").value = browser.i18n.getMessage('optionsDeleteLocal');
+document.getElementById("delete_sync").value = browser.i18n.getMessage('optionsDeleteSync');
+document.getElementById("delete_all").value = browser.i18n.getMessage('optionsDeleteAll');
 const notationOptions = {
 	TEXT: browser.i18n.getMessage('optionsNotationText'),
 	LOGICSYMBOL: browser.i18n.getMessage('optionsNotationLogicSymbol')
@@ -26,6 +30,9 @@ document.getElementById('sync_up_selected').addEventListener('click', syncUp);
 document.getElementById('sync_up_all').addEventListener('click', syncUp);
 document.getElementById('sync_down_selected').addEventListener('click', syncDown);
 document.getElementById('sync_down_all').addEventListener('click', syncDown);
+document.getElementById('delete_local').addEventListener('click', deleteStorage);
+document.getElementById('delete_sync').addEventListener('click', deleteStorage);
+document.getElementById('delete_all').addEventListener('click', deleteStorage);
 var getSettings = browser.storage.sync.get();
 getSettings.then(loadSettings);
 var getLocalStorage = browser.storage.local.get(null);
@@ -91,4 +98,12 @@ function syncUp() {
 
 function syncDown() {
 	// TODO
+}
+
+function deleteStorage() {
+	if(this.id == 'delete_local' || this.id == 'delete_all')
+		browser.storage.local.clear();
+	if(this.id == 'delete_sync' || this.id == 'delete_all')
+		browser.storage.sync.clear();
+	window.location.reload();
 }

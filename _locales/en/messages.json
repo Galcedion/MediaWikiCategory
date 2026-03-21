@@ -195,6 +195,10 @@
 		"message": "Import / Export",
 		"description": "Options: section title for up and down section."
 	},
+	"optionsSectionDelete": {
+		"message": "Danger zone",
+		"description": "Options: section title deletion section."
+	},
 	"optionsLabelSetNotation": {
 		"message": "Notation",
 		"description": "Options: label for notation selection."
@@ -250,6 +254,18 @@
 	"optionsSubstrCategories": {
 		"message": "categories",
 		"description": "Options: select option substring."
+	},
+	"optionsDeleteLocal": {
+		"message": "Delete wiki data",
+		"description": "Options: button delete local."
+	},
+	"optionsDeleteSync": {
+		"message": "Delete settings",
+		"description": "Options: button delete sync."
+	},
+	"optionsDeleteAll": {
+		"message": "Delete everything",
+		"description": "Options: button delete all."
 	},
 	"errorDialogTitle": {
 		"message": "MediaWiki Category Extension Error",
