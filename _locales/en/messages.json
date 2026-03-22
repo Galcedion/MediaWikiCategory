@@ -75,6 +75,10 @@
 		"message": "Pages",
 		"description": "Popup display, number of pages saved for a Wiki."
 	},
+	"popupMathAvailableCategories": {
+		"message": "Available categories",
+		"description": "Popup display, available categories as basis for math."
+	},
 	"popupMathResults": {
 		"message": "Results",
 		"description": "Popup display, results headline for math operations."
@@ -142,6 +146,10 @@
 	"titleXNOR": {
 		"message": "An entry must be contained on both sides or neither.",
 		"description": "Mouseover title: logical XNOR."
+	},
+	"titleSwitch": {
+		"message": "Switch categories",
+		"description": "Mouseover title: switch categories."
 	},
 	"titleInfo": {
 		"message": "Information",

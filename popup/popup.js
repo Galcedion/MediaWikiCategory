@@ -303,7 +303,7 @@ function showWiki() {
 	}
 	if('dataset' in this)
 		toShow = this.dataset.wiki;
-	var html = '';
+	var html = `<h4>${browser.i18n.getMessage("popupMathAvailableCategories")}</h4>`;
 	JSON.parse(storedData[toShow]).forEach(function(category) {
 		html += `<label for="sc_${category.title}" class="clickable">
 		<input type="checkbox" name="selected_cat" id="sc_${category.title}" value="${category.title}" class="clickable">
@@ -381,7 +381,7 @@ function addCatCalc() {
 // create visual operator selection
 function generateOperators(operatorID, value, pos) {
 	var operator = '';
-	operator += `<div class="text-center"><img data-pos="${pos}" src="../heroicons/arrows-right-left.svg" class="clickable icon"><br><select id="operator_${operatorID}" name="math_operator" class="clickable">`;
+	operator += `<div class="text-center"><img data-pos="${pos}" src="../heroicons/arrows-right-left.svg" class="clickable icon" title="${browser.i18n.getMessage("titleSwitch")}"><br><select id="operator_${operatorID}" name="math_operator" class="clickable">`;
 	Object.keys(operatorList).forEach(function(o) {
 		operator += `<option title="${operatorList[o].title}"${o == value ? ' selected' : ''}>${operatorList[o][settings.notation]}</option>`;
 	});
@@ -540,7 +540,7 @@ function openTab() {
 
 // filter resultlist by live-input
 function filterResults() {
-	let filter = this.value;
+	let filter = document.getElementById('resultFilter').value;
 	if(!caseSensitive)
 		filter = filter.toLowerCase();
 	document.querySelectorAll('.result-entry').forEach(function(elem) {
@@ -554,6 +554,7 @@ function filterResults() {
 // set case sensitive for resultlist live-input filter
 function filterResultsCaseSensitive() {
 	document.getElementById('resultFilterCaseSensitive').checked ? caseSensitive = true : caseSensitive = false;
+	filterResults();
 }
 
 // reset filtering of resultlist
