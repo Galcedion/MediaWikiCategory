@@ -71,6 +71,9 @@
 	"popupMathResultsFilterReset": {
 		"message": "Zurücksetzen"
 	},
+	"popupStorageTotal": {
+		"message": "Gesamt"
+	},
 	"titleOpen": {
 		"message": "Öffnen"
 	},

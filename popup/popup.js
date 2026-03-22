@@ -25,7 +25,8 @@ var operatorList = {
 	'NOR': {'title': browser.i18n.getMessage("titleNOR"), TEXT: "NOR", LOGICSYMBOL: "⊽"},
 	'XNOR': {'title': browser.i18n.getMessage("titleXNOR"), TEXT: "XNOR", LOGICSYMBOL: "⊙"}
 };
-var storageUsage = {'total' : 0};
+const storageUsageTotal = browser.i18n.getMessage("popupStorageTotal");
+var storageUsage = {};
 var currentTabsURL = [];
 const displayState = {NODATA: 'NODATA', DATA: 'DATA', OVERVIEW: 'OVERVIEW', INWIKI: 'INWIKI'}; // reference for reload operations to refresh specific sections
 var pageDisplayState = displayState.NODATA;
@@ -85,20 +86,31 @@ function displayStorage() {
 	displayCleanup();
 	if(isActive)
 		return;
+	const units = {0: 'B', 1: 'kB', 2: 'MB', 3: 'GB', 4: 'TB'};
 	document.getElementById("p_storage").classList.add("active");
 	let storageDisplay = document.createElement("div");
 	storageDisplay.id = "storage_display";
 	storageDisplay.classList.add("display_box", "storage_display");
+	let html = `<table class="margin-center">`;
+	let firstRow = true;
 	for(let [key, value] of Object.entries(storageUsage)) {
-		let unit = 'k';
-		value = value / 1024;
-		if(value > 1024) {
-			value = value / 1024;
-			unit = 'M';
+		let unitStep = 0;
+		while(value > 1024) {
+			unitStep += 1;
+			value /= 1024;
 		}
-		value = (Math.ceil(value * 10) / 10).toFixed(1) + unit + 'B';
-		storageDisplay.innerHTML += `${key}: ${value}<br>`;
+		value = (Math.ceil(value * 10) / 10).toFixed(1);
+		html += `<tr>`;
+		if(firstRow) {
+			html += `<th>${key}</th><th>${value} ${units[unitStep]}</th>`;
+			firstRow = false;
+		} else {
+			html += `<td>${key}</td><td>${value} ${units[unitStep]}</td>`;
+		}
+		html += `<tr>`;
 	}
+	html += `</table>`;
+	storageDisplay.innerHTML += html;
 	document.getElementById("p_special").appendChild(storageDisplay);
 }
 
@@ -197,9 +209,10 @@ function deleteAllConfirmation() {
 
 // calculate approximate disc size in use by storage
 function calculateStorage() {
+	storageUsage[storageUsageTotal] = 0;
 	for(let [key, value] of Object.entries(storedData)) {
 		let curStorage = key.length * 2 + value.length * 2;
-		storageUsage['total'] += curStorage;
+		storageUsage[storageUsageTotal] += curStorage;
 		storageUsage[key] = curStorage;
 	}
 }
@@ -247,11 +260,10 @@ function fetchStream(dataStream) {
 		${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")}
 		<img name="popupDelete" src="../heroicons/trash.svg" class="clickable icon" data-wiki="${key}" title="${browser.i18n.getMessage("titleDelete")}">
 		</div>`;
-		if(!hasError) {
+		if(!hasError)
 			html += entryContent;
-			calculateStorage();
-		}
 	}
+	calculateStorage();
 	document.getElementById("p_overview").innerHTML = html;
 	document.getElementsByName("popupShow").forEach(function(node) {node.addEventListener("click", showWiki);});
 	document.getElementsByName("popupExpand").forEach(function(node) {if(!node.classList.contains('disabled')) {node.addEventListener("click", expandWiki);}});

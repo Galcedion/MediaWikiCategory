@@ -95,6 +95,10 @@
 		"message": "Reset",
 		"description": "Popup display, reset filter."
 	},
+	"popupStorageTotal": {
+		"message": "Total",
+		"description": "Popup display, total storage usage."
+	},
 	"titleOpen": {
 		"message": "Open",
 		"description": "Mouseover title: open object."
