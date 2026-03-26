@@ -221,7 +221,7 @@
 	},
 	"optionsNotationLogicSymbol": {
 		"message": "Logic symbol (e.g. ⋀)",
-		"description": "Options: notation selection optio logic symbol."
+		"description": "Options: notation selection option logic symbol."
 	},
 	"optionsButtonSave": {
 		"message": "Save",

@@ -44,6 +44,7 @@ var settings = {};
 var getSettings = browser.storage.sync.get();
 getSettings.then(loadSettings);
 
+// load sync storage settings
 function loadSettings(syncSettings) {
 	let tmp = "TEXT";
 	if(syncSettings.notation)
@@ -155,7 +156,7 @@ function showSelected() {
 	document.getElementById("p_wiki").classList.remove("hidden");
 }
 
-// main storage function, creating a promise
+// main storage function, creating a promise to get local storage
 function fetchStorage() {
 	var sm = browser.storage.local.get(null);
 	sm.then(fetchStream);
@@ -181,6 +182,7 @@ function deleteWiki() {
 	}
 }
 
+// create dialog box to delete all local storage
 function deleteAll() {
 	var dialog = document.createElement('dialog');
 	dialog.id = 'delete_all_dialog';
@@ -194,6 +196,7 @@ function deleteAll() {
 	document.querySelectorAll("#delete_all_dialog input").forEach(function(i) {i.addEventListener("click", deleteAllConfirmation)});
 }
 
+// on confirmation delete all local storage
 function deleteAllConfirmation() {
 	document.getElementById("delete_all_dialog").remove();
 	if(this.dataset.confirmation == 1) {
@@ -217,7 +220,7 @@ function calculateStorage() {
 	}
 }
 
-// retrieve data from storage and create overview of all available wikis
+// retrieve data from local storage and create overview of all available wikis
 function fetchStream(dataStream) {
 	storedData = dataStream;
 	if(typeof(storedData) === 'undefined' || Object.keys(storedData).length == 0) {
@@ -363,8 +366,6 @@ function addCatCalc() {
 			selectedCategories[Object.keys(selectedCategories).length] = {'type' : 'o', 'value': 'AND'};
 		selectedCategories[Object.keys(selectedCategories).length] = {'type' : 'c', 'value': caller};
 	}
-	//if(selectedCategories.indexOf(caller) != -1)
-	//	return;
 	var html = '';
 	for(let i = 0; i < Object.keys(selectedCategories).length; i++) {
 		if(selectedCategories[i]['type'] == 'o')

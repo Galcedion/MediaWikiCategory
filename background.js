@@ -197,6 +197,7 @@ function scrapeCategoryList(content, storedData, metadata) {
 	}
 }
 
+// remove current category from todo-list and call storageManager again when still todos
 function checkToDo(metadata) {
 	for(let i = 0; i < categoryToDo.length; i++) {
 		if(categoryToDo[i][0] == metadata['targetTitle'] && categoryToDo[i][1].href == metadata['originalTargetHref'].href)
@@ -208,6 +209,7 @@ function checkToDo(metadata) {
 		storageManager(metadata['caller'], true);
 }
 
+// send error message back to callers
 function transmitError(to, errorMsg) {
 	if(to == 'ba') {
 		browser.runtime.sendMessage({
@@ -230,6 +232,8 @@ function transmitError(to, errorMsg) {
 		});
 	}
 }
+
+// send signal to caller when the category has been scraped
 function finishedCategoryScrape(to, targetCategory, success = true) {
 	if(to == 'ba') {
 		browser.runtime.sendMessage({

@@ -38,6 +38,7 @@ getSettings.then(loadSettings);
 var getLocalStorage = browser.storage.local.get(null);
 getLocalStorage.then(loadLocal);
 
+// load sync storage settings
 function loadSettings(settings) {
 	let tmp = notationOptionsDefault;
 	if(settings.notation)
@@ -53,6 +54,7 @@ function loadSettings(settings) {
 	}
 }
 
+// load local storage
 function loadLocal(storage) {
 	localStorage = JSON.parse(JSON.stringify(storage));
 	var select = document.getElementById('select_sync_up');
@@ -65,6 +67,7 @@ function loadLocal(storage) {
 	}
 }
 
+// save the currently selected settings
 function saveSettings() {
 	let settings = {};
 	settings.notation = document.getElementById('set_notation').value.toUpperCase();
@@ -74,11 +77,13 @@ function saveSettings() {
 	browser.storage.sync.set(settings);
 }
 
+// restore default settings and save
 function resetSettings() {
 	document.getElementById('set_notation').value = notationOptionsDefault;
 	saveSettings();
 }
 
+// upload local storage wikis into sync storage
 function syncUp() {
 	let local = {};
 	let saveAll = (this.id == 'sync_up_all' ? true : false);
@@ -96,10 +101,12 @@ function syncUp() {
 	// TODO: if the value is larger than about:config dom.storage.default_quota this fails
 }
 
+// download sync storage wikis into local storage
 function syncDown() {
 	// TODO
 }
 
+// delete selected or all storages
 function deleteStorage() {
 	if(this.id == 'delete_local' || this.id == 'delete_all')
 		browser.storage.local.clear();
