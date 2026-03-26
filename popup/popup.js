@@ -34,7 +34,8 @@ var rebuild = false;
 var caseSensitive = false;
 browser.tabs.query({}).then(tl => {
 	for(const t of tl) {
-		t.url = t.url.substring(0, t.url.indexOf('#'));
+		if(t.url.indexOf('#') >= 0)
+			t.url = t.url.substring(0, t.url.indexOf('#'));
 		currentTabsURL.push(t.url);
 	}
 });
