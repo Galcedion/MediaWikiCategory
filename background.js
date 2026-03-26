@@ -117,12 +117,12 @@ function scrapeCategoryTask(storedData, metadata) {
 			scrapeCategoryList(req.responseXML, storedData, metadata);
 		} else {
 			transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFail"));
-			finishedCategoryScrape(metadata['caller'], metadata['targetHref'], false);
+			finishedCategoryScrape(metadata['caller'], metadata['originalTargetHref'], false);
 		}
 	});
 	req.addEventListener('error', function() {
 		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFail"));
-		finishedCategoryScrape(metadata['caller'], metadata['targetHref'], false);
+		finishedCategoryScrape(metadata['caller'], metadata['originalTargetHref'], false);
 	});
 	req.send();
 }
@@ -193,7 +193,7 @@ function scrapeCategoryList(content, storedData, metadata) {
 	} else {
 		browser.storage.local.set(storedData);
 		checkToDo(metadata);
-		finishedCategoryScrape(metadata['caller'], metadata['targetHref'], true);
+		finishedCategoryScrape(metadata['caller'], metadata['originalTargetHref'], true);
 	}
 }
 
