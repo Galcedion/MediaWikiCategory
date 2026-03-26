@@ -2,7 +2,7 @@ document.getElementById("section_settings").textContent = browser.i18n.getMessag
 document.getElementById("l_set_notation").textContent = browser.i18n.getMessage('optionsLabelSetNotation');
 document.getElementById("button_save").value = browser.i18n.getMessage('optionsButtonSave');
 document.getElementById("button_reset").value = browser.i18n.getMessage('optionsButtonReset');
-document.getElementById("section_updown").textContent = browser.i18n.getMessage('optionsSectionUpDown');
+/*document.getElementById("section_updown").textContent = browser.i18n.getMessage('optionsSectionUpDown');
 document.getElementById("l_select_sync_up").textContent = browser.i18n.getMessage('optionsLabelSelectSyncUp');
 document.getElementById("sync_up_selected").value = browser.i18n.getMessage('optionsSyncUpSelected');
 document.getElementById("sync_up_selected").title = browser.i18n.getMessage('optionsSyncUpTitle');
@@ -12,7 +12,7 @@ document.getElementById("l_select_sync_down").textContent = browser.i18n.getMess
 document.getElementById("sync_down_selected").value = browser.i18n.getMessage('optionsSyncDownSelected');
 document.getElementById("sync_down_selected").title = browser.i18n.getMessage('optionsSyncDownTitle');
 document.getElementById("sync_down_all").value = browser.i18n.getMessage('optionsSyncDownAll');
-document.getElementById("sync_down_all").title = browser.i18n.getMessage('optionsSyncDownTitle');
+document.getElementById("sync_down_all").title = browser.i18n.getMessage('optionsSyncDownTitle');*/
 document.getElementById("section_delete").textContent = browser.i18n.getMessage('optionsSectionDelete');
 document.getElementById("delete_local").value = browser.i18n.getMessage('optionsDeleteLocal');
 document.getElementById("delete_sync").value = browser.i18n.getMessage('optionsDeleteSync');
@@ -26,17 +26,17 @@ var localStorage = {};
 
 document.getElementById('button_save').addEventListener('click', saveSettings);
 document.getElementById('button_reset').addEventListener('click', resetSettings);
-document.getElementById('sync_up_selected').addEventListener('click', syncUp);
+/*document.getElementById('sync_up_selected').addEventListener('click', syncUp);
 document.getElementById('sync_up_all').addEventListener('click', syncUp);
 document.getElementById('sync_down_selected').addEventListener('click', syncDown);
-document.getElementById('sync_down_all').addEventListener('click', syncDown);
+document.getElementById('sync_down_all').addEventListener('click', syncDown);*/
 document.getElementById('delete_local').addEventListener('click', deleteStorage);
 document.getElementById('delete_sync').addEventListener('click', deleteStorage);
 document.getElementById('delete_all').addEventListener('click', deleteStorage);
 var getSettings = browser.storage.sync.get();
 getSettings.then(loadSettings);
-var getLocalStorage = browser.storage.local.get(null);
-getLocalStorage.then(loadLocal);
+/*var getLocalStorage = browser.storage.local.get(null);
+getLocalStorage.then(loadLocal);*/
 
 // load sync storage settings
 function loadSettings(settings) {
@@ -54,6 +54,7 @@ function loadSettings(settings) {
 	}
 }
 
+/*
 // load local storage
 function loadLocal(storage) {
 	localStorage = JSON.parse(JSON.stringify(storage));
@@ -65,7 +66,7 @@ function loadLocal(storage) {
 		select.appendChild(option);
 		localStorage[wiki] = categories;
 	}
-}
+}*/
 
 // save the currently selected settings
 function saveSettings() {
@@ -83,6 +84,7 @@ function resetSettings() {
 	saveSettings();
 }
 
+/*
 // upload local storage wikis into sync storage
 function syncUp() {
 	let local = {};
@@ -105,6 +107,7 @@ function syncUp() {
 function syncDown() {
 	// TODO
 }
+*/
 
 // delete selected or all storages
 function deleteStorage() {
