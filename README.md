@@ -4,7 +4,9 @@ Firefox AddOn to perform logic operations on any MediaWiki wiki's categories to 
 - select and save categories across many websites running WikiMedia wikis
 - each wiki is handled separately
 - perform logical operations to filter the pages in the categories
-- supported operations: AND, OR, XOR
+- supported operations: AND, OR, XOR, NAND, NOR, XNOR
+## Available settings
+- set the notation for logic operations
 ## License
 MediaWikiCategory uses more than one license.
 
