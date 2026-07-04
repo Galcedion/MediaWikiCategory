@@ -120,19 +120,14 @@ function scrapeCategoryTask(storedData, metadata) {
 	req.setRequestHeader('Access-Control-Allow-Origin', '*'); // User Agent?
 	req.setRequestHeader('Accept', 'text/html');
 	req.addEventListener('load', function() {
-
 		if(req.readyState === 4 && req.status === 200) { // TODO status != 200 ?
 			scrapeCategoryList(req.responseXML, storedData, metadata);
 		} else {
-			checkToDo(metadata);
-			transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFail"));
-			finishedCategoryScrape(metadata['caller'], metadata['originalTargetHref'], false);
+			webErrorHandler(metadata, req);
 		}
 	});
 	req.addEventListener('error', function() {
-		checkToDo(metadata);
-		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFail"));
-		finishedCategoryScrape(metadata['caller'], metadata['originalTargetHref'], false);
+		webErrorHandler(metadata, req);
 	});
 	req.send();
 }
@@ -217,6 +212,23 @@ function checkToDo(metadata) {
 		lock = false;
 	else
 		storageManager(metadata['caller'], true);
+}
+
+// analyze XMLHttpRequest errors and give info
+function webErrorHandler(metadata, req) {
+	if(req.status == 404) {
+		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFail404", metadata['targetHref'].href));
+	} else if(req.status == 403) {
+		let blockingServer = req.getResponseHeader('server');
+		if(!blockingServer)
+			blockingServer = 'Host';
+		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFailBlocked", [metadata['originalTargetHref'].origin, blockingServer]));
+	} else if(req.status >= 500 && req.status < 600) {
+		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFailServer", [metadata['originalTargetHref'].origin, req.status]));
+	} else
+		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFail", metadata['targetTitle']));
+	checkToDo(metadata);
+	finishedCategoryScrape(metadata['caller'], metadata['originalTargetHref'], false);
 }
 
 // send error message back to callers

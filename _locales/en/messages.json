@@ -296,8 +296,52 @@
 		"description": "Error: a category is found to be corrupted."
 	},
 	"errorWebReqFail": {
-		"message": "The requested webpage could not be loaded!",
-		"description": "Error: the requested web resource could not be loaded."
+		"message": "Category $CAT$ could not be loaded!",
+		"description": "Error: the requested web resource could not be loaded due to a general issue.",
+		"placeholders": {
+			"cat": {
+				"content": "$1",
+				"example": "Wiki-Category"
+			}
+		}
+	},
+	"errorWebReqFail404": {
+		"message": "$URL$ not reachable!",
+		"description": "Error: the requested web resource could not be reached.",
+		"placeholders": {
+			"url": {
+				"content": "$1",
+				"example": "https://example.com"
+			}
+		}
+	},
+	"errorWebReqFailBlock": {
+		"message": "$SERVER$ blocked by $BLOCK$!",
+		"description": "Error: the requested web resource was blocked.",
+		"placeholders": {
+			"server": {
+				"content": "$1",
+				"example": "https://example.com"
+			},
+			"block": {
+				"content": "$2",
+				"example": "cloudflare"
+			}
+		}
+	},
+	"errorWebReqFailServer": {
+		"message": "$SERVER$ not reachable (Status $STATUS$)!",
+		"description": "Error: the requested web resource has a server sided issue.",
+		"placeholders": {
+			"server": {
+				"content": "$1",
+				"example": "https://example.com"
+			},
+			"status": {
+				"content": "$2",
+				"example": "500"
+			}
+		}
 	},
 	"securityOffsiteCategory": {
 		"message": "Malicious category blocked",

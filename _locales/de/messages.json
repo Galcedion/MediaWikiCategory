@@ -222,7 +222,42 @@
 		"message": "Eine oder mehrere Kategorien dieses Wiki sind fehlerhaft. Bitte löschen Sie das Wiki und speichern Sie die Kategorien erneut."
 	},
 	"errorWebReqFail": {
-		"message": "Die gewünschte Seite konnte nicht geladen werden!"
+		"message": "Kategorie $CAT$ konnte nicht geladen werden!",
+		"placeholders": {
+			"cat": {
+				"content": "$1"
+			}
+		}
+	},
+	"errorWebReqFail404": {
+		"message": "$URL$ ist nicht erreichbar!",
+		"placeholders": {
+			"url": {
+				"content": "$1"
+			}
+		}
+	},
+	"errorWebReqFailBlocked": {
+		"message": "$SERVER$ blockiert von $BLOCK$!",
+		"placeholders": {
+			"server": {
+				"content": "$1"
+			},
+			"block": {
+				"content": "$2"
+			}
+		}
+	},
+	"errorWebReqFailServer": {
+		"message": "$SERVER$ ist nicht erreichbar (Status $STATUS$)!",
+		"placeholders": {
+			"server": {
+				"content": "$1"
+			},
+			"status": {
+				"content": "$2"
+			}
+		}
 	},
 	"securityOffsiteCategory": {
 		"message": "Böswillige Kategorie blockiert"
