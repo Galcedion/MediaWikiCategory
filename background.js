@@ -7,7 +7,7 @@ var categeoriesOnPage;
 var tmpStorage = {};
 var lock = false;
 var categoryToDo = [];
-var errorStack = []; // each entry has id, count, msg
+var errorStack = []; // each entry has id, count, msg, wiki
 
 // defining menu and browser action
 browser.menus.create({
@@ -51,7 +51,7 @@ function messageListenerDisplayCM(listener) {
 			targetHref = (new URL(listener.href));
 			caller = listener.caller;
 		} else {
-			transmitError(listener.caller, browser.i18n.getMessage("securityOffsiteCategory"));
+			transmitError(listener.caller, browser.i18n.getMessage("securityOffsiteCategory"), metadata['originalTargetHref'].origin);
 			browser.menus.onClicked.removeListener(function() {storageManager(caller);});
 			browser.menus.update(MEDIAWIKI_MENU_ITEM, {
 				visible: false,
@@ -191,7 +191,7 @@ function scrapeCategoryList(content, storedData, metadata) {
 			hasNext = metadata['targetHref'].protocol + '//' + metadata['targetHref'].hostname + hasNext;
 		metadata['targetHref'] = new URL(hasNext);
 		if(metadata['originalTargetHref'].origin != metadata['targetHref'].origin) {
-			transmitError(metadata['caller'], browser.i18n.getMessage("securityOffsiteCategoryRedirect"));
+			transmitError(metadata['caller'], browser.i18n.getMessage("securityOffsiteCategoryRedirect"), metadata['originalTargetHref'].origin);
 			checkToDo(metadata);
 		} else
 			scrapeCategoryTask(storedData, metadata);
@@ -216,23 +216,24 @@ function checkToDo(metadata) {
 
 // analyze XMLHttpRequest errors and give info
 function webErrorHandler(metadata, req) {
+	let wiki = metadata['originalTargetHref'].origin;
 	if(req.status == 404) {
-		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFail404", metadata['targetHref'].href));
+		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFail404", metadata['targetHref'].href), wiki);
 	} else if(req.status == 403) {
 		let blockingServer = req.getResponseHeader('server');
 		if(!blockingServer)
 			blockingServer = 'Host';
-		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFailBlocked", [metadata['originalTargetHref'].origin, blockingServer]));
+		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFailBlocked", [wiki, blockingServer]), wiki);
 	} else if(req.status >= 500 && req.status < 600) {
-		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFailServer", [metadata['originalTargetHref'].origin, req.status]));
+		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFailServer", [wiki, req.status]), wiki);
 	} else
-		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFail", metadata['targetTitle']));
+		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFail", metadata['targetTitle']), wiki);
 	checkToDo(metadata);
 	finishedCategoryScrape(metadata['caller'], metadata['originalTargetHref'], false);
 }
 
 // send error message back to callers
-function transmitError(to, errorMsg) {
+function transmitError(to, errorMsg, wiki) {
 	let newError = true;
 	let errCount = 1;
 	for(let es of errorStack) {
@@ -244,7 +245,7 @@ function transmitError(to, errorMsg) {
 		}
 	}
 	if(newError)
-		errorStack.push({id: errorStack.length, count: 1, msg: errorMsg});
+		errorStack.push({id: errorStack.length, count: 1, msg: errorMsg, wiki: wiki});
 	if(to == 'ba') {
 		browser.runtime.sendMessage({
 			task: 'raiseError',

@@ -120,7 +120,8 @@ function contentMessageListener(listener) {
 			break;
 		case 'errorStack': // event source: background.js
 			for(es of listener.errorStack) {
-				raiseError(null, es['msg'], es['count']);
+				if(es.wiki == currentTabTrueURL.origin)
+					raiseError(null, es['msg'], es['count']);
 			}
 			break;
 	}
