@@ -7,6 +7,7 @@ var categeoriesOnPage;
 var tmpStorage = {};
 var lock = false;
 var categoryToDo = [];
+var errorStack = []; // each entry has id, count, msg
 
 // defining menu and browser action
 browser.menus.create({
@@ -28,6 +29,12 @@ function messageListener(listener) {
 			break;
 		case 'storeFromPopup': // event source: mwc.js
 			storeFromPopup(listener);
+			break;
+		case 'requestErrorStack': // event source: ba
+			requestErrorStack(listener.caller);
+			break;
+		case 'removeErrorStack': // event source: ba
+			removeErrorStack(listener.msg);
 			break;
 	}
 }
@@ -113,14 +120,17 @@ function scrapeCategoryTask(storedData, metadata) {
 	req.setRequestHeader('Access-Control-Allow-Origin', '*'); // User Agent?
 	req.setRequestHeader('Accept', 'text/html');
 	req.addEventListener('load', function() {
+
 		if(req.readyState === 4 && req.status === 200) { // TODO status != 200 ?
 			scrapeCategoryList(req.responseXML, storedData, metadata);
 		} else {
+			checkToDo(metadata);
 			transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFail"));
 			finishedCategoryScrape(metadata['caller'], metadata['originalTargetHref'], false);
 		}
 	});
 	req.addEventListener('error', function() {
+		checkToDo(metadata);
 		transmitError(metadata['caller'], browser.i18n.getMessage("errorWebReqFail"));
 		finishedCategoryScrape(metadata['caller'], metadata['originalTargetHref'], false);
 	});
@@ -211,11 +221,24 @@ function checkToDo(metadata) {
 
 // send error message back to callers
 function transmitError(to, errorMsg) {
+	let newError = true;
+	let errCount = 1;
+	for(let es of errorStack) {
+		if(es['msg'] == errorMsg) {
+			++es['count'];
+			errCount = es['count'];
+			newError = false;
+			break;
+		}
+	}
+	if(newError)
+		errorStack.push({id: errorStack.length, count: 1, msg: errorMsg});
 	if(to == 'ba') {
 		browser.runtime.sendMessage({
 			task: 'raiseError',
 			caller: 'background',
 			target: to,
+			count: errCount,
 			error: errorMsg
 		});
 	} else {
@@ -226,10 +249,31 @@ function transmitError(to, errorMsg) {
 					task: 'raiseError',
 					caller: 'background',
 					target: to,
+					count: errCount,
 					error: errorMsg
 				});
 			}
 		});
+	}
+}
+
+// send the error stack to ba
+function requestErrorStack(to) {
+	browser.runtime.sendMessage({
+		task: 'errorStack',
+		caller: 'background',
+		target: to,
+		errorStack: errorStack
+	});
+}
+
+// remove the error from the stack
+function removeErrorStack(errorMsg) {
+	for(es of errorStack) {
+		if(es['msg'] == errorMsg) {
+			errorStack.splice(errorStack.indexOf(es), 1);
+			break;
+		}
 	}
 }
 

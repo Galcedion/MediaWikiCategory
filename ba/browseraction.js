@@ -1,7 +1,6 @@
 document.getElementById("ba_title").textContent = browser.i18n.getMessage("extensionName");
 document.getElementById("ba_popup").value = browser.i18n.getMessage("browserActionOpenPopup");
 document.getElementById("ba_popup").addEventListener("click", openTab);
-document.getElementById("error").addEventListener("click", closeError);
 var lastSelected;
 var detailTarget = false;
 var currentTabTrueURL = null;
@@ -38,6 +37,10 @@ function checkTabWiki(tabData) {
 		document.getElementById("ba_current").innerHTML = html;
 		document.getElementsByName("currentCategories").forEach(function(node) {node.addEventListener("click", saveCategory);});
 		fetchStorage();
+		// request error stack
+		browser.tabs.query({active: true, currentWindow: true})
+		.then(tl => browser.runtime.sendMessage({task: 'requestErrorStack', caller: 'ba'}))
+		.catch(e => {raiseError(this, e);});
 	}
 }
 
@@ -61,22 +64,40 @@ function saveCategory() {
 }
 
 // visual error handler
-function raiseError(caller, error) {
+function raiseError(caller, error, count) {
 	if(caller !== null) {
 		caller.classList.remove('saved', 'pending');
 		caller.classList.add('error');
 	}
-	let errorNode = document.getElementById("error");
-	errorNode.textContent = error;
-	errorNode.classList.add('error');
-	errorNode.title = browser.i18n.getMessage("titleClose");
+	let errorList = document.getElementsByClassName("errorNode");
+	let nodeExists = false;
+	for(let i = 0; i < errorList.length; i++) {
+		if(errorList[i].dataset.msg == error) {
+			nodeExists = true;
+			errorList[i].dataset.count = count;
+			errorList[i].innerHTML = `x${count} | ${error}`;
+			break;
+		}
+	}
+	if(!nodeExists) {
+		let errorMain = document.getElementById("error");
+		let newError = document.createElement("div");
+		newError.classList.add("errorNode");
+		newError.title = browser.i18n.getMessage("titleClose");
+		newError.dataset.msg = error;
+		newError.dataset.count = count;
+		newError.textContent = count > 1 ? `x${count} | ${error}` : error;
+		newError.addEventListener("click", closeError);
+		errorMain.appendChild(newError);
+	}
 }
 
 // close open error message
 function closeError() {
-	let errorNode = document.getElementById("error");
-	errorNode.textContent = '';
-	errorNode.classList.remove('error');
+	browser.tabs.query({active: true, currentWindow: true})
+	.then(tl => browser.runtime.sendMessage({task: 'removeErrorStack', msg: this.getAttribute('data-msg'), caller: 'ba'}))
+	.catch(e => {raiseError(this, e);});
+	this.remove();
 }
 
 // listener for incoming events
@@ -85,7 +106,7 @@ function contentMessageListener(listener) {
 		return;
 	switch(listener.task) {
 		case 'raiseError': // event source: background.js
-			raiseError(lastSelected, listener.error);
+			raiseError(lastSelected, listener.error, listener.count);
 			break;
 		case 'finishedCategoryScrape': // event source: background.js
 			listener.category = new URL(listener.category).pathname;
@@ -95,6 +116,11 @@ function contentMessageListener(listener) {
 					catList[i].classList.remove('pending');
 					listener.success ? catList[i].classList.add('saved') : catList[i].classList.add('error');
 				}
+			}
+			break;
+		case 'errorStack': // event source: background.js
+			for(es of listener.errorStack) {
+				raiseError(null, es['msg'], es['count']);
 			}
 			break;
 	}
