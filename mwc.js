@@ -2,6 +2,7 @@ var isWiki = false;
 var availableCategories = {};
 var curURL = window.location.href;
 var curHostname = new URL(window.location.href).hostname;
+var curLang = null;
 
 mwc_check();
 
@@ -14,6 +15,7 @@ function mwc_check() {
 // attach event handlers to categories and fetch all categories for action button
 function mwc_attach() {
 	isWiki = true;
+	mwc_getLang();
 	if(document.querySelector("#catlinks ul")) {
 		let catlist = document.querySelectorAll("#catlinks ul a");
 		catlist.forEach(mwc_addListener);
@@ -46,6 +48,7 @@ function mwc_addListener(n, isLink = true) {
 			enableCM: true,
 			title: n.textContent,
 			href: n.href,
+			lang: curLang,
 			caller: curURL
 		});
 	});
@@ -55,13 +58,23 @@ function mwc_addListener(n, isLink = true) {
 function contentMessageListener(listener) {
 	switch(listener.task) {
 		case 'getWiki': // event source: browseraction.js
-			return Promise.resolve({'wiki': isWiki, 'categories': availableCategories, 'name': curHostname});
+			return Promise.resolve({'wiki': isWiki, 'categories': availableCategories, 'name': curHostname, 'lang': curLang});
 			break;
 		case 'raiseError': // event source: background.js
 			if(typeof listener.target === 'undefined' || listener.target != curURL)
 				return;
 			raiseError(listener.error);
 			break;
+	}
+}
+
+// identify the current language of the page
+function mwc_getLang() {
+	if(document.querySelector('#firstHeading span[lang]')) {
+		curLang = document.querySelector('#firstHeading span[lang]').lang;
+	}
+	if(document.querySelector('.page__main[lang]')) {
+		curLang = document.querySelector('.page__main[lang]').lang;
 	}
 }
 
