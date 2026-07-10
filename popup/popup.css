@@ -65,7 +65,9 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .math i {padding: 0 5px;}
 .math select {text-align: center; border: 0; border-radius: 5px;}
 .math, .result-list, .p_available {margin: 0 1em;}
-.math div {display: inline-block;}
+.math div {position: relative; display: inline-block;}
+.math-move {cursor: grab; border: 1px solid transparent; background-color: var(--white); border-radius: 5px; user-select: none;}
+.math-move:hover, .math-move:focus {border-color: var(--border);}
 .result-list {width: fit-content;}
 .result-list div {display: flex; padding-bottom: 0.5em; flex-wrap: wrap;}
 .result-list label {margin-left: 5rem;}

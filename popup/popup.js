@@ -14,6 +14,7 @@ document.getElementById("p_deleteall").addEventListener("click", deleteAll);
 document.getElementById("p_nav_overview").addEventListener("click", showOverview);
 document.getElementById("error").addEventListener("click", closeError);
 document.addEventListener("keydown", function(event) {if(event.key == 'Escape') displayCleanup();});
+document.addEventListener("mouseup", function(e) {mouseDown = false;});
 var storedData;
 var selectedCategories;
 var toShow = null;
@@ -40,6 +41,7 @@ browser.tabs.query({}).then(tl => {
 	}
 });
 var tt_operator = null;
+var mouseDown = false;
 
 var settings = {};
 var getSettings = browser.storage.sync.get();
@@ -368,26 +370,51 @@ function addCatCalc() {
 		selectedCategories[Object.keys(selectedCategories).length] = {'type' : 'c', 'value': caller};
 	}
 	var html = '';
+	var pMath = document.getElementById("p_math");
+	pMath.innerHTML = '';
 	for(let i = 0; i < Object.keys(selectedCategories).length; i++) {
-		if(selectedCategories[i]['type'] == 'o')
-			html += generateOperators(i, selectedCategories[i]['value'], i);
-		else
-			html += `<i>${selectedCategories[i]['value']}</i>`;
+		if(selectedCategories[i]['type'] == 'o') {
+			pMath.appendChild(generateOperators(i, selectedCategories[i]['value'], i));
+		} else {
+			let selCat = document.createElement('div');
+			selCat.id = `selcat_${i}`;
+			selCat.setAttribute("name", 'selcat');
+			selCat.innerHTML = `<i>${selectedCategories[i]['value']}</i>`;
+			selCat.classList.add('math-move');
+			selCat.addEventListener("mousedown", function(e) {
+				mouseDown = this.id;
+				this.style.cursor = 'grabbing';
+				this.style.zIndex = 1;
+				this.dataset.offset = this.offsetLeft - e.clientX;
+			});
+			selCat.addEventListener("mousemove", function(e) {
+				e.preventDefault();
+				if(mouseDown != this.id)
+					return;
+				this.style.left = `${e.clientX + parseInt(this.dataset.offset)}px`;
+			});
+			selCat.addEventListener("mouseup", function() {dropCategory()});
+			pMath.appendChild(selCat);
+		}
 	}
-	document.getElementById("p_math").innerHTML = html;
-	document.getElementsByName("math_operator").forEach(function(node) {node.addEventListener("change", updateOperator);});
 	document.querySelectorAll('#p_math div img').forEach(function(node) {node.addEventListener("click", switchCategories);});
 	catCalc();
 }
 
 // create visual operator selection
 function generateOperators(operatorID, value, pos) {
-	var operator = '';
-	operator += `<div class="text-center"><img data-pos="${pos}" src="../heroicons/arrows-right-left.svg" class="clickable icon" title="${browser.i18n.getMessage("titleSwitch")}"><br><select id="operator_${operatorID}" name="math_operator" class="clickable">`;
+	var operator = document.createElement('div');
+	operator.classList.add('text-center');
+	operator.innerHTML = `<img data-pos="${pos}" src="../heroicons/arrows-right-left.svg" class="clickable icon" title="${browser.i18n.getMessage("titleSwitch")}"><br>`;
+	var operatorSelect = document.createElement('select');
+	operatorSelect.id = `operator_${operatorID}`;
+	operatorSelect.name = 'math_operator';
+	operatorSelect.classList.add('clickable');
+	operatorSelect.addEventListener("change", updateOperator);
 	Object.keys(operatorList).forEach(function(o) {
-		operator += `<option title="${operatorList[o].title}"${o == value ? ' selected' : ''}>${operatorList[o][settings.notation]}</option>`;
+		operatorSelect.innerHTML += `<option title="${operatorList[o].title}"${o == value ? ' selected' : ''}>${operatorList[o][settings.notation]}</option>`;
 	});
-	operator += `</select></div>`;
+	operator.appendChild(operatorSelect);
 	return operator;
 }
 
@@ -410,6 +437,39 @@ function switchCategories() {
 	selectedCategories[caller - 1] = selectedCategories[caller + 1];
 	selectedCategories[caller + 1] = tmp;
 	catCalc();
+}
+
+// reorder categories per drag and drop
+function dropCategory() {
+	var curPos = 0;
+	var moved = document.querySelectorAll('[data-offset]')[0];
+	var movePos = moved.offsetLeft;//moved.dataset.offset;
+	delete(moved.dataset.offset);
+	var moveOld = parseInt(moved.id.substring(7));
+	var catList = document.getElementsByName('selcat');
+	for(let i = 0; i < catList.length; i++) {
+		if(catList[i].offsetLeft > movePos) {
+			let insertBefore = parseInt(catList[i].id.substring(7));
+			if(insertBefore == 0 || insertBefore == moveOld)
+				break;
+			if(moveOld < insertBefore) {
+				let tmp = selectedCategories[moveOld];
+				for(let sc = moveOld; sc <= (insertBefore - 2); sc += 2) {
+					selectedCategories[sc] = selectedCategories[sc + 2];
+				}
+				selectedCategories[insertBefore] = tmp;
+			} else { // TODO: currently not testable
+				let tmp = selectedCategories[insertBefore];
+				for(let sc = moveOld; sc > (moveOld + 2); sc -= 2) {
+					selectedCategories[sc] = selectedCategories[sc - 2];
+				}
+				selectedCategories[moveOld] = tmp;
+			}
+			break;
+		}
+		movePos = catList[i].offsetLeft;
+	}
+	addCatCalc();
 }
 
 // calculate category entries from user selection
