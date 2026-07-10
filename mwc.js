@@ -26,11 +26,20 @@ function mwc_attach() {
 		let catlist = document.querySelectorAll("#mw-subcategories .CategoryTreeItem bdi a");
 		catlist.forEach(mwc_addListener);
 	}
+	if(document.querySelector(".mw-category-generated #mw-pages, .category-page__total-number")) {
+		let cat = {};
+		cat.textContent = decodeURI(curURL.substring(curURL.lastIndexOf(':') + 1));
+		cat.textContent = cat.textContent.replace(/_/g, ' ');
+		cat.href = curURL;
+		mwc_addListener(cat, false);
+	}
 }
 
 // add listener to all given nodes
-function mwc_addListener(n) {
+function mwc_addListener(n, isLink = true) {
 	availableCategories[n.textContent] = n.href;
+	if(!isLink)
+		return;
 	n.addEventListener("contextmenu", function() {
 		browser.runtime.sendMessage({
 			task: 'enableCM',
