@@ -385,13 +385,13 @@ function addCatCalc() {
 				mouseDown = this.id;
 				this.style.cursor = 'grabbing';
 				this.style.zIndex = 1;
-				this.dataset.offset = this.offsetLeft - e.clientX;
+				this.dataset.offset = e.clientX;
 			});
 			selCat.addEventListener("mousemove", function(e) {
 				e.preventDefault();
 				if(mouseDown != this.id)
 					return;
-				this.style.left = `${e.clientX + parseInt(this.dataset.offset)}px`;
+				this.style.left = `${e.clientX - parseInt(this.dataset.offset)}px`;
 			});
 			selCat.addEventListener("mouseup", function() {dropCategory()});
 			pMath.appendChild(selCat);
@@ -441,33 +441,31 @@ function switchCategories() {
 
 // reorder categories per drag and drop
 function dropCategory() {
-	var curPos = 0;
 	var moved = document.querySelectorAll('[data-offset]')[0];
 	var movePos = moved.offsetLeft;//moved.dataset.offset;
-	delete(moved.dataset.offset);
 	var moveOld = parseInt(moved.id.substring(7));
 	var catList = document.getElementsByName('selcat');
 	for(let i = 0; i < catList.length; i++) {
 		if(catList[i].offsetLeft > movePos) {
 			let insertBefore = parseInt(catList[i].id.substring(7));
-			if(insertBefore == 0 || insertBefore == moveOld)
+			if(insertBefore == moveOld) {
 				break;
-			if(moveOld < insertBefore) {
+			}
+			if(moveOld <= insertBefore) {
 				let tmp = selectedCategories[moveOld];
 				for(let sc = moveOld; sc <= (insertBefore - 2); sc += 2) {
 					selectedCategories[sc] = selectedCategories[sc + 2];
 				}
 				selectedCategories[insertBefore] = tmp;
-			} else { // TODO: currently not testable
-				let tmp = selectedCategories[insertBefore];
-				for(let sc = moveOld; sc > (moveOld + 2); sc -= 2) {
+			} else {
+				let tmp = selectedCategories[moveOld];
+				for(let sc = moveOld; sc >= (insertBefore + 2); sc -= 2) {
 					selectedCategories[sc] = selectedCategories[sc - 2];
 				}
-				selectedCategories[moveOld] = tmp;
+				selectedCategories[insertBefore] = tmp;
 			}
 			break;
 		}
-		movePos = catList[i].offsetLeft;
 	}
 	addCatCalc();
 }
