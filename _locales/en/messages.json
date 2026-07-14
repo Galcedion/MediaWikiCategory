@@ -7,6 +7,10 @@
 		"message": "Get categories of MediaWikis (e.g. Wikipedia, fandom.com) and find articles matching the categories by different criteria. Be aware: this AddOn performs background webrequests based on your input!",
 		"description": "Description of the extension."
 	},
+	"genAll": {
+		"message": "All",
+		"description": "General use snippet: All"
+	},
 	"dropdownDefault": {
 		"message": "Detecting category",
 		"description": "Initial dropdown text."
@@ -94,6 +98,10 @@
 	"popupMathResultsCaseSensitive": {
 		"message": "Case sensitive",
 		"description": "Popup display, filter case sensitive y/n."
+	},
+	"popupMathResultsLang": {
+		"message": "Languages",
+		"description": "Popup display, filter by available languages."
 	},
 	"popupMathResultsFilterReset": {
 		"message": "Reset",

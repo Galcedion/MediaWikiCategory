@@ -2,6 +2,7 @@ const MEDIAWIKI_MENU_ITEM = "mediawiki-menu-item";
 
 var targetTitle;
 var targetHref;
+var targetLang = null;
 var caller = false;
 var categeoriesOnPage;
 var tmpStorage = {};
@@ -49,9 +50,10 @@ function messageListenerDisplayCM(listener) {
 			});
 			targetTitle = listener.title;
 			targetHref = (new URL(listener.href));
+			targetLang = listener.lang;
 			caller = listener.caller;
 		} else {
-			transmitError(listener.caller, browser.i18n.getMessage("securityOffsiteCategory"), metadata['originalTargetHref'].origin);
+			transmitError(listener.caller, browser.i18n.getMessage("securityOffsiteCategory"), new URL(listener.caller).origin);
 			browser.menus.onClicked.removeListener(function() {storageManager(caller);});
 			browser.menus.update(MEDIAWIKI_MENU_ITEM, {
 				visible: false,
@@ -74,6 +76,7 @@ function messageListenerHideCM() {
 function storeFromPopup(listener) {
 	targetTitle = listener.title;
 	targetHref = (new URL(listener.href));
+	targetLang = listener.lang;
 	storageManager(listener.caller);
 }
 
@@ -84,15 +87,20 @@ function storageManager(caller = false, rerun = false) {
 		lock = true;
 		metadata['targetTitle'] = targetTitle;
 		metadata['targetHref'] = targetHref;
+		metadata['targetLang'] = targetLang;
 	} else if(rerun) {
 		metadata['targetTitle'] = categoryToDo[0][0];
 		metadata['targetHref'] = categoryToDo[0][1];
+		if(categoryToDo[0].length > 2) // LEGACY SUPPORT for 1.1 and older
+			metadata['targetLang'] = categoryToDo[0][2];
+		else
+			metadata['targetLang'] = null;
 	} else {
 		for(let i = 0; i < categoryToDo.length; i++) {
 			if(categoryToDo[i][1] == targetHref)
 				return;
 		}
-		categoryToDo.push([targetTitle, targetHref]);
+		categoryToDo.push([targetTitle, targetHref, targetLang]);
 		return;
 	}
 	metadata['originalTargetHref'] = metadata['targetHref'];
@@ -182,8 +190,15 @@ function scrapeCategoryList(content, storedData, metadata) {
 			existing = true;
 		}
 	});
-	if(!existing)
-		content.push({'title': metadata['targetTitle'], 'path': metadata['targetHref'].pathname, 'protocol': metadata['targetHref'].protocol, 'items' : catList});
+	if(!existing) {
+		content.push({
+			'title': metadata['targetTitle'],
+			'path': metadata['targetHref'].pathname,
+			'protocol': metadata['targetHref'].protocol,
+			'lang': metadata['targetLang'],
+			'items' : catList
+		});
+	}
 	storedData[metadata['targetHref'].hostname] = JSON.stringify(content);
 
 	if(hasNext !== false) { // if next-page is available, call next page

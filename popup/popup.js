@@ -42,6 +42,7 @@ browser.tabs.query({}).then(tl => {
 });
 var tt_operator = null;
 var mouseDown = false;
+var langList = [];
 
 var settings = {};
 var getSettings = browser.storage.sync.get();
@@ -248,7 +249,7 @@ function fetchStream(dataStream) {
 		var hasError = false;
 		var entryContent = `<ul id="expand_list_${key}" class="category-list hidden">`;
 		for(let i = 0; i < entries; i++) {
-			if(typeof value[i] !== 'object' || Object.keys(value[i]).length != 4) {
+			if(typeof value[i] !== 'object' || !validateCategoryData(value[i])) {
 				hasError = true;
 				raiseError(`${key}: ${browser.i18n.getMessage("errorPopupCorruptedCategory")}`);
 				break;
@@ -291,11 +292,24 @@ function fetchStream(dataStream) {
 	}
 }
 
+// TODO: add sanity checks
+// check if the category has the necessary keys
+function validateCategoryData(category) {
+	let mandatoryKeys = ['title', 'path', 'protocol', 'items'];
+	let optionalKeys = ['lang']; // LEGACY SUPPORT for 1.1 and older
+	for(let k = 0; k < mandatoryKeys.length; ++k) {
+		if(!(mandatoryKeys[k] in category))
+			return false;
+	}
+	return true;
+}
+
 // display selected wiki and stored categories of said wiki
 function showWiki() {
 	/* each category has:
 	 * title - title of the category
 	 * path - path to category
+	 * lang - language of the category; introduced in MWC 1.2
 	 * items - Obj. of k (string) - v (URL)
 	 */
 	selectedCategories = {};
@@ -310,7 +324,10 @@ function showWiki() {
 	if('dataset' in this)
 		toShow = this.dataset.wiki;
 	var html = `<h4>${browser.i18n.getMessage("popupMathAvailableCategories")}</h4>`;
+	langList = [];
 	JSON.parse(storedData[toShow]).forEach(function(category) {
+		if("lang" in category && category.lang !== null && category.lang !== undefined && !langList.includes(category.lang))
+			langList.push(category.lang);
 		html += `<label for="sc_${category.title}" class="clickable">
 		<input type="checkbox" name="selected_cat" id="sc_${category.title}" value="${category.title}" class="clickable">
 		${category.title}
@@ -512,15 +529,25 @@ function catCalc() {
 	resultList.sort();
 	resultList.forEach(function(r) {
 		let classes = 'result-entry clickable';
-		let url = getURLFromCategoryItem(wikiData, r);
+		let url = getURLFromCategoryItem(wikiData, r.item);
+		let langStr = '';
+		if(langList.length > 1 && r.lang !== undefined && r.lang !== null)
+			langStr = ` data-lang="${r.lang}"`;
 		if(currentTabsURL.includes(url))
 			classes += ' clicked';
-		html += `<a href="${url}" target="_blank" class="${classes}">${r}</a>`;
+		html += `<a href="${url}" target="_blank" class="${classes}"${langStr}>${r.item}</a>`;
 	});
 	if(Object.keys(resultList).length > 0) {
+		let langDisplay = '';
+		if(langList.length > 1) {
+			langDisplay = `<label for="resultLang">${browser.i18n.getMessage("popupMathResultsLang")}</label><select id="resultLang"><option value="">${browser.i18n.getMessage("genAll")}</option>`;
+			langList.forEach(function(ll) {langDisplay += `<option value="${ll}">${ll}</option>`;});
+			langDisplay += `</select>`;
+		}
 		html = `<div><h4>${browser.i18n.getMessage("popupMathResults")} <i>(${Object.keys(resultList).length})</i></h4>
 		<label for="resultFilter">${browser.i18n.getMessage("popupMathResultsFilter")}</label><input id="resultFilter" type="text">
 		<label for="resultFilterCaseSensitive"><input id="resultFilterCaseSensitive" type="checkbox" class="clickable">${browser.i18n.getMessage("popupMathResultsCaseSensitive")}</label>
+		${langDisplay}
 		<input id="resultFilterReset" type="button" class="clickable" value="${browser.i18n.getMessage("popupMathResultsFilterReset")}"></div>
 		<div>` + html + `</div>`;
 		document.getElementById("p_result").innerHTML = html;
@@ -528,6 +555,7 @@ function catCalc() {
 		document.getElementById("resultFilter").addEventListener("keyup", filterResults);
 		document.getElementById("resultFilterCaseSensitive").addEventListener("click", filterResultsCaseSensitive);
 		document.getElementById("resultFilterReset").addEventListener("click", filterResultsReset);
+		document.getElementById("resultLang").addEventListener("change", filterResultsLang);
 	} else {
 		document.getElementById("p_result").innerHTML = `<h4>${browser.i18n.getMessage("popupMathResultsNone")}</h4>`;
 	}
@@ -538,7 +566,11 @@ function getItemsFromCategory(data, categoryName) {
 	var result = [];
 	data.forEach(function(d) {
 		if(d['title'] == categoryName) {
-			result = Object.keys(d['items']);
+			let lang = null;
+			if(typeof d['lang'] !== undefined && d['lang'] !== null)
+				lang = d['lang'];
+			for(let item in d['items'])
+				result.push({'item': item, 'lang': lang});
 		}
 	});
 	return result;
@@ -563,8 +595,9 @@ function calcAND(a, b, not = false) {
 		r = a.concat(b);
 		r = r.filter((elem, index, self) => self.indexOf(elem) === index);
 	} else {
+		let bMap = b.map(m => JSON.stringify(m));
 		for(let i = 0; i < a.length; i++) {
-			b.includes(a[i]) ? r.push(a[i]) : '';
+			bMap.includes(JSON.stringify(a[i])) ? r.push(a[i]) : '';
 		}
 	}
 	return r;
@@ -578,16 +611,19 @@ function calcOR(a, b, not = false, xor = false) {
 	else if(not && xor) // XNOR
 		return calcAND(a, b);
 	else if(xor) { // XOR
+		let bMap = b.map(m => JSON.stringify(m));
 		for(let i = 0; i < a.length; i++) {
-			b.includes(a[i]) ? '' : r.push(a[i]);
+			bMap.includes(JSON.stringify(a[i])) ? r.push(a[i]) : '';
 		}
+		let aMap = a.map(m => JSON.stringify(m));
 		for(let i = 0; i < b.length; i++) {
-			a.includes(b[i]) ? '' : r.push(b[i]);
+			aMap.includes(JSON.stringify(b[i])) ? r.push(b[i]) : '';
 		}
 	} else { // OR
 		r = b;
+		let bMap = b.map(m => JSON.stringify(m));
 		for(let i = 0; i < a.length; i++) {
-			b.includes(a[i]) ? '' : r.push(a[i]);
+			bMap.includes(JSON.stringify(a[i])) ? r.push(a[i]) : '';
 		}
 	}
 	return r;
@@ -615,6 +651,14 @@ function filterResults() {
 function filterResultsCaseSensitive() {
 	document.getElementById('resultFilterCaseSensitive').checked ? caseSensitive = true : caseSensitive = false;
 	filterResults();
+}
+
+// filter the results by language
+function filterResultsLang() {
+	let filter = this.value;
+	document.querySelectorAll('.result-entry').forEach(function(elem) {
+		(elem.dataset.lang == filter || filter == '') ? elem.classList.remove('hidden') : elem.classList.add('hidden');
+	});
 }
 
 // reset filtering of resultlist

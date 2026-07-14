@@ -3,6 +3,7 @@ document.getElementById("ba_popup").value = browser.i18n.getMessage("browserActi
 document.getElementById("ba_popup").addEventListener("click", openTab);
 var lastSelected;
 var detailTarget = false;
+var langTarget = null;
 var currentTabTrueURL = null;
 
 // entry point for browser action
@@ -27,6 +28,7 @@ function checkTabWiki(tabData) {
 	else { // else display available categories
 		document.getElementById("ba_popup").value = browser.i18n.getMessage("browserActionOpenPopupDetail") + ': ' + tabData.name;
 		detailTarget = tabData.name;
+		langTarget = tabData.lang;
 		var html = `<h4>${browser.i18n.getMessage("browserActionAvailableCategories")}</h4>`;
 		for(const [k, v] of Object.entries(tabData.categories)) {
 			if(currentTabTrueURL.origin == new URL(v).origin)
@@ -58,7 +60,13 @@ function saveCategory() {
 		return;
 	lastSelected = this;
 	browser.tabs.query({active: true, currentWindow: true})
-	.then(tl => browser.runtime.sendMessage({task: 'storeFromPopup', title: this.getAttribute('data-name'), href: this.getAttribute('data-href'), caller: 'ba'}))
+	.then(tl => browser.runtime.sendMessage({
+		task: 'storeFromPopup',
+		title: this.getAttribute('data-name'),
+		href: this.getAttribute('data-href'),
+		lang: langTarget,
+		caller: 'ba'
+	}))
 	.then(this.classList.add('pending'))
 	.catch(e => {raiseError(this, e);});
 }
