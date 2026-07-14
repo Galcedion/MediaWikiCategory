@@ -300,8 +300,14 @@
 		"description": "Error: the requested category has been fetched already."
 	},
 	"errorPopupCorruptedCategory": {
-		"message": "One or more categories of this wiki are corrupted. Please delete the wiki and save the categories again.",
-		"description": "Error: a category is found to be corrupted."
+		"message": "Category '$CAT$' is corrupted. Please delete the wiki or category and save them again.",
+		"description": "Error: a specified category is found to be corrupted.",
+		"placeholders": {
+			"cat": {
+				"content": "$1",
+				"example": "Wiki-Category"
+			}
+		}
 	},
 	"errorWebReqFail": {
 		"message": "Category $CAT$ could not be loaded!",

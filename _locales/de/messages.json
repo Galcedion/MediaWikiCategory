@@ -225,7 +225,12 @@
 		"message": "Kategorie bereits gespeichert!"
 	},
 	"errorPopupCorruptedCategory": {
-		"message": "Eine oder mehrere Kategorien dieses Wiki sind fehlerhaft. Bitte löschen Sie das Wiki und speichern Sie die Kategorien erneut."
+		"message": "Kategorie '$CAT$' ist fehlerhaft. Bitte löschen Sie das Wiki oder die Kategorie und speichern sie erneut.",
+		"placeholders": {
+			"cat": {
+				"content": "$1"
+			}
+		}
 	},
 	"errorWebReqFail": {
 		"message": "Kategorie $CAT$ konnte nicht geladen werden!",

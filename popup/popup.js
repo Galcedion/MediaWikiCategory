@@ -246,16 +246,15 @@ function fetchStream(dataStream) {
 		value = JSON.parse(value);
 		var entries = value.length;
 		var sum = 0;
-		var hasError = false;
 		var entryContent = `<ul id="expand_list_${key}" class="category-list hidden">`;
 		for(let i = 0; i < entries; i++) {
+			let hasError = false;
 			if(typeof value[i] !== 'object' || !validateCategoryData(value[i])) {
 				hasError = true;
-				raiseError(`${key}: ${browser.i18n.getMessage("errorPopupCorruptedCategory")}`);
-				break;
+				raiseError(`${key}: ${browser.i18n.getMessage("errorPopupCorruptedCategory", value[i].title)}`);
 			}
 			entryContent += `<li>
-			<div class="flex-10">${value[i]['title']}</div>
+			<div class="flex-10${hasError ? ' error' : ''}">${value[i]['title']}</div>
 			<div class="flex-1 text-right">(${Object.keys(value[i]['items']).length})</div>
 			<div class="flex-1 text-center"><img name="popupDelete" src="../heroicons/trash.svg" data-wiki="${key}" data-category="${value[i]['title']}" class="clickable icon" title="${browser.i18n.getMessage("titleDelete")}"></div>
 			</li>`;
@@ -267,8 +266,7 @@ function fetchStream(dataStream) {
 		${entries} ${browser.i18n.getMessage("popupCategories")}, ${sum} ${browser.i18n.getMessage("popupPages")}
 		<img name="popupDelete" src="../heroicons/trash.svg" class="clickable icon" data-wiki="${key}" title="${browser.i18n.getMessage("titleDelete")}">
 		</div>`;
-		if(!hasError)
-			html += entryContent;
+		html += entryContent;
 	}
 	calculateStorage();
 	document.getElementById("p_overview").innerHTML = html;
@@ -292,13 +290,20 @@ function fetchStream(dataStream) {
 	}
 }
 
-// TODO: add sanity checks
 // check if the category has the necessary keys
 function validateCategoryData(category) {
-	let mandatoryKeys = ['title', 'path', 'protocol', 'items'];
-	let optionalKeys = ['lang']; // LEGACY SUPPORT for 1.1 and older
-	for(let k = 0; k < mandatoryKeys.length; ++k) {
-		if(!(mandatoryKeys[k] in category))
+	let mandatoryKeys = {'title': ['r', /^.+$/g], 'path': ['r', /^[^<>\\ ]+$/g], 'protocol': ['r', /^\w+:$/g], 'items': ['o']};
+	let optionalKeys = {'lang': /^\w+$/g}; // LEGACY SUPPORT for 1.1 and older
+	for(mk in mandatoryKeys) {
+		if(!(mk in category))
+			return false;
+		if(mandatoryKeys[mk][0] == 'r' && !(mandatoryKeys[mk][1]).test(category[mk]))
+			return false;
+		if(mandatoryKeys[mk][0] == 'o' && typeof category[mk] !== 'object')
+			return false;
+	}
+	for(ok in optionalKeys) {
+		if(ok in category && !(optionalKeys[ok]).test(category[ok]))
 			return false;
 	}
 	return true;
