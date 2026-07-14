@@ -18,7 +18,7 @@ table {border-spacing: 0;}
 ul {padding-bottom: 0.25em; border: 1px solid var(--border); border-top: 0; border-radius: 0 0 5px 5px;}
 li {width: 50%; display: flex; padding-left: 5px; border-radius: 5px; transition: }
 li:hover {background-color: var(--clickable);}
-li + li {margin-top: 0.25em;}
+li + li, #error div + div {margin-top: 0.25em;}
 label {margin: 0 5px; padding: 0 5px; border-radius: 5px;}
 input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 #p_special {position: absolute; right: calc(15% + 0.5em); margin: calc(1em - 3px); font-style: normal; border: 1px solid var(--border); border-radius: 5px;}
@@ -34,6 +34,8 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 #p_overview {padding: 1em;}
 #p_overview > div {padding: 0.5em 0.25em; border: 1px solid var(--border); border-radius: 0 5px 5px 5px;}
 #error {border-bottom: 2px solid var(--bg); border-radius: 0 0 5px 5px; min-height: 5px;}
+#error div {margin: 0 1em; border-radius: 5px}
+#error div:last-child {margin-bottom: 0.25em;}
 .p_nav {background-color: var(--bg); text-align: center;}
 .p_title {text-align: center; background-color: var(--bg); font-weight: bold; padding: 1em; border-radius: 5px 5px 0 0;}
 .p_title ~ div {border-left: 2px solid var(--bg); border-right: 2px solid var(--bg);}

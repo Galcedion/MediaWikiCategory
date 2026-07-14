@@ -12,7 +12,6 @@ document.getElementById("p_storage").addEventListener("click", displayStorage);
 document.getElementById("p_refresh").addEventListener("click", refreshData);
 document.getElementById("p_deleteall").addEventListener("click", deleteAll);
 document.getElementById("p_nav_overview").addEventListener("click", showOverview);
-document.getElementById("error").addEventListener("click", closeError);
 document.addEventListener("keydown", function(event) {if(event.key == 'Escape') displayCleanup();});
 document.addEventListener("mouseup", function(e) {mouseDown = false;});
 var storedData;
@@ -703,19 +702,17 @@ function showTruthTable() {
 // visual error handler
 function raiseError(error) {
 	let errorNode = document.getElementById("error");
-	if(errorNode.innerHTML == '')
-		errorNode.innerHTML = error;
-	else
-		errorNode.innerHTML += '<br>' + error;
-	errorNode.classList.add('error');
-	errorNode.title = browser.i18n.getMessage("titleClose");
+	let newError = document.createElement('div');
+	newError.classList.add('error');
+	newError.textContent = error;
+	newError.title = browser.i18n.getMessage("titleClose");
+	newError.addEventListener("click", closeError);
+	errorNode.appendChild(newError);
 }
 
 // close open error message
 function closeError() {
-	let errorNode = document.getElementById("error");
-	errorNode.innerHTML = '';
-	errorNode.classList.remove('error');
+	this.remove();
 }
 
 window.onload = fetchStorage();
