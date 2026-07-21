@@ -563,7 +563,8 @@ function catCalc() {
 		document.getElementById("resultFilter").addEventListener("keyup", filterResults);
 		document.getElementById("resultFilterCaseSensitive").addEventListener("click", filterResultsCaseSensitive);
 		document.getElementById("resultFilterReset").addEventListener("click", filterResultsReset);
-		document.getElementById("resultLang").addEventListener("change", filterResultsLang);
+		if(langList.length > 1)
+			document.getElementById("resultLang").addEventListener("change", filterResultsLang);
 	} else {
 		document.getElementById("p_result").innerHTML = `<h4>${browser.i18n.getMessage("popupMathResultsNone")}</h4>`;
 	}
@@ -603,10 +604,7 @@ function calcAND(a, b, not = false) {
 		r = a.concat(b);
 		r = r.filter((elem, index, self) => self.indexOf(elem) === index);
 	} else {
-		let bMap = b.map(m => JSON.stringify(m));
-		for(let i = 0; i < a.length; i++) {
-			bMap.includes(JSON.stringify(a[i])) ? r.push(a[i]) : '';
-		}
+		r = r.concat(calcMAP(b, a));
 	}
 	return r;
 }
@@ -619,19 +617,27 @@ function calcOR(a, b, not = false, xor = false) {
 	else if(not && xor) // XNOR
 		return calcAND(a, b);
 	else if(xor) { // XOR
-		let bMap = b.map(m => JSON.stringify(m));
-		for(let i = 0; i < a.length; i++) {
-			bMap.includes(JSON.stringify(a[i])) ? r.push(a[i]) : '';
-		}
-		let aMap = a.map(m => JSON.stringify(m));
-		for(let i = 0; i < b.length; i++) {
-			aMap.includes(JSON.stringify(b[i])) ? r.push(b[i]) : '';
-		}
+		r = r.concat(calcMAP(b, a));
+		r = r.concat(calcMAP(a, b));
 	} else { // OR
-		r = b;
-		let bMap = b.map(m => JSON.stringify(m));
-		for(let i = 0; i < a.length; i++) {
-			bMap.includes(JSON.stringify(a[i])) ? r.push(a[i]) : '';
+		r = b.concat(calcMAP(b, a));
+	}
+	return r;
+}
+
+// calculate if a map of the first paramter includes an element of the second one
+function calcMAP(a, b) {
+	let r = [];
+	let aMap = a.map(m => JSON.stringify(m));
+	let legacyMapNoLang = a.map(m => ((typeof(m.lang) === undefined || m.lang == null) ? m.item : null)).filter(i => i); // LEGACY SUPPORT for 1.1 and older
+	let legacyMapFull = a.map(m => m.item); // LEGACY SUPPORT for 1.1 and older
+	for(let i = 0; i < b.length; i++) {
+		if(typeof(b[i].lang) === undefined || b[i].lang == null) { // LEGACY SUPPORT for 1.1 and older
+			if(legacyMapFull.includes(b[i].item))
+				r.push(b[i]);
+		} else {
+			if(aMap.includes(JSON.stringify(b[i])) || legacyMapNoLang.includes(b[i].item))
+				r.push(b[i]);
 		}
 	}
 	return r;
