@@ -3,17 +3,11 @@ document.getElementById("l_set_notation").textContent = browser.i18n.getMessage(
 document.getElementById("l_set_math").textContent = browser.i18n.getMessage('optionsLabelSetMath');
 document.getElementById("button_save").value = browser.i18n.getMessage('optionsButtonSave');
 document.getElementById("button_reset").value = browser.i18n.getMessage('optionsButtonReset');
-/*document.getElementById("section_updown").textContent = browser.i18n.getMessage('optionsSectionUpDown');
-document.getElementById("l_select_sync_up").textContent = browser.i18n.getMessage('optionsLabelSelectSyncUp');
-document.getElementById("sync_up_selected").value = browser.i18n.getMessage('optionsSyncUpSelected');
-document.getElementById("sync_up_selected").title = browser.i18n.getMessage('optionsSyncUpTitle');
-document.getElementById("sync_up_all").value = browser.i18n.getMessage('optionsSyncUpAll');
-document.getElementById("sync_up_all").title = browser.i18n.getMessage('optionsSyncUpTitle');
-document.getElementById("l_select_sync_down").textContent = browser.i18n.getMessage('optionsLabelSelectSyncDown');
-document.getElementById("sync_down_selected").value = browser.i18n.getMessage('optionsSyncDownSelected');
-document.getElementById("sync_down_selected").title = browser.i18n.getMessage('optionsSyncDownTitle');
-document.getElementById("sync_down_all").value = browser.i18n.getMessage('optionsSyncDownAll');
-document.getElementById("sync_down_all").title = browser.i18n.getMessage('optionsSyncDownTitle');*/
+document.getElementById("section_data").textContent = browser.i18n.getMessage('optionsSectionData');
+document.getElementById("t_download").textContent = browser.i18n.getMessage('optionsDataDownload');
+document.getElementById("data_dl_settings").value = browser.i18n.getMessage('optionsDataDownloadSettings');
+document.getElementById("data_dl_wiki").value = browser.i18n.getMessage('optionsDataDownloadWiki');
+document.getElementById("data_dl_all").value = browser.i18n.getMessage('optionsDataDownloadAll');
 document.getElementById("section_delete").textContent = browser.i18n.getMessage('optionsSectionDelete');
 document.getElementById("delete_local").value = browser.i18n.getMessage('optionsDeleteLocal');
 document.getElementById("delete_sync").value = browser.i18n.getMessage('optionsDeleteSync');
@@ -28,27 +22,28 @@ const mathOptions = {
 };
 const notationOptionsDefault = "TEXT";
 const mathOptionsDefault = "SIMPLE";
+var syncSettings = {};
 var localStorage = {};
 
 document.getElementById('button_save').addEventListener('click', saveSettings);
 document.getElementById('button_reset').addEventListener('click', resetSettings);
-/*document.getElementById('sync_up_selected').addEventListener('click', syncUp);
-document.getElementById('sync_up_all').addEventListener('click', syncUp);
-document.getElementById('sync_down_selected').addEventListener('click', syncDown);
-document.getElementById('sync_down_all').addEventListener('click', syncDown);*/
+document.getElementById('data_dl_settings').addEventListener('click', dataDownload);
+document.getElementById('data_dl_wiki').addEventListener('click', dataDownload);
+document.getElementById('data_dl_all').addEventListener('click', dataDownload);
 document.getElementById('delete_local').addEventListener('click', deleteStorage);
 document.getElementById('delete_sync').addEventListener('click', deleteStorage);
 document.getElementById('delete_all').addEventListener('click', deleteStorage);
 var getSettings = browser.storage.sync.get();
 getSettings.then(loadSettings);
-/*var getLocalStorage = browser.storage.local.get(null);
-getLocalStorage.then(loadLocal);*/
+var getLocalStorage = browser.storage.local.get(null);
+getLocalStorage.then(loadLocal);
 
 // load sync storage settings
 function loadSettings(settings) {
 	let tmp = notationOptionsDefault;
 	if(settings.notation)
 		tmp = settings.notation;
+	syncSettings.notation = tmp;
 	var select = document.getElementById('set_notation');
 	for(n in notationOptions) {
 		let option = document.createElement('option');
@@ -61,6 +56,7 @@ function loadSettings(settings) {
 	tmp = mathOptionsDefault;
 	if(settings.math)
 		tmp = settings.math;
+	syncSettings.math = tmp;
 	var select = document.getElementById('set_math');
 	for(m in mathOptions) {
 		let option = document.createElement('option');
@@ -72,32 +68,23 @@ function loadSettings(settings) {
 	}
 }
 
-/*
+
 // load local storage
 function loadLocal(storage) {
-	localStorage = JSON.parse(JSON.stringify(storage));
-	var select = document.getElementById('select_sync_up');
-	for(let [wiki, categories] of Object.entries(storage)) {
-		let option = document.createElement('option');
-		option.value = wiki;
-		option.textContent = `${wiki} (${JSON.parse(categories).length} ${browser.i18n.getMessage("optionsSubstrCategories")})`;
-		select.appendChild(option);
-		localStorage[wiki] = categories;
-	}
-}*/
+	localStorage = structuredClone(storage);
+}
 
 // save the currently selected settings
 function saveSettings() {
-	let settings = {};
-	settings.notation = document.getElementById('set_notation').value.toUpperCase();
-	if(!(settings.notation in notationOptions)) {
-		settings.notation = notationOptionsDefault;
+	syncSettings.notation = document.getElementById('set_notation').value.toUpperCase();
+	if(!(syncSettings.notation in notationOptions)) {
+		syncSettings.notation = notationOptionsDefault;
 	}
-	settings.math = document.getElementById('set_math').value.toUpperCase();
-	if(!(settings.math in mathOptions)) {
-		settings.math = mathOptionsDefault;
+	syncSettings.math = document.getElementById('set_math').value.toUpperCase();
+	if(!(syncSettings.math in mathOptions)) {
+		syncSettings.math = mathOptionsDefault;
 	}
-	browser.storage.sync.set(settings);
+	browser.storage.sync.set(syncSettings);
 }
 
 // restore default settings and save
@@ -105,6 +92,25 @@ function resetSettings() {
 	document.getElementById('set_notation').value = notationOptionsDefault;
 	document.getElementById('set_math').value = mathOptionsDefault;
 	saveSettings();
+}
+
+// provide a data download
+function dataDownload() {
+	let dataBlob = {};
+	let fname = (new Date()).toISOString();
+	fname = fname.substring(0, fname.lastIndexOf('T'));
+	fname = `mwc_${this.id.substring(this.id.lastIndexOf("_")+1)}_${fname}`;
+	if(this.id == 'data_dl_settings' || this.id == 'data_dl_all')
+		dataBlob['settings'] = syncSettings;
+	if(this.id == 'data_dl_wiki' || this.id == 'data_dl_all')
+		dataBlob['wiki'] = localStorage;
+	dataBlob = new Blob([JSON.stringify(dataBlob)], {type: 'application/json'});
+	let dl = document.createElement('a');
+	dl.download = fname;
+	dl.href = URL.createObjectURL(dataBlob);
+	document.body.append(dl);
+	dl.click();
+	dl.remove();
 }
 
 /*

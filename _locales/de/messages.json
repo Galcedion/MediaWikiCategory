@@ -158,8 +158,8 @@
 	"optionsSectionSettings": {
 		"message": "Einstellungen"
 	},
-	"optionsSectionUpDown": {
-		"message": "Import / Export"
+	"optionsSectionData": {
+		"message": "Datenimport / -export"
 	},
 	"optionsSectionDelete": {
 		"message": "Gefahrenzone"
@@ -188,29 +188,17 @@
 	"optionsButtonReset": {
 		"message": "Zurücksetzen"
 	},
-	"optionsLabelSelectSyncUp": {
-		"message": "Wikis zum exportieren und synchronisieren wählen"
+	"optionsDataDownload": {
+		"message": "Herunterladen"
 	},
-	"optionsSyncUpSelected": {
-		"message": "Ausgewählte exportieren"
+	"optionsDataDownloadSettings": {
+		"message": "Einstellungen"
 	},
-	"optionsSyncUpAll": {
-		"message": "Alle exportieren"
+	"optionsDataDownloadWiki": {
+		"message": "Wiki-Daten"
 	},
-	"optionsSyncUpTitle": {
-		"message": "Das wird die ausgewählten / alle Wikis im synchronisierten Speicher überschreiben!"
-	},
-	"optionsLabelSelectSyncDown": {
-		"message": "Wikis zum importieren wählen"
-	},
-	"optionsSyncDownSelected": {
-		"message": "Ausgewählte importieren"
-	},
-	"optionsSyncDownAll": {
-		"message": "Alle importieren"
-	},
-	"optionsSyncDownTitle": {
-		"message": "Das wird die ausgewählten / alle Wikis im lokalen Speicher überschreiben!"
+	"optionsDataDownloadAll": {
+		"message": "Alle Daten"
 	},
 	"optionsSubstrCategories": {
 		"message": "Kategorien"

@@ -211,9 +211,9 @@
 		"message": "Settings",
 		"description": "Options: section title for settings section."
 	},
-	"optionsSectionUpDown": {
-		"message": "Import / Export",
-		"description": "Options: section title for up and down section."
+	"optionsSectionData": {
+		"message": "Data Import / Export",
+		"description": "Options: section title for data section."
 	},
 	"optionsSectionDelete": {
 		"message": "Danger zone",
@@ -251,37 +251,21 @@
 		"message": "Reset",
 		"description": "Options: button reset."
 	},
-	"optionsLabelSelectSyncUp": {
-		"message": "Select wikis to export and synchronize",
-		"description": "Options: label for wiki selection to store."
+	"optionsDataDownload": {
+		"message": "Download",
+		"description": "Options: download row text."
 	},
-	"optionsSyncUpSelected": {
-		"message": "Export selected",
-		"description": "Options: button store selected wikis."
+	"optionsDataDownloadSettings": {
+		"message": "Settings",
+		"description": "Options: button download settings."
 	},
-	"optionsSyncUpAll": {
-		"message": "Export all",
-		"description": "Options: button store all wikis."
+	"optionsDataDownloadWiki": {
+		"message": "Wiki data",
+		"description": "Options: button download wiki data."
 	},
-	"optionsSyncUpTitle": {
-		"message": "This will overwrite selected / all wikis in the synchronized storage!",
-		"description": "Options: title warning for sync up."
-	},
-	"optionsLabelSelectSyncDown": {
-		"message": "Select wikis to import from synchronized storage",
-		"description": "Options: label for wiki selection to load."
-	},
-	"optionsSyncDownSelected": {
-		"message": "Import selected",
-		"description": "Options: button import selected wikis."
-	},
-	"optionsSyncDownAll": {
-		"message": "Import all",
-		"description": "Options: button import all wikis."
-	},
-	"optionsSyncDownTitle": {
-		"message": "This will overwrite selected / all wikis in the local storage!",
-		"description": "Options: title warning for sync down."
+	"optionsDataDownloadAll": {
+		"message": "All data",
+		"description": "Options: button download all data."
 	},
 	"optionsSubstrCategories": {
 		"message": "categories",
