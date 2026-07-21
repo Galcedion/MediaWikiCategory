@@ -1,5 +1,6 @@
 document.getElementById("section_settings").textContent = browser.i18n.getMessage('optionsSectionSettings');
 document.getElementById("l_set_notation").textContent = browser.i18n.getMessage('optionsLabelSetNotation');
+document.getElementById("l_set_math").textContent = browser.i18n.getMessage('optionsLabelSetMath');
 document.getElementById("button_save").value = browser.i18n.getMessage('optionsButtonSave');
 document.getElementById("button_reset").value = browser.i18n.getMessage('optionsButtonReset');
 /*document.getElementById("section_updown").textContent = browser.i18n.getMessage('optionsSectionUpDown');
@@ -21,7 +22,12 @@ const notationOptions = {
 	TEXT: browser.i18n.getMessage('optionsNotationText'),
 	LOGICSYMBOL: browser.i18n.getMessage('optionsNotationLogicSymbol')
 };
+const mathOptions = {
+	SIMPLE: browser.i18n.getMessage('optionsMathSimple'),
+	ADVANCED: browser.i18n.getMessage('optionsMathAdvanced')
+};
 const notationOptionsDefault = "TEXT";
+const mathOptionsDefault = "SIMPLE";
 var localStorage = {};
 
 document.getElementById('button_save').addEventListener('click', saveSettings);
@@ -52,6 +58,18 @@ function loadSettings(settings) {
 			option.selected = true;
 		select.appendChild(option);
 	}
+	tmp = mathOptionsDefault;
+	if(settings.math)
+		tmp = settings.math;
+	var select = document.getElementById('set_math');
+	for(m in mathOptions) {
+		let option = document.createElement('option');
+		option.value = m;
+		option.textContent = mathOptions[m];
+		if(tmp == m)
+			option.selected = true;
+		select.appendChild(option);
+	}
 }
 
 /*
@@ -75,12 +93,17 @@ function saveSettings() {
 	if(!(settings.notation in notationOptions)) {
 		settings.notation = notationOptionsDefault;
 	}
+	settings.math = document.getElementById('set_math').value.toUpperCase();
+	if(!(settings.math in mathOptions)) {
+		settings.math = mathOptionsDefault;
+	}
 	browser.storage.sync.set(settings);
 }
 
 // restore default settings and save
 function resetSettings() {
 	document.getElementById('set_notation').value = notationOptionsDefault;
+	document.getElementById('set_math').value = mathOptionsDefault;
 	saveSettings();
 }
 

@@ -53,6 +53,10 @@ function loadSettings(syncSettings) {
 	if(syncSettings.notation)
 		tmp = syncSettings.notation;
 	settings["notation"] = tmp;
+	tmp = "SIMPLE";
+	if(syncSettings.math)
+		tmp = syncSettings.math;
+	settings["math"] = tmp;
 }
 
 // toggle display of info

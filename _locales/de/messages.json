@@ -173,6 +173,15 @@
 	"optionsNotationLogicSymbol": {
 		"message": "Logik-Symbol (z.B. ⋀)"
 	},
+	"optionsLabelSetMath": {
+		"message": "Kategorie-Filter"
+	},
+	"optionsMathSimple": {
+		"message": "Einfach"
+	},
+	"optionsMathAdvanced": {
+		"message": "Erweitert"
+	},
 	"optionsButtonSave": {
 		"message": "Speichern"
 	},

@@ -231,6 +231,18 @@
 		"message": "Logic symbol (e.g. ⋀)",
 		"description": "Options: notation selection option logic symbol."
 	},
+	"optionsLabelSetMath": {
+		"message": "Category filter",
+		"description": "Options: label for math type."
+	},
+	"optionsMathSimple": {
+		"message": "Simple",
+		"description": "Options: math type selection option simple."
+	},
+	"optionsMathAdvanced": {
+		"message": "Advanced",
+		"description": "Options: math type selection option advanced."
+	},
 	"optionsButtonSave": {
 		"message": "Save",
 		"description": "Options: button save."
