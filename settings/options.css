@@ -1,12 +1,19 @@
 :root {
   --white: white;
+  --bg: lightgray;
   --warn: red;
 }
-td {text-align: center;}
+table {width: 100%; border-spacing: 0.5em;}
+td {text-align: center; width: 25%;}
 hr {color: lightgray;}
 th {text-align: center;}
+select {width: 50%;}
+input[type="button"] {min-width: 33%; text-align: center;}
+input[type="file"] {width: 100%; background-color: var(--bg);}
 #error div:first-child {margin-top: 1em;}
 #error div+div {margin-top: 0.25em;}
+.left {text-align: left;}
 .dangerzone {color: var(--warn);}
-.crit-button {background-color: var(--warn); border-radius: 5px;}
+.crit-button {color: var(--white); background-color: var(--warn); border-radius: 5px;}
+.crit-button:hover, .crit-button :active {box-shadow: 0 0 20px var(--bg) inset;}
 .error {background-color: var(--warn); color: var(--white); padding: 5px; border-radius: 5px;}
