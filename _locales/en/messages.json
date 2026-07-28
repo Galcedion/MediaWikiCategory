@@ -361,6 +361,50 @@
 			}
 		}
 	},
+	"errorNoFile": {
+		"message": "No file has been given to load!",
+		"description": "Error: the file selector is empty."
+	},
+	"errorTooManyFiles": {
+		"message": "Too many files selected! Only $NUM$ file(s) are required.",
+		"description": "Error: too many files were selected.",
+		"placeholders": {
+			"num": {
+				"content": "$1",
+				"example": "1"
+			}
+		}
+	},
+	"errorFileEmpty": {
+		"message": "$FILE$ is empty and can't be loaded!",
+		"description": "Error: the given file has a size of 0.",
+		"placeholders": {
+			"file": {
+				"content": "$1",
+				"example": "empty.json"
+			}
+		}
+	},
+	"errorCantOpenFile": {
+		"message": "$FILE$ can not be opened! Please check if you have the permissions for the file or if it is defective.",
+		"description": "Error: the given file is broken or MWC has no authorization to open it.",
+		"placeholders": {
+			"file": {
+				"content": "$1",
+				"example": "broken.json"
+			}
+		}
+	},
+	"errorNoJSONFile": {
+		"message": "$FILE$ is no valid JSON file!",
+		"description": "Error: the given file is no JSON and therefore can't be read.",
+		"placeholders": {
+			"file": {
+				"content": "$1",
+				"example": "file.txt"
+			}
+		}
+	},
 	"securityOffsiteCategory": {
 		"message": "Malicious category blocked",
 		"description": "Security warning: the category has a target outside of the current wiki."

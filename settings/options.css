@@ -1,8 +1,12 @@
 :root {
+  --white: white;
   --warn: red;
 }
 td {text-align: center;}
 hr {color: lightgray;}
 th {text-align: center;}
+#error div:first-child {margin-top: 1em;}
+#error div+div {margin-top: 0.25em;}
 .dangerzone {color: var(--warn);}
 .crit-button {background-color: var(--warn); border-radius: 5px;}
+.error {background-color: var(--warn); color: var(--white); padding: 5px; border-radius: 5px;}

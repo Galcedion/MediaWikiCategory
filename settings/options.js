@@ -120,11 +120,19 @@ function dataDownload() {
 function dataUpload() {
 	let ul = document.getElementById('data_ul');
 	if(ul.files.length == 0) {
-		// TODO Error empty
-	} else if(ul.files.length > 1) {
-		// TODO Error multifile
+		raiseError(browser.i18n.getMessage('errorNoFile'));
+		return;
+	} else if(ul.files.length > 1) { // as of now, this should never happen
+		raiseError(browser.i18n.getMessage('errorTooManyFiles', 1));
+		ul.value = null;
+		return;
 	}
 	ul = ul.files[0];
+	if(ul.size == 0) {
+		raiseError(browser.i18n.getMessage('errorFileEmpty', ul.name));
+		document.getElementById('data_ul').value = null;
+		return;
+	}
 	let reader = new FileReader();
 	reader.readAsText(ul, 'UTF-8');
 	reader.onload = function(stream) {
@@ -142,10 +150,16 @@ function dataUpload() {
 				browser.storage.local.set(dataBlob.wiki);
 			}
 		} catch (e) {
-			// TODO SyntaxError for non-JSON files
+			if(e.name == 'SyntaxError' && e.message.indexOf('JSON.parse') == 0) {
+				raiseError(browser.i18n.getMessage('errorNoJSONFile', ul.name));
+			}
+			document.getElementById('data_ul').value = null;
 		}
 	};
-	reader.onerror = function() {}; // TODO Error reading file
+	reader.onerror = function() {
+		raiseError(browser.i18n.getMessage('errorCantOpenFile', ul.name));
+		document.getElementById('data_ul').value = null;
+	};
 }
 
 // delete selected or all storages
@@ -155,4 +169,20 @@ function deleteStorage() {
 	if(this.id == 'delete_sync' || this.id == 'delete_all')
 		browser.storage.sync.clear();
 	window.location.reload();
+}
+
+// visual error handler
+function raiseError(error) {
+	let errorNode = document.getElementById("error");
+	let newError = document.createElement('div');
+	newError.classList.add('error');
+	newError.textContent = error;
+	newError.title = browser.i18n.getMessage("titleClose");
+	newError.addEventListener("click", closeError);
+	errorNode.appendChild(newError);
+}
+
+// close open error message
+function closeError() {
+	this.remove();
 }

@@ -273,6 +273,41 @@
 			}
 		}
 	},
+	"errorNoFile": {
+		"message": "Keine Datei zum Laden angegeben!"
+	},
+	"errorTooManyFiles": {
+		"message": "Zu viele Dateien ausgewählt! Nur $NUM$ Datei(en) werden benötigt.",
+		"placeholders": {
+			"num": {
+				"content": "$1"
+			}
+		}
+	},
+	"errorFileEmpty": {
+		"message": "$FILE$ ist leer und kann nicht geladen werden!",
+		"placeholders": {
+			"file": {
+				"content": "$1"
+			}
+		}
+	},
+	"errorCantOpenFile": {
+		"message": "$FILE$ kann nicht geöffnet werden! Bitte prüfen Sie, ob Sie die nötige Berechtigung haben oder die Datei beschädigt ist.",
+		"placeholders": {
+			"file": {
+				"content": "$1"
+			}
+		}
+	},
+	"errorNoJSONFile": {
+		"message": "$FILE$ ist keine gültige JSON-Datei!",
+		"placeholders": {
+			"file": {
+				"content": "$1"
+			}
+		}
+	},
 	"securityOffsiteCategory": {
 		"message": "Böswillige Kategorie blockiert"
 	},
