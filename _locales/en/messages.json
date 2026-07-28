@@ -267,6 +267,14 @@
 		"message": "All data",
 		"description": "Options: button download all data."
 	},
+	"optionsLabelDataUpload": {
+		"message": "Load data",
+		"description": "Options: label for data upload."
+	},
+	"optionsDataUploadNow": {
+		"message": "Overwrite data",
+		"description": "Options: button upload selected file."
+	},
 	"optionsSubstrCategories": {
 		"message": "categories",
 		"description": "Options: select option substring."

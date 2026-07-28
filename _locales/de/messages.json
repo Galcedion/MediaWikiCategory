@@ -200,6 +200,12 @@
 	"optionsDataDownloadAll": {
 		"message": "Alle Daten"
 	},
+	"optionsLabelDataUpload": {
+		"message": "Daten laden"
+	},
+	"optionsDataUploadNow": {
+		"message": "Daten überschreiben"
+	},
 	"optionsSubstrCategories": {
 		"message": "Kategorien"
 	},

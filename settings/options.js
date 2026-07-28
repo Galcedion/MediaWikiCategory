@@ -8,6 +8,8 @@ document.getElementById("t_download").textContent = browser.i18n.getMessage('opt
 document.getElementById("data_dl_settings").value = browser.i18n.getMessage('optionsDataDownloadSettings');
 document.getElementById("data_dl_wiki").value = browser.i18n.getMessage('optionsDataDownloadWiki');
 document.getElementById("data_dl_all").value = browser.i18n.getMessage('optionsDataDownloadAll');
+document.getElementById("l_data_ul").textContent = browser.i18n.getMessage('optionsLabelDataUpload');
+document.getElementById("data_ul_submit").value = browser.i18n.getMessage('optionsDataUploadNow');
 document.getElementById("section_delete").textContent = browser.i18n.getMessage('optionsSectionDelete');
 document.getElementById("delete_local").value = browser.i18n.getMessage('optionsDeleteLocal');
 document.getElementById("delete_sync").value = browser.i18n.getMessage('optionsDeleteSync');
@@ -30,6 +32,7 @@ document.getElementById('button_reset').addEventListener('click', resetSettings)
 document.getElementById('data_dl_settings').addEventListener('click', dataDownload);
 document.getElementById('data_dl_wiki').addEventListener('click', dataDownload);
 document.getElementById('data_dl_all').addEventListener('click', dataDownload);
+document.getElementById('data_ul_submit').addEventListener('click', dataUpload);
 document.getElementById('delete_local').addEventListener('click', deleteStorage);
 document.getElementById('delete_sync').addEventListener('click', deleteStorage);
 document.getElementById('delete_all').addEventListener('click', deleteStorage);
@@ -113,30 +116,37 @@ function dataDownload() {
 	dl.remove();
 }
 
-/*
-// upload local storage wikis into sync storage
-function syncUp() {
-	let local = {};
-	let saveAll = (this.id == 'sync_up_all' ? true : false);
-	let selectedWikis = [];
-	let optionList = document.getElementById('select_sync_up').options;
-	for(let i = 0; i < optionList.length; i++) {
-		if(optionList[i].selected)
-			selectedWikis.push(optionList[i].value);
+// use the given file to overwrite existing data
+function dataUpload() {
+	let ul = document.getElementById('data_ul');
+	if(ul.files.length == 0) {
+		// TODO Error empty
+	} else if(ul.files.length > 1) {
+		// TODO Error multifile
 	}
-	for(let [wiki, categories] of Object.entries(localStorage)) {
-		if(saveAll || selectedWikis.includes(wiki))
-			local[wiki] = categories;
-	}
-	browser.storage.sync.set({'localStorage': local});
-	// TODO: if the value is larger than about:config dom.storage.default_quota this fails
+	ul = ul.files[0];
+	let reader = new FileReader();
+	reader.readAsText(ul, 'UTF-8');
+	reader.onload = function(stream) {
+		try {
+			let dataBlob = JSON.parse(stream.target.result);
+			if(dataBlob.settings !== undefined) {
+				if(dataBlob.settings.notation !== undefined)
+					document.getElementById('set_notation').value = dataBlob.settings.notation;
+				if(dataBlob.settings.math !== undefined)
+					document.getElementById('set_math').value = dataBlob.settings.math;
+				saveSettings();
+			}
+			if(dataBlob.wiki !== undefined) { // TODO error handling and potential race conditions
+				browser.storage.local.clear();
+				browser.storage.local.set(dataBlob.wiki);
+			}
+		} catch (e) {
+			// TODO SyntaxError for non-JSON files
+		}
+	};
+	reader.onerror = function() {}; // TODO Error reading file
 }
-
-// download sync storage wikis into local storage
-function syncDown() {
-	// TODO
-}
-*/
 
 // delete selected or all storages
 function deleteStorage() {
