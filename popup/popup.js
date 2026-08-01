@@ -32,13 +32,6 @@ const displayState = {NODATA: 'NODATA', DATA: 'DATA', OVERVIEW: 'OVERVIEW', INWI
 var pageDisplayState = displayState.NODATA;
 var rebuild = false;
 var caseSensitive = false;
-browser.tabs.query({}).then(tl => {
-	for(const t of tl) {
-		if(t.url.indexOf('#') >= 0)
-			t.url = t.url.substring(0, t.url.indexOf('#'));
-		currentTabsURL.push(t.url);
-	}
-});
 var tt_operator = null;
 var mouseDown = false;
 var langList = [];
@@ -57,6 +50,18 @@ function loadSettings(syncSettings) {
 	if(syncSettings.math)
 		tmp = syncSettings.math;
 	settings["math"] = tmp;
+}
+
+// fetch open tabs
+function loadCurrentTabs() {
+	currentTabsURL = [];
+	browser.tabs.query({}).then(tl => {
+		for(const t of tl) {
+			if(t.url.indexOf('#') >= 0)
+				t.url = t.url.substring(0, t.url.indexOf('#'));
+			currentTabsURL.push(t.url);
+		}
+	});
 }
 
 // toggle display of info
@@ -143,6 +148,7 @@ function refreshData() {
 		displayStorage();
 	rebuild = true;
 	fetchStorage();
+	loadCurrentTabs();
 }
 
 // toggle display to overview
@@ -726,3 +732,4 @@ function closeError() {
 }
 
 window.onload = fetchStorage();
+window.onload = loadCurrentTabs();
