@@ -19,7 +19,8 @@ ul {padding-bottom: 0.25em; border: 1px solid var(--border); border-top: 0; bord
 li {width: 50%; display: flex; padding-left: 5px; border-radius: 5px; transition: }
 li:hover {background-color: var(--clickable);}
 li + li, #error div + div {margin-top: 0.25em;}
-label {margin: 0 5px; padding: 0 5px; border-radius: 5px;}
+label, button {margin: 0 5px; padding: 0 5px; border-radius: 5px;}
+button {border: 0;}
 input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 #p_special {position: absolute; right: calc(15% + 0.5em); margin: calc(1em - 3px); font-style: normal; border: 1px solid var(--border); border-radius: 5px;}
 #p_special img {margin: 2px;}
@@ -33,6 +34,7 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 #delete_all_dialog input:first-child {background-color: var(--warn);}
 #p_overview {padding: 1em;}
 #p_overview > div {padding: 0.5em 0.25em; border: 1px solid var(--border); border-radius: 0 5px 5px 5px;}
+#p_available button > * {vertical-align: center;}
 #error {border-bottom: 2px solid var(--bg); border-radius: 0 0 5px 5px; min-height: 5px;}
 #error div {margin: 0 1em; border-radius: 5px}
 #error div:last-child {margin-bottom: 0.25em;}

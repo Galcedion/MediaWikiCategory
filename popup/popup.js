@@ -337,16 +337,41 @@ function showWiki() {
 	}
 	if('dataset' in this)
 		toShow = this.dataset.wiki;
-	var html = `<h4>${browser.i18n.getMessage("popupMathAvailableCategories")}</h4>`;
+	let availCatNode = document.getElementById("p_available");
+	availCatNode.innerHTML = `<h4>${browser.i18n.getMessage("popupMathAvailableCategories")}</h4>`;
 	langList = [];
 	JSON.parse(storedData[toShow]).forEach(function(category) {
 		if("lang" in category && category.lang !== null && category.lang !== undefined && !langList.includes(category.lang))
 			langList.push(category.lang);
-		html += `<label for="sc_${category.title}" class="clickable">
-		<input type="checkbox" name="selected_cat" id="sc_${category.title}" value="${category.title}" class="clickable">
-		${category.title}
-		<i>(${Object.keys(category.items).length})</i>
-		</label>`;
+		if(settings.math == "SIMPLE") {
+			let label = document.createElement('label');
+			label.setAttribute("for", `sc_${category.title}`);
+			label.classList.add("clickable");
+			let input = document.createElement('input');
+			input.name = "selected_cat";
+			input.id = `sc_${category.title}`;
+			input.classList.add("clickable");
+			input.type = "checkbox";
+			input.value = category.title;
+			input.classList.add("clickable");
+			input.addEventListener("click", addCatCalc);
+			label.appendChild(input);
+			let span = document.createElement('span');
+			span.innerText = category.title;
+			label.appendChild(span);
+			let italic = document.createElement('i');
+			italic.innerText = `(${Object.keys(category.items).length})`;
+			label.appendChild(italic);
+			availCatNode.appendChild(label);
+		} else if(settings.math == "ADVANCED") {
+			let button = document.createElement('button');
+			button.type = "button";
+			button.value = category.title;
+			button.classList.add("clickable");
+			button.innerHTML = `<img src="../heroicons/plus-circle.svg"><span>${category.title}<i>(${Object.keys(category.items).length})</i></span>`;
+			button.addEventListener("click", addCatCalc);
+			availCatNode.appendChild(button);
+		}
 	});
 
 	if(!document.getElementById("p_nav_show").classList.contains("clickable")) {
@@ -354,8 +379,6 @@ function showWiki() {
 		document.getElementById("p_nav_show").classList.add("clickable");
 	}
 	document.getElementById("p_nav_show").textContent = toShow;
-	document.getElementById("p_available").innerHTML = html;
-	document.getElementsByName("selected_cat").forEach(function(node) {node.addEventListener("click", addCatCalc);});
 	if('dataset' in this)
 		showSelected();
 }
@@ -381,7 +404,7 @@ function expandWiki() {
 // create calculation overview based on selected categories
 function addCatCalc() {
 	var caller = this.value;
-	if(!this.checked) {
+	if(settings.math == "SIMPLE" && !this.checked) {
 		if(Object.keys(selectedCategories).length == 1)
 			selectedCategories = {};
 		else {
@@ -395,7 +418,7 @@ function addCatCalc() {
 				delete selectedCategories[Object.keys(selectedCategories).length - 1];
 			}
 		}
-	} else {
+	} else if(settings.math == "SIMPLE" || settings.math == "ADVANCED") {
 		if(Object.keys(selectedCategories).length > 0)
 			selectedCategories[Object.keys(selectedCategories).length] = {'type' : 'o', 'value': 'AND'};
 		selectedCategories[Object.keys(selectedCategories).length] = {'type' : 'c', 'value': caller};
