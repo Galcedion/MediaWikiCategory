@@ -71,10 +71,8 @@ function displayInfo() {
 	if(isActive)
 		return;
 	document.getElementById("p_info").classList.add("active");
-	let infoDisplay = document.createElement("div");
-	infoDisplay.id = "info_display";
-	infoDisplay.classList.add("display_box", "info_display");
-	infoDisplay.innerHTML += `${browser.i18n.getMessage("infoDialogPopupUse")}<br>${browser.i18n.getMessage("infoDialogTruthTableUse")}`;
+	let infoDisplay = generateNode('div', {'id': 'info_display', 'class': 'display_box info_display'});
+	infoDisplay.innerHTML += `${browser.i18n.getMessage("infoDialogPopupUse")}<br>${browser.i18n.getMessage("infoDialogTruthTableUse")}`; // TODO in general try to replace br with CSS
 	let operatorHTML = '';
 	for(let [key, value] of Object.entries(operatorList)) {
 		operatorHTML += `<i name="tt_operator" data-operator="${key}">${value[settings.notation]}</i>`;
@@ -101,10 +99,8 @@ function displayStorage() {
 		return;
 	const units = {0: 'B', 1: 'kB', 2: 'MB', 3: 'GB', 4: 'TB'};
 	document.getElementById("p_storage").classList.add("active");
-	let storageDisplay = document.createElement("div");
-	storageDisplay.id = "storage_display";
-	storageDisplay.classList.add("display_box", "storage_display");
-	let html = `<table class="margin-center">`;
+	let storageDisplay = generateNode('div', {'id': 'storage_display', 'class': 'display_box storage_display'});
+	let table = generateNode('table', {'class': 'margin-center'});
 	let firstRow = true;
 	for(let [key, value] of Object.entries(storageUsage)) {
 		let unitStep = 0;
@@ -113,17 +109,18 @@ function displayStorage() {
 			value /= 1024;
 		}
 		value = (Math.ceil(value * 10) / 10).toFixed(1);
-		html += `<tr>`;
+		let tr = generateNode('tr');
 		if(firstRow) {
-			html += `<th>${key}</th><th>${value} ${units[unitStep]}</th>`;
+			tr.appendChild(generateNode('th', {}, null, key));
+			tr.appendChild(generateNode('th', {}, null, `${value} ${units[unitStep]}`));
 			firstRow = false;
 		} else {
-			html += `<td>${key}</td><td>${value} ${units[unitStep]}</td>`;
+			tr.appendChild(generateNode('td', {}, null, key));
+			tr.appendChild(generateNode('td', {}, null, `${value} ${units[unitStep]}`));
 		}
-		html += `<tr>`;
+		table.appendChild(tr);
 	}
-	html += `</table>`;
-	storageDisplay.innerHTML += html;
+	storageDisplay.appendChild(table);
 	document.getElementById("p_special").appendChild(storageDisplay);
 }
 
@@ -197,16 +194,21 @@ function deleteWiki() {
 
 // create dialog box to delete all local storage
 function deleteAll() {
-	var dialog = document.createElement('dialog');
-	dialog.id = 'delete_all_dialog';
-	dialog.open = true;
-	dialog.innerHTML = `<p>${browser.i18n.getMessage("popupDeleteAllText")}</p>
-	<p style="text-align:center;">
-		<input type="button" data-confirmation="1" value="${browser.i18n.getMessage("popupDeleteAllYes")}">
-		<input type="button" data-confirmation="0" value="${browser.i18n.getMessage("popupDeleteAllNo")}">
-	<p>`;
+	let dialog = generateNode('dialog', {'id': 'delete_all_dialog', 'open': true});
+	dialog.appendChild(generateNode('p', {}, null, browser.i18n.getMessage("popupDeleteAllText")));
+	let p = generateNode('p', {'style': 'text-align:center;'});
+	p.appendChild(generateNode('input', {
+		'type': 'button',
+		'data-confirmation': 1,
+		'value': browser.i18n.getMessage("popupDeleteAllYes")
+	}, {'click': deleteAllConfirmation}));
+	p.appendChild(generateNode('input', {
+		'type': 'button',
+		'data-confirmation': 0,
+		'value': browser.i18n.getMessage("popupDeleteAllNo")
+	}, {'click': deleteAllConfirmation}));
+	dialog.appendChild(p);
 	document.getElementsByTagName('BODY')[0].insertBefore(dialog, document.getElementsByTagName('BODY')[0].firstChild);
-	document.querySelectorAll("#delete_all_dialog input").forEach(function(i) {i.addEventListener("click", deleteAllConfirmation)});
 }
 
 // on confirmation delete all local storage
@@ -299,6 +301,22 @@ function fetchStream(dataStream) {
 	}
 }
 
+// generator for HTML-Nodes
+function generateNode(tag, params = {}, eventListener = null, nodeInnerText = null) {
+	let node = document.createElement(tag);
+	for(const [k, v] of Object.entries(params)) {
+		node.setAttribute(k, v);
+	}
+	if(eventListener !== null) {
+		for(const [k, v] of Object.entries(eventListener)) {
+			node.addEventListener(k, v);
+		}
+	}
+	if(nodeInnerText !== null)
+		node.innerText = nodeInnerText;
+	return node;
+}
+
 // check if the category has the necessary keys
 function validateCategoryData(category) {
 	let mandatoryKeys = {'title': ['r', /^.+$/g], 'path': ['r', /^[^<>\\ ]+$/g], 'protocol': ['r', /^\w+:$/g], 'items': ['o']};
@@ -344,32 +362,24 @@ function showWiki() {
 		if("lang" in category && category.lang !== null && category.lang !== undefined && !langList.includes(category.lang))
 			langList.push(category.lang);
 		if(settings.math == "SIMPLE") {
-			let label = document.createElement('label');
-			label.setAttribute("for", `sc_${category.title}`);
-			label.classList.add("clickable");
-			let input = document.createElement('input');
-			input.name = "selected_cat";
-			input.id = `sc_${category.title}`;
-			input.classList.add("clickable");
-			input.type = "checkbox";
-			input.value = category.title;
-			input.classList.add("clickable");
-			input.addEventListener("click", addCatCalc);
+			let label = generateNode('label', {'for': `sc_${category.title}`, 'class': 'clickable'});
+			let input = generateNode('input', {
+				'name': 'selected_cat',
+				'id': `sc_${category.title}`,
+				'class': 'clickable',
+				'type': 'checkbox',
+				'value': category.title
+			},{'click': addCatCalc});
 			label.appendChild(input);
-			let span = document.createElement('span');
-			span.innerText = category.title;
-			label.appendChild(span);
-			let italic = document.createElement('i');
-			italic.innerText = `(${Object.keys(category.items).length})`;
-			label.appendChild(italic);
+			label.appendChild(generateNode('span', {}, null, category.title));
+			label.appendChild(generateNode('i', {}, null, `(${Object.keys(category.items).length})`));
 			availCatNode.appendChild(label);
 		} else if(settings.math == "ADVANCED") {
-			let button = document.createElement('button');
-			button.type = "button";
-			button.value = category.title;
-			button.classList.add("clickable");
-			button.innerHTML = `<img src="../heroicons/plus-circle.svg"><span>${category.title}<i>(${Object.keys(category.items).length})</i></span>`;
-			button.addEventListener("click", addCatCalc);
+			let button = generateNode('button', {'type': 'button', 'value': category.title, 'class': 'clickable'}, {'click': addCatCalc});
+			button.appendChild(generateNode('img', {'src': '../heroicons/plus-circle.svg'}));
+			let span = generateNode('span', {}, null, category.title);
+			span.appendChild(generateNode('i', {}, null, Object.keys(category.items).length));
+			button.appendChild(span);
 			availCatNode.appendChild(button);
 		}
 	});
@@ -430,11 +440,8 @@ function addCatCalc() {
 		if(selectedCategories[i]['type'] == 'o') {
 			pMath.appendChild(generateOperators(i, selectedCategories[i]['value'], i));
 		} else {
-			let selCat = document.createElement('div');
-			selCat.id = `selcat_${i}`;
-			selCat.setAttribute("name", 'selcat');
-			selCat.innerHTML = `<i>${selectedCategories[i]['value']}</i>`;
-			selCat.classList.add('math-move');
+			let selCat = generateNode('div', {'id': `selcat_${i}`, 'name': 'selcat', 'class': 'math-move'});
+			selCat.appendChild(generateNode('i', {}, null, `${selectedCategories[i]['value']}`));
 			selCat.addEventListener("mousedown", function(e) {
 				mouseDown = this.id;
 				this.style.cursor = 'grabbing';
@@ -457,16 +464,23 @@ function addCatCalc() {
 
 // create visual operator selection
 function generateOperators(operatorID, value, pos) {
-	var operator = document.createElement('div');
-	operator.classList.add('text-center');
-	operator.innerHTML = `<img data-pos="${pos}" src="../heroicons/arrows-right-left.svg" class="clickable icon" title="${browser.i18n.getMessage("titleSwitch")}"><br>`;
-	var operatorSelect = document.createElement('select');
-	operatorSelect.id = `operator_${operatorID}`;
-	operatorSelect.name = 'math_operator';
-	operatorSelect.classList.add('clickable');
-	operatorSelect.addEventListener("change", updateOperator);
+	let operator = generateNode('div', {'class': 'text-center'});
+	operator.appendChild(generateNode('img', {
+		'src': '../heroicons/arrows-right-left.svg',
+		'data-pos': pos,
+		'class': 'clickable icon',
+		'title': browser.i18n.getMessage("titleSwitch")
+	}));
+	operator.appendChild(generateNode('br'));
+	var operatorSelect = generateNode('select', {
+		'id': `operator_${operatorID}`,
+		'name': 'math_operator',
+		'class': 'clickable'}, {'change': updateOperator});
 	Object.keys(operatorList).forEach(function(o) {
-		operatorSelect.innerHTML += `<option title="${operatorList[o].title}"${o == value ? ' selected' : ''}>${operatorList[o][settings.notation]}</option>`;
+		let params = {'title': operatorList[o].title};
+		if(o == value)
+			params['selected'] = true;
+		operatorSelect.appendChild(generateNode('option', params, null, operatorList[o][settings.notation]));
 	});
 	operator.appendChild(operatorSelect);
 	return operator;
@@ -741,12 +755,10 @@ function showTruthTable() {
 // visual error handler
 function raiseError(error) {
 	let errorNode = document.getElementById("error");
-	let newError = document.createElement('div');
-	newError.classList.add('error');
-	newError.textContent = error;
-	newError.title = browser.i18n.getMessage("titleClose");
-	newError.addEventListener("click", closeError);
-	errorNode.appendChild(newError);
+	errorNode.appendChild(generateNode('div', {
+		'class': 'error',
+		'title': browser.i18n.getMessage("titleClose")
+	}, {'click': closeError}, error));
 }
 
 // close open error message
