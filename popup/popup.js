@@ -1,8 +1,8 @@
 document.title = browser.i18n.getMessage("extensionName");
-document.getElementById("p_title").innerHTML = browser.i18n.getMessage("popupTitle");
-document.getElementById("p_available").innerHTML = browser.i18n.getMessage("popupLoading");
-document.getElementById("p_nav_overview").innerHTML = browser.i18n.getMessage("popupNavOverview");
-document.getElementById("p_nav_show").innerHTML = browser.i18n.getMessage("popupNavShow");
+document.getElementById("p_title").textContent = browser.i18n.getMessage("popupTitle");
+document.getElementById("p_available").textContent = browser.i18n.getMessage("popupLoading");
+document.getElementById("p_nav_overview").textContent = browser.i18n.getMessage("popupNavOverview");
+document.getElementById("p_nav_show").textContent = browser.i18n.getMessage("popupNavShow");
 document.getElementById("p_info").title = browser.i18n.getMessage("titleInfo");
 document.getElementById("p_storage").title = browser.i18n.getMessage("titleStorage");
 document.getElementById("p_refresh").title = browser.i18n.getMessage("titleRefresh");
@@ -217,9 +217,9 @@ function deleteAllConfirmation() {
 	if(this.dataset.confirmation == 1) {
 		toShow = null;
 		document.getElementById('p_nav_overview').click();
-		document.getElementById("p_nav_show").innerHTML = browser.i18n.getMessage("popupNavShow");
+		document.getElementById("p_nav_show").textContent = browser.i18n.getMessage("popupNavShow");
 		document.getElementById("p_nav_show").classList.remove("clickable");
-		['p_available', 'p_math', 'p_result'].forEach(function(i) {document.getElementById(i).innerHTML = '';});
+		['p_available', 'p_math', 'p_result'].forEach(function(i) {clearChildren(document.getElementById(i));});
 		browser.storage.local.clear();
 		refreshData();
 	}
@@ -239,7 +239,7 @@ function calculateStorage() {
 function fetchStream(dataStream) {
 	storedData = dataStream;
 	if(typeof(storedData) === 'undefined' || Object.keys(storedData).length == 0) {
-		document.getElementById("p_overview").innerHTML = `<div>${browser.i18n.getMessage("popupNavOverviewEmpty")}</div>`;
+		document.getElementById("p_overview").appendChild(generateNode('div', {}, null, browser.i18n.getMessage("popupNavOverviewEmpty")));
 		document.getElementById("p_nav_show").classList.add('hidden');
 		rebuild = false;
 		return;
@@ -247,7 +247,7 @@ function fetchStream(dataStream) {
 	document.getElementById("p_nav_show").classList.remove('hidden');
 	if(pageDisplayState == displayState.NODATA)
 		pageDisplayState = displayState.DATA;
-	document.getElementById("p_overview").innerHTML = '';
+	clearChildren(document.getElementById("p_overview"));
 	var html = '';
 	for(let [key, value] of Object.entries(storedData)) {
 		html += `<strong name="popupShow" title="${browser.i18n.getMessage("titleOpen")}" class="section_title clickable" data-wiki="${key}">
@@ -317,6 +317,14 @@ function generateNode(tag, params = {}, eventListener = null, nodeInnerText = nu
 	return node;
 }
 
+// removes all child nodes as well as any textContent
+function clearChildren(parent) {
+	while(parent.lastElementChild) {
+		parent.removeChild(parent.lastElementChild);
+	}
+	parent.textContent = '';
+}
+
 // check if the category has the necessary keys
 function validateCategoryData(category) {
 	let mandatoryKeys = {'title': ['r', /^.+$/g], 'path': ['r', /^[^<>\\ ]+$/g], 'protocol': ['r', /^\w+:$/g], 'items': ['o']};
@@ -350,13 +358,14 @@ function showWiki() {
 		return;
 	}
 	if(toShow !== null) {
-		document.getElementById("p_math").innerHTML = '';
-		document.getElementById("p_result").innerHTML = '';
+		clearChildren(document.getElementById("p_math"));
+		clearChildren(document.getElementById("p_result"));
 	}
 	if('dataset' in this)
 		toShow = this.dataset.wiki;
 	let availCatNode = document.getElementById("p_available");
-	availCatNode.innerHTML = `<h4>${browser.i18n.getMessage("popupMathAvailableCategories")}</h4>`;
+	availCatNode.textContent = '';
+	availCatNode.appendChild(generateNode('h4', {}, null, browser.i18n.getMessage("popupMathAvailableCategories")));
 	langList = [];
 	JSON.parse(storedData[toShow]).forEach(function(category) {
 		if("lang" in category && category.lang !== null && category.lang !== undefined && !langList.includes(category.lang))
@@ -435,7 +444,7 @@ function addCatCalc() {
 	}
 	var html = '';
 	var pMath = document.getElementById("p_math");
-	pMath.innerHTML = '';
+	clearChildren(pMath);
 	for(let i = 0; i < Object.keys(selectedCategories).length; i++) {
 		if(selectedCategories[i]['type'] == 'o') {
 			pMath.appendChild(generateOperators(i, selectedCategories[i]['value'], i));
@@ -541,7 +550,7 @@ function dropCategory() {
 // calculate category entries from user selection
 function catCalc() {
 	if(Object.keys(selectedCategories).length == 0) { // when no categories selected, nothing to do
-		document.getElementById("p_result").innerHTML = '';
+		clearChildren(document.getElementById("p_result"));
 		return;
 	}
 	var wikiData = JSON.parse(storedData[toShow]);
@@ -609,7 +618,8 @@ function catCalc() {
 		if(langList.length > 1)
 			document.getElementById("resultLang").addEventListener("change", filterResultsLang);
 	} else {
-		document.getElementById("p_result").innerHTML = `<h4>${browser.i18n.getMessage("popupMathResultsNone")}</h4>`;
+		clearChildren(document.getElementById("p_result"));
+		document.getElementById("p_result").appendChild(generateNode('h4', {}, null, browser.i18n.getMessage("popupMathResultsNone")));
 	}
 }
 
@@ -729,7 +739,7 @@ function showTruthTable() {
 	if(tt_operator == this.dataset.operator)
 		return;
 	tt_operator = this.dataset.operator;
-	document.getElementById('tt_title').innerHTML = browser.i18n.getMessage("infoDialogTruthTable") + ': ' + this.textContent;
+	document.getElementById('tt_title').textContent = browser.i18n.getMessage("infoDialogTruthTable") + ': ' + this.textContent;
 	let tt_data = {
 		AND : [0, 0, 0, 1],
 		OR : [0, 1, 1, 1],
@@ -743,11 +753,11 @@ function showTruthTable() {
 		if(tt_data[tt_operator][i] == 0) {
 			cells[i].classList.remove('tt_yes');
 			cells[i].classList.add('tt_no');
-			cells[i].innerHTML = browser.i18n.getMessage("infoDialogTruthTableNo");
+			cells[i].textContent = browser.i18n.getMessage("infoDialogTruthTableNo");
 		} else {
 			cells[i].classList.remove('tt_no');
 			cells[i].classList.add('tt_yes');
-			cells[i].innerHTML = browser.i18n.getMessage("infoDialogTruthTableYes");
+			cells[i].textContent = browser.i18n.getMessage("infoDialogTruthTableYes");
 		}
 	}
 }
