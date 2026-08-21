@@ -104,7 +104,7 @@ function displayStorage() {
 	let firstRow = true;
 	for(let [key, value] of Object.entries(storageUsage)) {
 		let unitStep = 0;
-		while(value > 1024) {
+		while(value > 1024 && unitStep + 1 < Object.keys(units).length) {
 			unitStep += 1;
 			value /= 1024;
 		}
@@ -364,7 +364,7 @@ function showWiki() {
 	if('dataset' in this)
 		toShow = this.dataset.wiki;
 	let availCatNode = document.getElementById("p_available");
-	availCatNode.textContent = '';
+	clearChildren(availCatNode);
 	availCatNode.appendChild(generateNode('h4', {}, null, browser.i18n.getMessage("popupMathAvailableCategories")));
 	langList = [];
 	JSON.parse(storedData[toShow]).forEach(function(category) {
