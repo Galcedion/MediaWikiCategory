@@ -72,6 +72,7 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .math div {position: relative; display: inline-block;}
 .math-move {cursor: grab; border: 1px solid transparent; background-color: var(--white); border-radius: 5px; user-select: none;}
 .math-move:hover, .math-move:focus {border-color: var(--border);}
+.hugging-left {margin-left: 0; border-radius: 0 5px 5px 0;}
 .result-list {width: fit-content;}
 .result-list div {display: flex; padding-bottom: 0.5em; flex-wrap: wrap;}
 .result-list label {margin-left: 5rem;}

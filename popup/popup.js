@@ -422,8 +422,14 @@ function expandWiki() {
 
 // create calculation overview based on selected categories
 function addCatCalc() {
-	var caller = this.value;
-	if(settings.math == "SIMPLE" && !this.checked) {
+	if(this.tagName == 'BUTTON') {
+		var caller = this.value;
+		var remove = false;
+	} else if(this.tagName == 'IMG') {
+		var caller = this.dataset.value;
+		var remove = true;
+	}
+	if((settings.math == "SIMPLE" && !this.checked) || (settings.math == "ADVANCED" && remove)) {
 		if(Object.keys(selectedCategories).length == 1)
 			selectedCategories = {};
 		else {
@@ -442,6 +448,30 @@ function addCatCalc() {
 			selectedCategories[Object.keys(selectedCategories).length] = {'type' : 'o', 'value': 'AND'};
 		selectedCategories[Object.keys(selectedCategories).length] = {'type' : 'c', 'value': caller};
 	}
+	renderMath();
+}
+
+//remove category from calculation overview
+function removeCatCalc() {
+	var remove = parseInt(this.dataset.selcat);
+	if(Object.keys(selectedCategories).length == 1)
+		selectedCategories = {};
+	else {
+		for(let i = 0; i < Object.keys(selectedCategories).length; i++) {
+			if(i != remove)
+				continue;
+			for(let j = i; j < Object.keys(selectedCategories).length - 2; j++) {
+				selectedCategories[j] = selectedCategories[j + 2];
+			}
+			delete selectedCategories[Object.keys(selectedCategories).length - 1];
+			delete selectedCategories[Object.keys(selectedCategories).length - 1];
+		}
+	}
+	renderMath();
+}
+
+// display the category math
+function renderMath() {
 	var html = '';
 	var pMath = document.getElementById("p_math");
 	clearChildren(pMath);
@@ -465,6 +495,9 @@ function addCatCalc() {
 			});
 			selCat.addEventListener("mouseup", function() {dropCategory()});
 			pMath.appendChild(selCat);
+			if(settings.math == "ADVANCED") {
+				pMath.appendChild(generateNode('img', {'src': '../heroicons/minus-circle.svg', 'class': 'clickable icon hugging-left', 'data-selcat': i}, {'click': removeCatCalc}));
+			}
 		}
 	}
 	document.querySelectorAll('#p_math div img').forEach(function(node) {node.addEventListener("click", switchCategories);});
