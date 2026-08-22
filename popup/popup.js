@@ -422,14 +422,8 @@ function expandWiki() {
 
 // create calculation overview based on selected categories
 function addCatCalc() {
-	if(this.tagName == 'BUTTON') {
-		var caller = this.value;
-		var remove = false;
-	} else if(this.tagName == 'IMG') {
-		var caller = this.dataset.value;
-		var remove = true;
-	}
-	if((settings.math == "SIMPLE" && !this.checked) || (settings.math == "ADVANCED" && remove)) {
+	var caller = this.value;
+	if((settings.math == "SIMPLE" && !this.checked)) {
 		if(Object.keys(selectedCategories).length == 1)
 			selectedCategories = {};
 		else {
