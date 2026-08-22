@@ -26,6 +26,7 @@ const notationOptionsDefault = "TEXT";
 const mathOptionsDefault = "SIMPLE";
 var syncSettings = {};
 var localStorage = {};
+var currentCallerValue = '';
 
 document.getElementById('button_save').addEventListener('click', saveSettings);
 document.getElementById('button_reset').addEventListener('click', resetSettings);
@@ -79,6 +80,8 @@ function loadLocal(storage) {
 
 // save the currently selected settings
 function saveSettings() {
+	if(typeof this.value !== 'undefined')
+		currentCallerValue = this.value;
 	syncSettings.notation = document.getElementById('set_notation').value.toUpperCase();
 	if(!(syncSettings.notation in notationOptions)) {
 		syncSettings.notation = notationOptionsDefault;
@@ -87,13 +90,18 @@ function saveSettings() {
 	if(!(syncSettings.math in mathOptions)) {
 		syncSettings.math = mathOptionsDefault;
 	}
-	browser.storage.sync.set(syncSettings);
+	browser.storage.sync.set(syncSettings)
+	.then(
+		(s) => {showMessage(`${browser.i18n.getMessage('genOperationSuccessful')}: ${currentCallerValue}`, 'SUCCESS');},
+		(e) => {showMessage(`${browser.i18n.getMessage('genOperationFailed')}: ${currentCallerValue} - ${e.message}`, 'ERROR');}
+	);
 }
 
 // restore default settings and save
 function resetSettings() {
 	document.getElementById('set_notation').value = notationOptionsDefault;
 	document.getElementById('set_math').value = mathOptionsDefault;
+	currentCallerValue = this.value;
 	saveSettings();
 }
 
@@ -120,16 +128,16 @@ function dataDownload() {
 function dataUpload() {
 	let ul = document.getElementById('data_ul');
 	if(ul.files.length == 0) {
-		raiseError(browser.i18n.getMessage('errorNoFile'));
+		showMessage(browser.i18n.getMessage('errorNoFile'), 'ERROR');
 		return;
 	} else if(ul.files.length > 1) { // as of now, this should never happen
-		raiseError(browser.i18n.getMessage('errorTooManyFiles', 1));
+		showMessage(browser.i18n.getMessage('errorTooManyFiles', 1), 'ERROR');
 		ul.value = null;
 		return;
 	}
 	ul = ul.files[0];
 	if(ul.size == 0) {
-		raiseError(browser.i18n.getMessage('errorFileEmpty', ul.name));
+		showMessage(browser.i18n.getMessage('errorFileEmpty', ul.name), 'ERROR');
 		document.getElementById('data_ul').value = null;
 		return;
 	}
@@ -151,38 +159,54 @@ function dataUpload() {
 			}
 		} catch (e) {
 			if(e.name == 'SyntaxError' && e.message.indexOf('JSON.parse') == 0) {
-				raiseError(browser.i18n.getMessage('errorNoJSONFile', ul.name));
+				showMessage(browser.i18n.getMessage('errorNoJSONFile', ul.name), 'ERROR');
 			}
 			document.getElementById('data_ul').value = null;
 		}
 	};
 	reader.onerror = function() {
-		raiseError(browser.i18n.getMessage('errorCantOpenFile', ul.name));
+		showMessage(browser.i18n.getMessage('errorCantOpenFile', ul.name), 'ERROR');
 		document.getElementById('data_ul').value = null;
 	};
 }
 
 // delete selected or all storages
 function deleteStorage() {
-	if(this.id == 'delete_local' || this.id == 'delete_all')
-		browser.storage.local.clear();
-	if(this.id == 'delete_sync' || this.id == 'delete_all')
-		browser.storage.sync.clear();
-	window.location.reload();
+	currentCallerValue = this.value;
+	if(this.id == 'delete_local' || this.id == 'delete_all') {
+		browser.storage.local.clear()
+		.then(
+			(s) => {showMessage(`${browser.i18n.getMessage('genOperationSuccessful')}: ${currentCallerValue}`, 'SUCCESS');},
+			(e) => {showMessage(`${browser.i18n.getMessage('genOperationFailed')}: ${currentCallerValue} - ${e.message}`, 'ERROR');}
+		);
+	}
+	if(this.id == 'delete_sync' || this.id == 'delete_all') {
+		browser.storage.sync.clear()
+		.then(
+			(s) => {showMessage(`${browser.i18n.getMessage('genOperationSuccessful')}: ${currentCallerValue}`, 'SUCCESS');},
+			(e) => {showMessage(`${browser.i18n.getMessage('genOperationFailed')}: ${currentCallerValue} - ${e.message}`, 'ERROR');}
+		);
+	}
+	showMessage(browser.i18n.getMessage('optionsReload', 5));
+	setTimeout(function() {window.location.reload();}, 5000);
 }
 
-// visual error handler
-function raiseError(error) {
-	let errorNode = document.getElementById("error");
-	let newError = document.createElement('div');
-	newError.classList.add('error');
-	newError.textContent = error;
-	newError.title = browser.i18n.getMessage("titleClose");
-	newError.addEventListener("click", closeError);
-	errorNode.appendChild(newError);
+// visual message handler for errors, infos and successes
+function showMessage(msg, type = null) {
+	let msgNode = document.getElementById("message");
+	let newMsg = document.createElement('div');
+	newMsg.classList.add('message');
+	if(type == 'ERROR')
+		newMsg.classList.add('error');
+	else if(type == 'SUCCESS')
+		newMsg.classList.add('success');
+	newMsg.textContent = msg;
+	newMsg.title = browser.i18n.getMessage("titleClose");
+	newMsg.addEventListener("click", closeMsg);
+	msgNode.appendChild(newMsg);
 }
 
-// close open error message
-function closeError() {
+// close open message
+function closeMsg() {
 	this.remove();
 }

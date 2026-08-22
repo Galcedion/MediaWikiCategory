@@ -8,6 +8,12 @@
 	"genAll": {
 		"message": "Alle"
 	},
+	"genOperationSuccessful": {
+		"message": "Operation erfolgreich"
+	},
+	"genOperationFailed": {
+		"message": "Operation gescheitert"
+	},
 	"dropdownDefault": {
 		"message": "Kategorie-Ermittlung läuft"
 	},
@@ -217,6 +223,14 @@
 	},
 	"optionsDeleteAll": {
 		"message": "Alles löschen"
+	},
+	"optionsReload": {
+		"message": "Seite wird in $SECONDS$s neu geladen!",
+		"placeholders": {
+			"seconds": {
+				"content": "$1"
+			}
+		}
 	},
 	"errorDialogTitle": {
 		"message": "MediaWiki Category AddOn Fehler"

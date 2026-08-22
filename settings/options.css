@@ -1,6 +1,8 @@
 :root {
   --white: white;
   --bg: lightgray;
+  --border: darkgray;
+  --success: lightgreen;
   --warn: red;
 }
 table {width: 100%; border-spacing: 0.5em;}
@@ -10,10 +12,12 @@ th {text-align: center;}
 select {width: 50%;}
 input[type="button"] {min-width: 33%; text-align: center;}
 input[type="file"] {width: 100%; background-color: var(--bg);}
-#error div:first-child {margin-top: 1em;}
-#error div+div {margin-top: 0.25em;}
+#message div:first-child {margin-top: 1em;}
+#message div+div {margin-top: 0.25em;}
 .left {text-align: left;}
 .dangerzone {color: var(--warn);}
 .crit-button {color: var(--white); background-color: var(--warn); border-radius: 5px;}
 .crit-button:hover, .crit-button :active {box-shadow: 0 0 20px var(--bg) inset;}
-.error {background-color: var(--warn); color: var(--white); padding: 5px; border-radius: 5px;}
+.message {padding: 5px; border: 1px solid var(--border); border-radius: 5px;}
+.error {background-color: var(--warn); color: var(--white);}
+.success {background-color: var(--success);}

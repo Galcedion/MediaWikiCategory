@@ -11,6 +11,14 @@
 		"message": "All",
 		"description": "General use snippet: All"
 	},
+	"genOperationSuccessful": {
+		"message": "Operation successful",
+		"description": "General use snippet: Operation successful"
+	},
+	"genOperationFailed": {
+		"message": "Operation failed",
+		"description": "General use snippet: Operation failed"
+	},
 	"dropdownDefault": {
 		"message": "Detecting category",
 		"description": "Initial dropdown text."
@@ -290,6 +298,16 @@
 	"optionsDeleteAll": {
 		"message": "Delete everything",
 		"description": "Options: button delete all."
+	},
+	"optionsReload": {
+		"message": "Page reload in $SECONDS$s!",
+		"description": "Options: mandatory reload of the settings page",
+		"placeholders": {
+			"seconds": {
+				"content": "$1",
+				"example": "1"
+			}
+		}
 	},
 	"errorDialogTitle": {
 		"message": "MediaWiki Category Extension Error",
