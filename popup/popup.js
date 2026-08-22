@@ -473,13 +473,20 @@ function renderMath() {
 		if(selectedCategories[i]['type'] == 'o') {
 			pMath.appendChild(generateOperators(i, selectedCategories[i]['value'], i));
 		} else {
-			let selCat = generateNode('div', {'id': `selcat_${i}`, 'name': 'selcat', 'class': 'math-move'});
+			let selCatParams = {'id': `selcat_${i}`, 'name': 'selcat'}
+			if(settings.math == "ADVANCED") {
+				var container = generateNode('div', {'class': 'math-move'});
+			} else {
+				selCatParams['class'] = 'math-move';
+			}
+			let selCat = generateNode('div', selCatParams);
 			selCat.appendChild(generateNode('i', {}, null, `${selectedCategories[i]['value']}`));
 			selCat.addEventListener("mousedown", function(e) {
 				mouseDown = this.id;
 				this.style.cursor = 'grabbing';
 				this.style.zIndex = 1;
 				this.dataset.offset = e.clientX;
+				this.classList.add('math-moving');
 			});
 			selCat.addEventListener("mousemove", function(e) {
 				e.preventDefault();
@@ -488,9 +495,12 @@ function renderMath() {
 				this.style.left = `${e.clientX - parseInt(this.dataset.offset)}px`;
 			});
 			selCat.addEventListener("mouseup", function() {dropCategory()});
-			pMath.appendChild(selCat);
 			if(settings.math == "ADVANCED") {
-				pMath.appendChild(generateNode('img', {'src': '../heroicons/minus-circle.svg', 'class': 'clickable icon hugging-left', 'data-selcat': i}, {'click': removeCatCalc}));
+				container.appendChild(selCat);
+				container.appendChild(generateNode('img', {'src': '../heroicons/minus-circle.svg', 'class': 'clickable icon hugging-left', 'data-selcat': i}, {'click': removeCatCalc}));
+				pMath.appendChild(container);
+			} else {
+				pMath.appendChild(selCat);
 			}
 		}
 	}
