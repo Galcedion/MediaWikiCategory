@@ -562,10 +562,17 @@ function switchCategories() {
 function dropCategory() {
 	var moved = document.querySelectorAll('[data-offset]')[0];
 	var movePos = moved.offsetLeft;//moved.dataset.offset;
+	if(settings.math == "ADVANCED")
+		movePos = moved.parentNode.offsetLeft;
 	var moveOld = parseInt(moved.id.substring(7));
 	var catList = document.getElementsByName('selcat');
+	var curOffset = 0;
 	for(let i = 0; i < catList.length; i++) {
-		if(catList[i].offsetLeft > movePos) {
+		if(settings.math == "SIMPLE")
+			curOffset = catList[i].offsetLeft;
+		else if(settings.math == "ADVANCED")
+			curOffset = catList[i].parentNode.offsetLeft;
+		if(curOffset > movePos) {
 			let insertBefore = parseInt(catList[i].id.substring(7));
 			if(insertBefore == moveOld) {
 				break;
@@ -586,7 +593,7 @@ function dropCategory() {
 			break;
 		}
 	}
-	addCatCalc();
+	renderMath();
 }
 
 // calculate category entries from user selection
