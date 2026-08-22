@@ -509,7 +509,7 @@ function renderMath() {
 			}
 		}
 	}
-	document.querySelectorAll('#p_math div img').forEach(function(node) {node.addEventListener("click", switchCategories);});
+	document.querySelectorAll('#p_math div.text-center img').forEach(function(node) {node.addEventListener("click", switchCategories);}); // TODO better hook for swap-icons
 	catCalc();
 }
 
