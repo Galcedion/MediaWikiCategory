@@ -17,7 +17,7 @@ document.addEventListener("mouseup", function(e) {mouseDown = false;});
 var storedData;
 var selectedCategories;
 var toShow = null;
-var operatorList = {
+var operatorList = { // reference for math operators
 	'AND': {'title': browser.i18n.getMessage("titleAND"), TEXT: "AND", LOGICSYMBOL: "⋀"},
 	'OR': {'title': browser.i18n.getMessage("titleOR"), TEXT: "OR", LOGICSYMBOL: "⋁"},
 	'XOR': {'title': browser.i18n.getMessage("titleXOR"), TEXT: "XOR", LOGICSYMBOL: "⊻"},
@@ -130,12 +130,10 @@ function displayCleanup() {
 		document.getElementById("info_display").remove();
 		document.getElementById("p_info").classList.remove("active");
 		tt_operator = null;
-		return;
 	}
 	if(document.getElementById("storage_display")) { // remove displayStorage content
 		document.getElementById("storage_display").remove();
 		document.getElementById("p_storage").classList.remove("active");
-		return;
 	}
 }
 
@@ -466,7 +464,6 @@ function removeCatCalc() {
 
 // display the category math
 function renderMath() {
-	var html = '';
 	var pMath = document.getElementById("p_math");
 	clearChildren(pMath);
 	for(let i = 0; i < Object.keys(selectedCategories).length; i++) {
@@ -539,8 +536,7 @@ function generateOperators(operatorID, value, pos) {
 
 // update operator on change and recalculate
 function updateOperator() {
-	var caller = this.id;
-	selectedCategories[caller.replace('operator_', '')]['value'] = this.options[this.selectedIndex].text;
+	selectedCategories[this.id.replace('operator_', '')]['value'] = this.options[this.selectedIndex].text;
 	catCalc();
 }
 

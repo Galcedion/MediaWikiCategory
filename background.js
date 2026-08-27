@@ -4,8 +4,6 @@ var targetTitle;
 var targetHref;
 var targetLang = null;
 var caller = false;
-var categeoriesOnPage;
-var tmpStorage = {};
 var lock = false;
 var categoryToDo = [];
 var errorStack = []; // each entry has id, count, msg, wiki
@@ -126,7 +124,7 @@ function scrapeCategoryTask(storedData, metadata) {
 	req.open('GET', metadata['targetHref']);
 	req.responseType = 'document';
 	req.setRequestHeader('Access-Control-Allow-Origin', '*');
-	req.setRequestHeader('Accept', 'text/html');console.log(req);
+	req.setRequestHeader('Accept', 'text/html');
 	req.addEventListener('load', function() {
 		if(req.readyState === 4 && req.status === 200) {
 			scrapeCategoryList(req.responseXML, storedData, metadata);

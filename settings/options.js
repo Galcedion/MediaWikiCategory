@@ -14,11 +14,11 @@ document.getElementById("section_delete").textContent = browser.i18n.getMessage(
 document.getElementById("delete_local").value = browser.i18n.getMessage('optionsDeleteLocal');
 document.getElementById("delete_sync").value = browser.i18n.getMessage('optionsDeleteSync');
 document.getElementById("delete_all").value = browser.i18n.getMessage('optionsDeleteAll');
-const notationOptions = {
+const notationOptions = { // available options for the notation display
 	TEXT: browser.i18n.getMessage('optionsNotationText'),
 	LOGICSYMBOL: browser.i18n.getMessage('optionsNotationLogicSymbol')
 };
-const mathOptions = {
+const mathOptions = { // available options for the math process in popup
 	SIMPLE: browser.i18n.getMessage('optionsMathSimple'),
 	ADVANCED: browser.i18n.getMessage('optionsMathAdvanced')
 };
@@ -39,7 +39,7 @@ document.getElementById('delete_sync').addEventListener('click', deleteStorage);
 document.getElementById('delete_all').addEventListener('click', deleteStorage);
 var getSettings = browser.storage.sync.get();
 getSettings.then(loadSettings);
-var getLocalStorage = browser.storage.local.get(null);
+var getLocalStorage = browser.storage.local.get();
 getLocalStorage.then(loadLocal);
 
 // load sync storage settings
@@ -61,7 +61,7 @@ function loadSettings(settings) {
 	if(settings.math)
 		tmp = settings.math;
 	syncSettings.math = tmp;
-	var select = document.getElementById('set_math');
+	select = document.getElementById('set_math');
 	for(m in mathOptions) {
 		let option = document.createElement('option');
 		option.value = m;
@@ -71,7 +71,6 @@ function loadSettings(settings) {
 		select.appendChild(option);
 	}
 }
-
 
 // load local storage
 function loadLocal(storage) {
