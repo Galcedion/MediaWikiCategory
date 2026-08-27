@@ -111,12 +111,12 @@ function displayStorage() {
 		value = (Math.ceil(value * 10) / 10).toFixed(1);
 		let tr = generateNode('tr');
 		if(firstRow) {
-			tr.appendChild(generateNode('th', {}, null, key));
-			tr.appendChild(generateNode('th', {}, null, `${value} ${units[unitStep]}`));
+			tr.appendChild(generateNode('th', {}, {}, key));
+			tr.appendChild(generateNode('th', {}, {}, `${value} ${units[unitStep]}`));
 			firstRow = false;
 		} else {
-			tr.appendChild(generateNode('td', {}, null, key));
-			tr.appendChild(generateNode('td', {}, null, `${value} ${units[unitStep]}`));
+			tr.appendChild(generateNode('td', {}, {}, key));
+			tr.appendChild(generateNode('td', {}, {}, `${value} ${units[unitStep]}`));
 		}
 		table.appendChild(tr);
 	}
@@ -193,7 +193,7 @@ function deleteWiki() {
 // create dialog box to delete all local storage
 function deleteAll() {
 	let dialog = generateNode('dialog', {'id': 'delete_all_dialog', 'open': true});
-	dialog.appendChild(generateNode('p', {}, null, browser.i18n.getMessage("popupDeleteAllText")));
+	dialog.appendChild(generateNode('p', {}, {}, browser.i18n.getMessage("popupDeleteAllText")));
 	let p = generateNode('p', {'style': 'text-align:center;'});
 	p.appendChild(generateNode('input', {
 		'type': 'button',
@@ -237,7 +237,7 @@ function calculateStorage() {
 function fetchStream(dataStream) {
 	storedData = dataStream;
 	if(typeof(storedData) === 'undefined' || Object.keys(storedData).length == 0) {
-		document.getElementById("p_overview").appendChild(generateNode('div', {}, null, browser.i18n.getMessage("popupNavOverviewEmpty")));
+		document.getElementById("p_overview").appendChild(generateNode('div', {}, {}, browser.i18n.getMessage("popupNavOverviewEmpty")));
 		document.getElementById("p_nav_show").classList.add('hidden');
 		rebuild = false;
 		return;
@@ -300,15 +300,13 @@ function fetchStream(dataStream) {
 }
 
 // generator for HTML-Nodes
-function generateNode(tag, params = {}, eventListener = null, nodeInnerText = null) {
+function generateNode(tag, params = {}, eventListener = {}, nodeInnerText = null) {
 	let node = document.createElement(tag);
 	for(const [k, v] of Object.entries(params)) {
 		node.setAttribute(k, v);
 	}
-	if(eventListener !== null) {
-		for(const [k, v] of Object.entries(eventListener)) {
-			node.addEventListener(k, v);
-		}
+	for(const [k, v] of Object.entries(eventListener)) {
+		node.addEventListener(k, v);
 	}
 	if(nodeInnerText !== null)
 		node.innerText = nodeInnerText;
@@ -363,7 +361,7 @@ function showWiki() {
 		toShow = this.dataset.wiki;
 	let availCatNode = document.getElementById("p_available");
 	clearChildren(availCatNode);
-	availCatNode.appendChild(generateNode('h4', {}, null, browser.i18n.getMessage("popupMathAvailableCategories")));
+	availCatNode.appendChild(generateNode('h4', {}, {}, browser.i18n.getMessage("popupMathAvailableCategories")));
 	langList = [];
 	JSON.parse(storedData[toShow]).forEach(function(category) {
 		if("lang" in category && category.lang !== null && category.lang !== undefined && !langList.includes(category.lang))
@@ -378,14 +376,14 @@ function showWiki() {
 				'value': category.title
 			},{'click': addCatCalc});
 			label.appendChild(input);
-			label.appendChild(generateNode('span', {}, null, category.title));
-			label.appendChild(generateNode('i', {}, null, `(${Object.keys(category.items).length})`));
+			label.appendChild(generateNode('span', {}, {}, category.title));
+			label.appendChild(generateNode('i', {}, {}, `(${Object.keys(category.items).length})`));
 			availCatNode.appendChild(label);
 		} else if(settings.math == "ADVANCED") {
 			let button = generateNode('button', {'type': 'button', 'value': category.title, 'class': 'clickable'}, {'click': addCatCalc});
 			button.appendChild(generateNode('img', {'src': '../heroicons/plus-circle.svg'}));
-			let span = generateNode('span', {}, null, category.title);
-			span.appendChild(generateNode('i', {}, null, Object.keys(category.items).length));
+			let span = generateNode('span', {}, {}, category.title);
+			span.appendChild(generateNode('i', {}, {}, Object.keys(category.items).length));
 			button.appendChild(span);
 			availCatNode.appendChild(button);
 		}
@@ -480,7 +478,7 @@ function renderMath() {
 					selCatParams['class'] = 'math-fixed';
 			}
 			let selCat = generateNode('div', selCatParams);
-			selCat.appendChild(generateNode('i', {}, null, `${selectedCategories[i]['value']}`));
+			selCat.appendChild(generateNode('i', {}, {}, `${selectedCategories[i]['value']}`));
 			if(Object.keys(selectedCategories).length > 1) {
 				selCat.addEventListener("mousedown", function(e) {
 					mouseDown = this.id;
@@ -528,7 +526,7 @@ function generateOperators(operatorID, value, pos) {
 		let params = {'title': operatorList[o].title};
 		if(o == value)
 			params['selected'] = true;
-		operatorSelect.appendChild(generateNode('option', params, null, operatorList[o][settings.notation]));
+		operatorSelect.appendChild(generateNode('option', params, {}, operatorList[o][settings.notation]));
 	});
 	operator.appendChild(operatorSelect);
 	return operator;
@@ -664,7 +662,7 @@ function catCalc() {
 			document.getElementById("resultLang").addEventListener("change", filterResultsLang);
 	} else {
 		clearChildren(document.getElementById("p_result"));
-		document.getElementById("p_result").appendChild(generateNode('h4', {}, null, browser.i18n.getMessage("popupMathResultsNone")));
+		document.getElementById("p_result").appendChild(generateNode('h4', {}, {}, browser.i18n.getMessage("popupMathResultsNone")));
 	}
 }
 
