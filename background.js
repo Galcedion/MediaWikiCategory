@@ -125,10 +125,10 @@ function scrapeCategoryTask(storedData, metadata) {
 	var req = new XMLHttpRequest();
 	req.open('GET', metadata['targetHref']);
 	req.responseType = 'document';
-	req.setRequestHeader('Access-Control-Allow-Origin', '*'); // User Agent?
-	req.setRequestHeader('Accept', 'text/html');
+	req.setRequestHeader('Access-Control-Allow-Origin', '*');
+	req.setRequestHeader('Accept', 'text/html');console.log(req);
 	req.addEventListener('load', function() {
-		if(req.readyState === 4 && req.status === 200) { // TODO status != 200 ?
+		if(req.readyState === 4 && req.status === 200) {
 			scrapeCategoryList(req.responseXML, storedData, metadata);
 		} else {
 			webErrorHandler(metadata, req);
