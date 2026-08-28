@@ -57,7 +57,7 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .storage_display td:first-child, .storage_display th:first-child {text-align: left; padding-right: 1em;}
 .storage_display td:last-child, .storage_display th:last-child {text-align: right;}
 .clickable {cursor: pointer; transition: all 0.5s ease;}
-.clickable:not(.icon) {background-color: var(--clickable);}
+.clickable:not(.icon,.math-swap) {background-color: var(--clickable);}
 .clickable:hover, .clickable:active {background-color: var(--clickable-f);}
 .category-list {list-style: none; margin: 0;}
 .flex-1 {flex: 1;}
@@ -74,6 +74,7 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .math-fixed {border: 1px solid var(--border); border-radius: 5px; user-select: none;}
 .math-move {cursor: grab; border: 1px solid transparent; border-radius: 5px; transition: all 0.5s ease; user-select: none;}
 .math-move:hover, .math-move:focus {border-color: var(--border);}
+.math-swap {display: block; margin: 0 auto; border-radius: 5px;}
 .hugging-left {margin: 0; border: 1px solid transparent; border-radius: 0 5px 5px 0;}
 .math-move:hover .hugging-left, .math-move:focus .hugging-left, .math-fixed .hugging-left {border-left: 1px solid var(--border);}
 .math-moving {padding: 1em 0; border: 1px solid var(--active-f)!important; background-color: var(--active); transition: padding 0.2s ease;}

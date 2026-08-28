@@ -504,7 +504,7 @@ function renderMath() {
 			}
 		}
 	}
-	document.querySelectorAll('#p_math div.text-center img').forEach(function(node) {node.addEventListener("click", switchCategories);}); // TODO better hook for swap-icons
+	document.querySelectorAll('.math-swap').forEach(function(node) {node.addEventListener("click", switchCategories);});
 	catCalc();
 }
 
@@ -514,10 +514,9 @@ function generateOperators(operatorID, value, pos) {
 	operator.appendChild(generateNode('img', {
 		'src': '../heroicons/arrows-right-left.svg',
 		'data-pos': pos,
-		'class': 'clickable icon',
+		'class': 'clickable math-swap',
 		'title': browser.i18n.getMessage("titleSwitch")
 	}));
-	operator.appendChild(generateNode('br'));
 	var operatorSelect = generateNode('select', {
 		'id': `operator_${operatorID}`,
 		'name': 'math_operator',
@@ -541,15 +540,10 @@ function updateOperator() {
 // switch two categories around an operator and recalculate
 function switchCategories() {
 	var caller = parseInt(this.dataset.pos);
-	let parent = this.parentNode;
-	let left = parent.previousElementSibling;
-	let right = parent.nextElementSibling;
-	parent.parentNode.insertBefore(right.cloneNode(true), parent);
-	parent.parentNode.replaceChild(left, right);
 	let tmp = selectedCategories[caller - 1];
 	selectedCategories[caller - 1] = selectedCategories[caller + 1];
 	selectedCategories[caller + 1] = tmp;
-	catCalc();
+	renderMath();
 }
 
 // reorder categories per drag and drop
