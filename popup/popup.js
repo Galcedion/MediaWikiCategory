@@ -620,6 +620,7 @@ function catCalc() {
 					break;
 			}
 		}
+		resultList.sort((a, b) => {return (a.item > b.item ? 1: -1);});
 	}
 	// visual output of results
 	var html = '';
