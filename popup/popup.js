@@ -682,6 +682,7 @@ function getURLFromCategoryItem(data, itemName) {
 	data.forEach(function(d) {
 		if(typeof d['items'][itemName] !== 'undefined') {
 			let iname = (d['items'][itemName][0] == '/' ? '' : '/') + d['items'][itemName];
+			iname = iname.replace(`${d['protocol']}//${toShow}/`, '');
 			url = `${d['protocol']}//${toShow}${iname}`;
 		}
 	});

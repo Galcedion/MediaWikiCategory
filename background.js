@@ -170,7 +170,7 @@ function scrapeCategoryList(content, storedData, metadata) {
 			hasNext = content.querySelector('a.category-page__pagination-next').href;
 	}
 	var catList = {};
-	var replacer = metadata['targetHref'].href.replace(metadata['targetHref'].pathname, '');
+	var replacer = metadata['originalTargetHref'].href.replace(metadata['originalTargetHref'].pathname, '');
 	for(let i = 0; i < catLinks.length; i++) { // fill category list, adjust href format for addon-use
 		catList[catLinks[i].title] = catLinks[i].href.replace(replacer, '');
 	}
