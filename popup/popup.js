@@ -357,6 +357,7 @@ function showWiki() {
 	if(toShow !== null) {
 		clearChildren(document.getElementById("p_math"));
 		clearChildren(document.getElementById("p_result"));
+		brackets = {};
 	}
 	if('dataset' in this)
 		toShow = this.dataset.wiki;
@@ -596,6 +597,7 @@ function dropCategory() {
 // select or deselect a bracket
 function bracketSelector() {
 	let cat = this.dataset.cat;
+	document.querySelector('.bracket.error')?.classList.remove('error');
 	if(brackets[cat] !== undefined && brackets[cat] == this.dataset.oc) {
 		this.classList.remove('bracket-active');
 		delete brackets[cat];
@@ -622,6 +624,7 @@ function bracketCheck() {
 		if(type == 'o' && startSubset === null)
 			startSubset = i;
 		else if(type == 'o') {
+			document.querySelector(`.bracket[data-cat="${i}"][data-oc="${type}"]`).classList.add('error');
 			raiseError(browser.i18n.getMessage("errorNestedBracket"));
 			return false;
 		} else if(type == 'c' && startSubset !== null) {

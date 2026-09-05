@@ -78,8 +78,8 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .hugging-left {margin: 0; border: 1px solid transparent; border-radius: 0 5px 5px 0;}
 .math-move:hover .hugging-left, .math-move:focus .hugging-left, .math-fixed .hugging-left {border-left: 1px solid var(--border);}
 .math-moving {padding: 1em 0; border: 1px solid var(--active-f)!important; background-color: var(--active); transition: padding 0.2s ease;}
-.bracket {color: var(--bg); cursor: pointer; font-weight: bolder; font-size: larger;}
-.bracket-active {color: var(--active);}
+.bracket {color: var(--clickable); padding: 5px; cursor: pointer; font-weight: bolder; font-size: larger; border-radius: 5px;}
+.bracket-active {color: var(--success-f);}
 .result-list {width: fit-content;}
 .result-list div {display: flex; padding-bottom: 0.5em; flex-wrap: wrap;}
 .result-list label {margin-left: 5rem;}
