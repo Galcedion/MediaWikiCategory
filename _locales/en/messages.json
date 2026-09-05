@@ -423,6 +423,10 @@
 			}
 		}
 	},
+	"errorNestedBracket": {
+		"message": "Nested brackets are not supported!",
+		"description": "Error: multiple open brackets selected without a closing bracket between."
+	},
 	"securityOffsiteCategory": {
 		"message": "Malicious category blocked",
 		"description": "Security warning: the category has a target outside of the current wiki."

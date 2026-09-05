@@ -593,6 +593,7 @@ function dropCategory() {
 	renderMath();
 }
 
+// select or deselect a bracket
 function bracketSelector() {
 	let cat = this.dataset.cat;
 	if(brackets[cat] !== undefined && brackets[cat] == this.dataset.oc) {
@@ -607,6 +608,28 @@ function bracketSelector() {
 		this.classList.add('bracket-active');
 		brackets[cat] = this.dataset.oc;
 	}
+	let completeBrackets = bracketCheck();
+	if(completeBrackets.length >= 1) {
+		catCalc();
+	}
+}
+
+// validate if brackets are complete or misaligned
+function bracketCheck() {
+	let startSubset = null;
+	let completeBrackets = [];
+	for(const [i, type] of Object.entries(brackets)) {
+		if(type == 'o' && startSubset === null)
+			startSubset = i;
+		else if(type == 'o') {
+			raiseError(browser.i18n.getMessage("errorNestedBracket"));
+			return false;
+		} else if(type == 'c' && startSubset !== null) {
+			completeBrackets.push([startSubset, i]);
+			startSubset = null;
+		}
+	}
+	return completeBrackets;
 }
 
 // calculate category entries from user selection
@@ -618,32 +641,30 @@ function catCalc() {
 	var wikiData = JSON.parse(storedData[toShow]);
 	var resultList = getItemsFromCategory(wikiData, selectedCategories[0]['value']);
 	var operator = null;
+	var completeBrackets = bracketCheck();
+	var inBracket = false;
+	var bracketOperator = null;
+	var bracketResult = null;
 	for(let i = 1; i < Object.keys(selectedCategories).length; i++) { // perform user selected calculations on the user selected categories
+		if(completeBrackets.length >= 1 && !inBracket && completeBrackets[0][0] == i) {
+			inBracket = true;
+			bracketResult = getItemsFromCategory(wikiData, selectedCategories[i]['value']);
+		} else if(completeBrackets.length >= 1 && inBracket && completeBrackets[0][1] == i) {
+			inBracket = false;
+			completeBrackets.shift();
+			if(operator !== null)
+				resultList = catCalcSwitch(operator, bracketResult, wikiData, selectedCategories[i]['value']);
+		}
 		if(selectedCategories[i]['type'] == 'o') {
-			operator = selectedCategories[i]['value'];
+			if(inBracket)
+				bracketOperator = selectedCategories[i]['value'];
+			else
+				operator = selectedCategories[i]['value'];
 		} else {
-			switch(operator) {
-				case 'AND':
-					resultList = calcAND(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']));
-					break;
-				case 'NAND':
-					resultList = calcAND(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), true);
-					break;
-				case 'OR':
-					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']));
-					break;
-				case 'NOR':
-					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), true);
-					break;
-				case 'XOR':
-					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), false, true);
-					break;
-				case 'XNOR':
-					resultList = calcOR(resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']), true, true);
-					break;
-				default:
-					break;
-			}
+			if(inBracket)
+				bracketResult = catCalcSwitch(bracketOperator, bracketResult, wikiData, selectedCategories[i]['value']);
+			else
+				resultList = catCalcSwitch(operator, resultList, wikiData, selectedCategories[i]['value']);
 		}
 		resultList.sort((a, b) => {return (a.item > b.item ? 1: -1);});
 	}
@@ -684,6 +705,33 @@ function catCalc() {
 		clearChildren(document.getElementById("p_result"));
 		document.getElementById("p_result").appendChild(generateNode('h4', {}, {}, browser.i18n.getMessage("popupMathResultsNone")));
 	}
+}
+
+// switch statement for category calculations
+function catCalcSwitch(operator, resultList, wikiData, categoryName) {
+	switch(operator) {
+		case 'AND':
+			resultList = calcAND(resultList, getItemsFromCategory(wikiData, categoryName));
+			break;
+		case 'NAND':
+			resultList = calcAND(resultList, getItemsFromCategory(wikiData, categoryName), true);
+			break;
+		case 'OR':
+			resultList = calcOR(resultList, getItemsFromCategory(wikiData, categoryName));
+			break;
+		case 'NOR':
+			resultList = calcOR(resultList, getItemsFromCategory(wikiData, categoryName), true);
+			break;
+		case 'XOR':
+			resultList = calcOR(resultList, getItemsFromCategory(wikiData, categoryName), false, true);
+			break;
+		case 'XNOR':
+			resultList = calcOR(resultList, getItemsFromCategory(wikiData, categoryName), true, true);
+			break;
+		default:
+			break;
+	}
+	return resultList;
 }
 
 // retrieve all items of a category

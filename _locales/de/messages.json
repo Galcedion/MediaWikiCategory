@@ -322,6 +322,9 @@
 			}
 		}
 	},
+	"errorNestedBracket": {
+		"message": "Verschachtelte Klammern werden nicht unterstützt!"
+	},
 	"securityOffsiteCategory": {
 		"message": "Böswillige Kategorie blockiert"
 	},
