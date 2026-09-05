@@ -35,6 +35,7 @@ var caseSensitive = false;
 var tt_operator = null;
 var mouseDown = false;
 var langList = [];
+var brackets = {};
 
 var settings = {};
 var getSettings = browser.storage.sync.get();
@@ -470,6 +471,10 @@ function renderMath() {
 		} else {
 			let selCatParams = {'id': `selcat_${i}`, 'name': 'selcat'}
 			if(settings.math == "ADVANCED") {
+				if(i < (Object.keys(selectedCategories).length - 1)) {
+					let bracketClass = 'bracket' + ((brackets[i] !== undefined && brackets[i] == 'o') ? ' bracket-active' : '');
+					pMath.appendChild(generateNode('div', {'class': bracketClass, 'data-cat': i, 'data-oc': 'o'}, {'click': bracketSelector}, '('));
+				}
 				var container = generateNode('div', {'class': (Object.keys(selectedCategories).length > 1) ? 'math-move' : 'math-fixed'});
 			} else {
 				if(Object.keys(selectedCategories).length > 1)
@@ -499,6 +504,10 @@ function renderMath() {
 				container.appendChild(selCat);
 				container.appendChild(generateNode('img', {'src': '../heroicons/minus-circle.svg', 'class': 'clickable icon hugging-left', 'data-selcat': i}, {'click': removeCatCalc}));
 				pMath.appendChild(container);
+				if(i > 0) {
+					let bracketClass = 'bracket' + ((brackets[i] !== undefined && brackets[i] == 'c') ? ' bracket-active' : '');
+					pMath.appendChild(generateNode('div', {'class': bracketClass, 'data-cat': i, 'data-oc': 'c'}, {'click': bracketSelector}, ')'));
+				}
 			} else {
 				pMath.appendChild(selCat);
 			}
@@ -582,6 +591,22 @@ function dropCategory() {
 		}
 	}
 	renderMath();
+}
+
+function bracketSelector() {
+	let cat = this.dataset.cat;
+	if(brackets[cat] !== undefined && brackets[cat] == this.dataset.oc) {
+		this.classList.remove('bracket-active');
+		delete brackets[cat];
+	} else if(brackets[cat] !== undefined) {
+		document.querySelector(`.bracket[data-cat="${cat}"][data-oc="${brackets[cat]}"]`).classList.remove('bracket-active');
+		delete brackets[cat];
+		this.classList.add('bracket-active');
+		brackets[cat] = this.dataset.oc;
+	} else {
+		this.classList.add('bracket-active');
+		brackets[cat] = this.dataset.oc;
+	}
 }
 
 // calculate category entries from user selection
