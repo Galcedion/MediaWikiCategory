@@ -31,11 +31,11 @@ var currentTabsURL = [];
 const displayState = {NODATA: 'NODATA', DATA: 'DATA', OVERVIEW: 'OVERVIEW', INWIKI: 'INWIKI'}; // reference for reload operations to refresh specific sections
 var pageDisplayState = displayState.NODATA;
 var rebuild = false;
-var caseSensitive = false;
 var tt_operator = null;
 var mouseDown = false;
 var langList = [];
 var brackets = {};
+var filterSettings = {'filter': null, 'caseSensitive': false};
 
 var settings = {};
 var getSettings = browser.storage.sync.get();
@@ -358,6 +358,7 @@ function showWiki() {
 		clearChildren(document.getElementById("p_math"));
 		clearChildren(document.getElementById("p_result"));
 		brackets = {};
+		filterSettings = {'filter': null, 'caseSensitive': false};
 	}
 	if('dataset' in this)
 		toShow = this.dataset.wiki;
@@ -693,7 +694,7 @@ function catCalc() {
 		}
 		html = `<div><h4>${browser.i18n.getMessage("popupMathResults")} <i>(${Object.keys(resultList).length})</i></h4>
 		<label for="resultFilter">${browser.i18n.getMessage("popupMathResultsFilter")}</label><input id="resultFilter" type="text">
-		<label for="resultFilterCaseSensitive"><input id="resultFilterCaseSensitive" type="checkbox" class="clickable">${browser.i18n.getMessage("popupMathResultsCaseSensitive")}</label>
+		<label for="resultFilterCaseSensitive"><input id="resultFilterCaseSensitive" ${filterSettings.caseSensitive ? "checked" : ''} type="checkbox" class="clickable">${browser.i18n.getMessage("popupMathResultsCaseSensitive")}</label>
 		${langDisplay}
 		<input id="resultFilterReset" type="button" class="clickable" value="${browser.i18n.getMessage("popupMathResultsFilterReset")}"></div>
 		<div>` + html + `</div>`;
@@ -702,6 +703,10 @@ function catCalc() {
 		document.getElementById("resultFilter").addEventListener("keyup", filterResults);
 		document.getElementById("resultFilterCaseSensitive").addEventListener("click", filterResultsCaseSensitive);
 		document.getElementById("resultFilterReset").addEventListener("click", filterResultsReset);
+		if(filterSettings.filter !== null) {
+			document.getElementById("resultFilter").value = filterSettings.filter;
+			filterResults();
+		}
 		if(langList.length > 1)
 			document.getElementById("resultLang").addEventListener("change", filterResultsLang);
 	} else {
@@ -857,20 +862,20 @@ function openTab() {
 
 // filter resultlist by live-input
 function filterResults() {
-	let filter = document.getElementById('resultFilter').value;
-	if(!caseSensitive)
-		filter = filter.toLowerCase();
+	filterSettings.filter = document.getElementById('resultFilter').value;
+	if(!filterSettings.caseSensitive)
+		filterSettings.filter = filterSettings.filter.toLowerCase();
 	document.querySelectorAll('.result-entry').forEach(function(elem) {
-		if(caseSensitive)
-			elem.innerHTML.includes(filter) || filter.length == 0 ? elem.classList.remove('hidden') : elem.classList.add('hidden');
+		if(filterSettings.caseSensitive)
+			elem.innerHTML.includes(filterSettings.filter) || filterSettings.filter.length == 0 ? elem.classList.remove('hidden') : elem.classList.add('hidden');
 		else
-			elem.innerHTML.toLowerCase().includes(filter) || filter.length == 0 ? elem.classList.remove('hidden') : elem.classList.add('hidden');
+			elem.innerHTML.toLowerCase().includes(filterSettings.filter) || filterSettings.filter.length == 0 ? elem.classList.remove('hidden') : elem.classList.add('hidden');
 	});
 }
 
 // set case sensitive for resultlist live-input filter
 function filterResultsCaseSensitive() {
-	document.getElementById('resultFilterCaseSensitive').checked ? caseSensitive = true : caseSensitive = false;
+	document.getElementById('resultFilterCaseSensitive').checked ? filterSettings.caseSensitive = true : filterSettings.caseSensitive = false;
 	filterResults();
 }
 
