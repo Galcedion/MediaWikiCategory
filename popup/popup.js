@@ -560,18 +560,18 @@ function switchCategories() {
 // reorder categories per drag and drop
 function dropCategory() {
 	var moved = document.querySelectorAll('[data-offset]')[0];
-	var movePos = moved.offsetLeft;//moved.dataset.offset;
+	var movePos = moved.offsetLeft + window.event.clientX - moved.dataset.offset;
 	if(settings.math == "ADVANCED")
-		movePos = moved.parentNode.offsetLeft;
+		movePos += moved.parentNode.offsetLeft;
 	var moveOld = parseInt(moved.id.substring(7));
 	var catList = document.getElementsByName('selcat');
 	var curOffset = 0;
 	for(let i = 0; i < catList.length; i++) {
 		if(settings.math == "SIMPLE")
-			curOffset = catList[i].offsetLeft;
+			curOffset = catList[i].offsetLeft + (catList[i].offsetWidth / 2);
 		else if(settings.math == "ADVANCED")
-			curOffset = catList[i].parentNode.offsetLeft;
-		if(curOffset > movePos) {
+			curOffset = catList[i].parentNode.offsetLeft + (catList[i].parentNode.offsetWidth / 2);
+		if(curOffset >= movePos || (i + 1 == catList.length)) {
 			let insertBefore = parseInt(catList[i].id.substring(7));
 			if(insertBefore == moveOld) {
 				break;
