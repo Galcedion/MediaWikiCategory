@@ -613,7 +613,23 @@ function bracketSelector() {
 	}
 	let completeBrackets = bracketCheck();
 	if(completeBrackets.length >= 1) {
+		let gradient = 'linear-gradient(to right';
+		let tmpGradient = null;
+		let parentLeft = getComputedStyle(document.getElementById('p_math')).marginLeft;
+		document.querySelectorAll('.bracket-active').forEach(function(node) {
+			let nodePos = `calc(${node.offsetLeft}px - ${parentLeft})`;
+			if(node.dataset.oc == 'o')
+				tmpGradient = `,transparent ${nodePos},color-mix(var(--success),transparent) ${nodePos}`;
+			else if(node.dataset.oc == 'c' && tmpGradient !== null) {
+				gradient += `${tmpGradient},color-mix(var(--success),transparent) ${nodePos},transparent ${nodePos}`;
+				tmpGradient = null;
+			}
+		});
+		gradient += ')';
+		document.getElementById('p_math').style.backgroundImage = gradient;
 		catCalc();
+	} else {
+		document.getElementById('p_math').style.backgroundImage = 'inherit';
 	}
 }
 
