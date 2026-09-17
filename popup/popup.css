@@ -88,7 +88,8 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .clicked {background-color: var(--success)!important;}
 .clicked:hover, .clicked:active {background-color: var(--success-f)!important;}
 .border-merge {border-bottom: 0!important; border-radius: 0 5px 0 0!important;}
-.error {background-color: var(--warn); color: var(--white); padding: 5px;}
+.error {background-color: var(--warn); color: var(--white); padding: 5px; cursor: pointer;}
+.error img {margin-right: 0.5em; vertical-align: center; filter: invert(100%);}
 .info-operators {margin: 1em 0;}
 .info-operators i {padding: 5px; background-color: var(--active); border: 1px solid var(--border); cursor: pointer; border-radius: 5px;}
 .info-operators i:hover {background-color: var(--active-f);}

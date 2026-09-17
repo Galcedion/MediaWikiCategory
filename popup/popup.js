@@ -939,11 +939,14 @@ function showTruthTable() {
 
 // visual error handler
 function raiseError(error) {
-	let errorNode = document.getElementById("error");
-	errorNode.appendChild(generateNode('div', {
+	let errorContainer = document.getElementById("error");
+	let errorNode = generateNode('div', {
 		'class': 'error',
 		'title': browser.i18n.getMessage("titleClose")
-	}, {'click': closeError}, error));
+	}, {'click': closeError});
+	errorNode.appendChild(generateNode('img', {'src': '../heroicons/trash.svg'}));
+	errorNode.appendChild(generateNode('span', {}, {}, error));
+	errorContainer.appendChild(errorNode);
 }
 
 // close open error message
