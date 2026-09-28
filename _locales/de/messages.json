@@ -330,5 +330,11 @@
 	},
 	"securityOffsiteCategoryRedirect": {
 		"message": "Böswillige Kategorie-Weiterleitung blockiert"
+	},
+	"securityItemTitleInjection": {
+		"message": "Potentieller Schadcode im Seitennamen blockiert"
+	},
+	"securityItemURLParams": {
+		"message": "Seiten-URL mit böswilligem Inhalt blockiert"
 	}
 }

@@ -172,7 +172,18 @@ function scrapeCategoryList(content, storedData, metadata) {
 	var catList = {};
 	var replacer = metadata['originalTargetHref'].href.replace(metadata['originalTargetHref'].pathname, '');
 	for(let i = 0; i < catLinks.length; i++) { // fill category list, adjust href format for addon-use
-		catList[catLinks[i].title] = catLinks[i].href.replace(replacer, '');
+		if(catLinks[i].title.indexOf('<') >= 0) {
+			transmitError(metadata['caller'], browser.i18n.getMessage("securityItemTitleInjection"), metadata['originalTargetHref'].origin);
+			checkToDo(metadata);
+			return;
+		}
+		let catLink = catLinks[i].href.replace(replacer, '');
+		if(catLink.indexOf('?') >= 0) {
+			transmitError(metadata['caller'], browser.i18n.getMessage("securityItemURLParams"), metadata['originalTargetHref'].origin);
+			checkToDo(metadata);
+			return;
+		}
+		catList[catLinks[i].title] = catLink;
 	}
 
 	var content;

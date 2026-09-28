@@ -434,5 +434,13 @@
 	"securityOffsiteCategoryRedirect": {
 		"message": "Malicious category-redirect blocked",
 		"description": "Security warning: the category paging has a target outside of the current wiki."
+	},
+	"securityItemTitleInjection": {
+		"message": "Potential injection of page name blocked",
+		"description": "Security warning: the item title contains unallowed characters that could be script tags."
+	},
+	"securityItemURLParams": {
+		"message": "Page URL with malicious content blocked",
+		"description": "Security warning: the item URL contains parameters but should have none."
 	}
 }
