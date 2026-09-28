@@ -35,6 +35,7 @@ var tt_operator = null;
 var mouseDown = false;
 var langList = [];
 var brackets = {};
+var completeBrackets = [];
 var filterSettings = {'filter': null, 'caseSensitive': false};
 
 var settings = {};
@@ -517,7 +518,7 @@ function renderMath() {
 		}
 	}
 	document.querySelectorAll('.math-swap').forEach(function(node) {node.addEventListener("click", switchCategories);});
-	catCalc();
+	bracketCheck();
 }
 
 // create visual operator selection
@@ -602,25 +603,23 @@ function bracketSelector() {
 	document.querySelector('.bracket.error')?.classList.remove('error');
 	if(brackets[cat] !== undefined && brackets[cat] == this.dataset.oc) {
 		this.classList.remove('bracket-active');
-		delete brackets[cat];
 	} else if(brackets[cat] !== undefined) {
 		document.querySelector(`.bracket[data-cat="${cat}"][data-oc="${brackets[cat]}"]`).classList.remove('bracket-active');
-		delete brackets[cat];
 		this.classList.add('bracket-active');
-		brackets[cat] = this.dataset.oc;
 	} else {
 		this.classList.add('bracket-active');
-		brackets[cat] = this.dataset.oc;
 	}
-	if(bracketCheck().length >= 1) {
-		catCalc();
-	}
+	bracketCheck();
 }
 
 // validate if brackets are complete or misaligned
 function bracketCheck() {
+	brackets = {};
+	document.querySelectorAll('.bracket-active').forEach(function(node) {
+		brackets[node.dataset.cat] = node.dataset.oc;
+	});
 	let startSubset = null;
-	let completeBrackets = [];
+	completeBrackets = new Array();
 	for(const [i, type] of Object.entries(brackets)) {
 		if(type == 'o' && startSubset === null)
 			startSubset = i;
@@ -629,16 +628,15 @@ function bracketCheck() {
 			raiseError(browser.i18n.getMessage("errorNestedBracket"));
 			return false;
 		} else if(type == 'c' && startSubset !== null) {
-			completeBrackets.push([startSubset, i]);
+			completeBrackets.push([parseInt(startSubset), parseInt(i)]);
 			startSubset = null;
 		}
 	}
-	window.requestAnimationFrame(function() {window.setTimeout(bracketCheckRedraw, 5, completeBrackets);});
-	return completeBrackets;
+	window.requestAnimationFrame(function() {window.setTimeout(bracketCheckRedraw, 5);});
 }
 
 // update the bracket highlighting
-function bracketCheckRedraw(completeBrackets) {
+function bracketCheckRedraw() {
 	if(completeBrackets.length >= 1) {
 		let gradient = 'linear-gradient(to right';
 		let tmpGradient = null;
@@ -657,6 +655,7 @@ function bracketCheckRedraw(completeBrackets) {
 	} else {
 		document.getElementById('p_math').style.backgroundImage = 'inherit';
 	}
+	catCalc();
 }
 
 // calculate category entries from user selection
@@ -668,7 +667,6 @@ function catCalc() {
 	var wikiData = JSON.parse(storedData[toShow]);
 	var resultList = getItemsFromCategory(wikiData, selectedCategories[0]['value']);
 	var operator = null;
-	var completeBrackets = bracketCheck();
 	var inBracket = false;
 	var bracketOperator = null;
 	var bracketResult = null;
