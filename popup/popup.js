@@ -951,7 +951,7 @@ function raiseError(error) {
 		'class': 'error',
 		'title': browser.i18n.getMessage("titleClose")
 	}, {'click': closeError});
-	errorNode.appendChild(generateNode('img', {'src': '../heroicons/trash.svg'}));
+	errorNode.appendChild(generateNode('img', {'src': '../heroicons/x-circle.svg'}));
 	errorNode.appendChild(generateNode('span', {}, {}, error));
 	errorContainer.appendChild(errorNode);
 }
