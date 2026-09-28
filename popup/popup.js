@@ -358,6 +358,7 @@ function showWiki() {
 		clearChildren(document.getElementById("p_math"));
 		clearChildren(document.getElementById("p_result"));
 		brackets = {};
+		bracketCheck();
 		filterSettings = {'filter': null, 'caseSensitive': false};
 	}
 	if('dataset' in this)
@@ -611,25 +612,8 @@ function bracketSelector() {
 		this.classList.add('bracket-active');
 		brackets[cat] = this.dataset.oc;
 	}
-	let completeBrackets = bracketCheck();
-	if(completeBrackets.length >= 1) {
-		let gradient = 'linear-gradient(to right';
-		let tmpGradient = null;
-		let parentLeft = getComputedStyle(document.getElementById('p_math')).marginLeft;
-		document.querySelectorAll('.bracket-active').forEach(function(node) {
-			let nodePos = `calc(${node.offsetLeft}px - ${parentLeft})`;
-			if(node.dataset.oc == 'o')
-				tmpGradient = `,transparent ${nodePos},color-mix(var(--success),transparent) ${nodePos}`;
-			else if(node.dataset.oc == 'c' && tmpGradient !== null) {
-				gradient += `${tmpGradient},color-mix(var(--success),transparent) ${nodePos},transparent ${nodePos}`;
-				tmpGradient = null;
-			}
-		});
-		gradient += ')';
-		document.getElementById('p_math').style.backgroundImage = gradient;
+	if(bracketCheck().length >= 1) {
 		catCalc();
-	} else {
-		document.getElementById('p_math').style.backgroundImage = 'inherit';
 	}
 }
 
@@ -649,7 +633,30 @@ function bracketCheck() {
 			startSubset = null;
 		}
 	}
+	window.requestAnimationFrame(function() {window.setTimeout(bracketCheckRedraw, 5, completeBrackets);});
 	return completeBrackets;
+}
+
+// update the bracket highlighting
+function bracketCheckRedraw(completeBrackets) {
+	if(completeBrackets.length >= 1) {
+		let gradient = 'linear-gradient(to right';
+		let tmpGradient = null;
+		let parentLeft = getComputedStyle(document.getElementById('p_math')).marginLeft;
+		document.querySelectorAll('.bracket-active').forEach(function(node) {
+			let nodePos = `calc(${node.offsetLeft}px - ${parentLeft})`;
+			if(node.dataset.oc == 'o')
+				tmpGradient = `,transparent ${nodePos},color-mix(var(--success),transparent) ${nodePos}`;
+			else if(node.dataset.oc == 'c' && tmpGradient !== null) {
+				gradient += `${tmpGradient},color-mix(var(--success),transparent) ${nodePos},transparent ${nodePos}`;
+				tmpGradient = null;
+			}
+		});
+		gradient += ')';
+		document.getElementById('p_math').style.backgroundImage = gradient;
+	} else {
+		document.getElementById('p_math').style.backgroundImage = 'inherit';
+	}
 }
 
 // calculate category entries from user selection
