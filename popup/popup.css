@@ -50,7 +50,7 @@ input.clickable {border: 1px solid var(--border); border-radius: 5px;}
 .active:hover, .active:focus {background-color: var(--active-f)!important;}
 .section_title {padding: 5px 5px 0 5px; border-radius: 5px 5px 0 0;}
 .icon {vertical-align: text-top; border-radius: 5px; margin: 0 2px;}
-.display_box {position: absolute; right: 0; padding: 5px; background-color: var(--bg); top: calc(2em - 2px); border: 1px solid var(--border); border-radius: 0 0 5px 5px; max-width: calc(70vw - 4em + 6px);}
+.display_box {position: absolute; right: 0; padding: 5px; background-color: var(--bg); top: calc(2em - 2px); border: 1px solid var(--border); border-radius: 0 0 5px 5px; max-width: calc(70vw - 4em + 6px); z-index: 1;}
 .info_display {width: 45em;}
 .storage_display {width: max-content;}
 .storage_display th {border-bottom: 1px solid var(--border);}
