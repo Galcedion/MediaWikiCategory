@@ -125,6 +125,7 @@ function dataDownload() {
 
 // use the given file to overwrite existing data
 function dataUpload() {
+	currentCallerValue = this.value;
 	let ul = document.getElementById('data_ul');
 	if(ul.files.length == 0) {
 		showMessage(browser.i18n.getMessage('errorNoFile'), 'ERROR');

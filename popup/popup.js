@@ -95,6 +95,7 @@ function displayInfo() {
 
 // toggle display of storage in use
 function displayStorage() {
+	calculateStorage();
 	let isActive = Boolean(document.getElementById("storage_display"));
 	displayCleanup();
 	if(isActive)
@@ -219,7 +220,7 @@ function deleteAllConfirmation() {
 		document.getElementById('p_nav_overview').click();
 		document.getElementById("p_nav_show").textContent = browser.i18n.getMessage("popupNavShow");
 		document.getElementById("p_nav_show").classList.remove("clickable");
-		['p_available', 'p_math', 'p_result'].forEach(function(i) {clearChildren(document.getElementById(i));});
+		['p_available', 'p_math', 'p_result', 'p_overview'].forEach(function(i) {clearChildren(document.getElementById(i));});
 		browser.storage.local.clear();
 		refreshData();
 	}
@@ -227,6 +228,7 @@ function deleteAllConfirmation() {
 
 // calculate approximate disc size in use by storage
 function calculateStorage() {
+	storageUsage = {};
 	storageUsage[storageUsageTotal] = 0;
 	for(let [key, value] of Object.entries(storedData)) {
 		let curStorage = key.length * 2 + value.length * 2;
@@ -279,7 +281,6 @@ function fetchStream(dataStream) {
 		</div>`;
 		html += entryContent;
 	}
-	calculateStorage();
 	document.getElementById("p_overview").innerHTML = html;
 	document.getElementsByName("popupShow").forEach(function(node) {node.addEventListener("click", showWiki);});
 	document.getElementsByName("popupExpand").forEach(function(node) {if(!node.classList.contains('disabled')) {node.addEventListener("click", expandWiki);}});
