@@ -665,20 +665,25 @@ function catCalc() {
 		return;
 	}
 	var wikiData = JSON.parse(storedData[toShow]);
-	var resultList = getItemsFromCategory(wikiData, selectedCategories[0]['value']);
+	var inBracket = (completeBrackets.length > 0 && completeBrackets[0][0] === 0) ? true : false;
+	var resultList = inBracket ? [] : getItemsFromCategory(wikiData, selectedCategories[0]['value']);
 	var operator = null;
-	var inBracket = false;
 	var bracketOperator = null;
-	var bracketResult = null;
+	var bracketResult = inBracket ? getItemsFromCategory(wikiData, selectedCategories[0]['value']) : [];
 	for(let i = 1; i < Object.keys(selectedCategories).length; i++) { // perform user selected calculations on the user selected categories
 		if(completeBrackets.length >= 1 && !inBracket && completeBrackets[0][0] == i) {
 			inBracket = true;
 			bracketResult = getItemsFromCategory(wikiData, selectedCategories[i]['value']);
+			continue;
 		} else if(completeBrackets.length >= 1 && inBracket && completeBrackets[0][1] == i) {
 			inBracket = false;
 			completeBrackets.shift();
+			bracketResult = catCalcSwitch(bracketOperator, bracketResult, getItemsFromCategory(wikiData, selectedCategories[i]['value']));
 			if(operator !== null)
-				resultList = catCalcSwitch(operator, bracketResult, wikiData, selectedCategories[i]['value']);
+				resultList = catCalcSwitch(operator, resultList, bracketResult);
+			else
+				resultList = bracketResult;
+			continue;
 		}
 		if(selectedCategories[i]['type'] == 'o') {
 			if(inBracket)
@@ -687,9 +692,9 @@ function catCalc() {
 				operator = selectedCategories[i]['value'];
 		} else {
 			if(inBracket)
-				bracketResult = catCalcSwitch(bracketOperator, bracketResult, wikiData, selectedCategories[i]['value']);
+				bracketResult = catCalcSwitch(bracketOperator, bracketResult, getItemsFromCategory(wikiData, selectedCategories[i]['value']));
 			else
-				resultList = catCalcSwitch(operator, resultList, wikiData, selectedCategories[i]['value']);
+				resultList = catCalcSwitch(operator, resultList, getItemsFromCategory(wikiData, selectedCategories[i]['value']));
 		}
 		resultList.sort((a, b) => {return (a.item > b.item ? 1: -1);});
 	}
@@ -737,25 +742,25 @@ function catCalc() {
 }
 
 // switch statement for category calculations
-function catCalcSwitch(operator, resultList, wikiData, categoryName) {
+function catCalcSwitch(operator, resultList, secondList) {
 	switch(operator) {
 		case 'AND':
-			resultList = calcAND(resultList, getItemsFromCategory(wikiData, categoryName));
+			resultList = calcAND(resultList, secondList);
 			break;
 		case 'NAND':
-			resultList = calcAND(resultList, getItemsFromCategory(wikiData, categoryName), true);
+			resultList = calcAND(resultList, secondList, true);
 			break;
 		case 'OR':
-			resultList = calcOR(resultList, getItemsFromCategory(wikiData, categoryName));
+			resultList = calcOR(resultList, secondList);
 			break;
 		case 'NOR':
-			resultList = calcOR(resultList, getItemsFromCategory(wikiData, categoryName), true);
+			resultList = calcOR(resultList, secondList, true);
 			break;
 		case 'XOR':
-			resultList = calcOR(resultList, getItemsFromCategory(wikiData, categoryName), false, true);
+			resultList = calcOR(resultList, secondList, false, true);
 			break;
 		case 'XNOR':
-			resultList = calcOR(resultList, getItemsFromCategory(wikiData, categoryName), true, true);
+			resultList = calcOR(resultList, secondList, true, true);
 			break;
 		default:
 			break;
