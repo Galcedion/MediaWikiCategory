@@ -25,7 +25,7 @@ const mathOptions = { // available options for the math process in popup
 const notationOptionsDefault = "TEXT";
 const mathOptionsDefault = "SIMPLE";
 var syncSettings = {};
-var localStorage = {};
+var localMWCStorage = {};
 var currentCallerValue = '';
 
 document.getElementById('button_save').addEventListener('click', saveSettings);
@@ -74,7 +74,7 @@ function loadSettings(settings) {
 
 // load local storage
 function loadLocal(storage) {
-	localStorage = structuredClone(storage);
+	localMWCStorage = structuredClone(storage);
 }
 
 // save the currently selected settings
@@ -113,7 +113,7 @@ function dataDownload() {
 	if(this.id == 'data_dl_settings' || this.id == 'data_dl_all')
 		dataBlob['settings'] = syncSettings;
 	if(this.id == 'data_dl_wiki' || this.id == 'data_dl_all')
-		dataBlob['wiki'] = localStorage;
+		dataBlob['wiki'] = localMWCStorage;
 	dataBlob = new Blob([JSON.stringify(dataBlob)], {type: 'application/json'});
 	let dl = document.createElement('a');
 	dl.download = fname;
